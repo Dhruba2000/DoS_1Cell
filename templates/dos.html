@@ -2,39 +2,297 @@
 {% block content %}
 
 <div class="page-header">
-    <div>
-        <div class="page-title">Directory of <span class="hi">Services</span></div>
-        <div class="page-desc">1Cell.AI product portfolio and operational summary</div>
+  <div class="page-header-left">
+    <div class="page-title">Directory of <span class="hi">Service</span></div>
+    <div class="page-desc">
+      Complete service portfolio including categories, specimen types, analytes, indications, TAT and pricing.
     </div>
+  </div>
+
+  <div class="page-header-actions">
+    <input type="text" id="dosSearch" class="search-box" placeholder="Search tests...">
+  </div>
 </div>
 
-<div class="tbl-wrap">
-    <div class="tbl-header">
-        <div class="tbl-title"><i class="fas fa-hospital"></i> DOS</div>
-    </div>
+<div class="card dos-card">
 
-    <div class="tbl-scroll">
-        <table>
-            <thead>
-                <tr>
-                    <th>Test Name</th>
-                    <th>Purpose</th>
-                    <th>Sample</th>
-                    <th>TAT</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for r in rows %}
-                <tr>
-                    <td>{{ r[0] }}</td>
-                    <td>{{ r[1] }}</td>
-                    <td>{{ r[2] }}</td>
-                    <td>{{ r[3] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+  <div class="table-wrap">
+    <table class="dos-table" id="dosTable">
+      <thead>
+        <tr>
+          <th>Test ID</th>
+          <th>Test Name</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Type</th>
+          <th>Gene Size</th>
+          <th>Specimen</th>
+          <th>Cell Biology</th>
+          <th>Analyte</th>
+          <th>Addons</th>
+          <th>Indication</th>
+          <th>TAT</th>
+          <th>MRP</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>DOS001</td>
+          <td>OncoIndx Basic</td>
+          <td>NGS test</td>
+          <td>Service Test</td>
+          <td>CGP</td>
+          <td>1080</td>
+          <td>Tissue / Blood</td>
+          <td>Tissue DNA / ctDNA</td>
+          <td>DNA</td>
+          <td>RNA</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+        <tr>
+          <td>DOS002</td>
+          <td>OncoIndx Premium</td>
+          <td>NGS test</td>
+          <td>Service Test</td>
+          <td>CGP</td>
+          <td>1080</td>
+          <td>CSF / Pleural Fluid / Ascitic Fluid</td>
+          <td>ctDNA</td>
+          <td>DNA</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+        <tr>
+          <td>DOS003</td>
+          <td>OncoIndx Prime+</td>
+          <td>Multi specimen NGS test</td>
+          <td>Service Test</td>
+          <td>CGP</td>
+          <td>1080</td>
+          <td>Tissue-Tissue / Tissue-Blood / Blood-CSF</td>
+          <td>Mixed</td>
+          <td>DNA, RNA</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+        <tr>
+          <td>DOS004</td>
+          <td>OncoHRD</td>
+          <td>HRD profiling</td>
+          <td>Service Test</td>
+          <td>-</td>
+          <td>100</td>
+          <td>Tissue / Blood</td>
+          <td>Tissue DNA / ctDNA</td>
+          <td>DNA</td>
+          <td>-</td>
+          <td>Ovarian, Breast, Pancreatic, Prostate</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+        <tr>
+          <td>DOS005</td>
+          <td>OncoIndx 360 EC</td>
+          <td>NGS test + IHC</td>
+          <td>Service Test</td>
+          <td>Targeted</td>
+          <td>-</td>
+          <td>Tissue</td>
+          <td>Tissue DNA, Protein</td>
+          <td>DNA, Protein</td>
+          <td>-</td>
+          <td>Endometrium Cancer - All stages</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+        <tr>
+          <td>DOS006</td>
+          <td>OncoTarget</td>
+          <td>NGS test</td>
+          <td>Service Test</td>
+          <td>Targeted</td>
+          <td>100</td>
+          <td>Tissue / Blood</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+        <tr>
+          <td>DOS007</td>
+          <td>OncoCTC</td>
+          <td>CTC test</td>
+          <td>Service Test</td>
+          <td>-</td>
+          <td>N/A</td>
+          <td>Blood</td>
+          <td>CTC</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+        <tr>
+          <td>DOS008</td>
+          <td>OncoMonitor MRD</td>
+          <td>NGS test with Methylation</td>
+          <td>Service Test</td>
+          <td>-</td>
+          <td>100</td>
+          <td>Blood</td>
+          <td>CTC, ctDNA</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+        <tr>
+          <td>DOS009</td>
+          <td>OncoMonitor TRM</td>
+          <td>NGS test</td>
+          <td>Service Test</td>
+          <td>-</td>
+          <td>100</td>
+          <td>Blood</td>
+          <td>CTC, ctDNA</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+        <tr>
+          <td>DOS010</td>
+          <td>OncoRisk + MLPA</td>
+          <td>Germline test</td>
+          <td>Service Test</td>
+          <td>-</td>
+          <td>74 Gene + 28 MLPA</td>
+          <td>Blood</td>
+          <td>DNA</td>
+          <td>DNA</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
 </div>
+
+<div class="card mt-20">
+  <h3 class="sub-title">Available Add-ons</h3>
+  <div class="addon-wrap">
+    <span class="addon-chip">RNA</span>
+    <span class="addon-chip">PD-L1 by IHC</span>
+    <span class="addon-chip">ER/PR/HER2 by IHC</span>
+    <span class="addon-chip">MMR</span>
+  </div>
+</div>
+
+<style>
+.search-box{
+  padding:10px 14px;
+  border:1px solid #d8dee8;
+  border-radius:10px;
+  min-width:250px;
+}
+
+.dos-card{
+  padding:0;
+  overflow:hidden;
+}
+
+.table-wrap{
+  overflow:auto;
+}
+
+.dos-table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:1700px;
+}
+
+.dos-table th{
+  background:#0f172a;
+  color:#fff;
+  padding:12px;
+  font-size:13px;
+  text-align:left;
+  position:sticky;
+  top:0;
+}
+
+.dos-table td{
+  padding:12px;
+  border-bottom:1px solid #edf0f5;
+  font-size:13px;
+  vertical-align:top;
+}
+
+.dos-table tr:hover{
+  background:#f8fafc;
+}
+
+.sub-title{
+  margin-bottom:14px;
+}
+
+.addon-wrap{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.addon-chip{
+  background:#eef4ff;
+  color:#1d4ed8;
+  padding:8px 14px;
+  border-radius:30px;
+  font-size:13px;
+  font-weight:600;
+}
+
+.mt-20{
+  margin-top:20px;
+}
+</style>
+
+<script>
+document.getElementById("dosSearch").addEventListener("keyup", function() {
+    let value = this.value.toLowerCase();
+    let rows = document.querySelectorAll("#dosTable tbody tr");
+
+    rows.forEach(row => {
+        row.style.display =
+            row.innerText.toLowerCase().includes(value)
+            ? ""
+            : "none";
+    });
+});
+</script>
 
 {% endblock %}
