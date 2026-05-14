@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <div class="page-title">Scientific <span class="hi">Glossary</span></div>
+        <div class="page-desc">Important molecular diagnostics terms and abbreviations</div>
+    </div>
+</div>
+
+<div class="tbl-wrap">
+    <div class="tbl-header">
+        <div class="tbl-title"><i class="fas fa-spell-check"></i> Glossary</div>
+    </div>
+
+    <div class="tbl-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Term</th>
+                    <th>Meaning</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in glossary %}
+                <tr>
+                    <td><strong>{{ g[0] }}</strong></td>
+                    <td>{{ g[1] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% set section_meta = {
+  'master_test_directory': ('Master Test Directory', 'fa-list-alt', 'Core registry of all OncoIndx® diagnostic tests.', 'gold'),
+  'biomarker_coverage': ('Biomarker Coverage', 'fa-dna', 'Gene-level biomarker details and clinical relevance for each test.', 'teal'),
+  'clinical_positioning': ('Clinical Positioning', 'fa-stethoscope', 'When to order, when not to order, and key differentiators.', 'teal'),
+  'operations': ('Operations', 'fa-cogs', 'Sample collection, shipping, and logistics requirements.', 'teal'),
+  'performance': ('Performance', 'fa-chart-line', 'Analytical validation metrics and performance data.', 'teal'),
+  'pricing': ('Pricing', 'fa-tags', 'Commercial pricing, discounts, and reimbursement information.', 'rose'),
+  'ordering': ('Ordering', 'fa-shopping-cart', 'Order codes, channels, and TAT commitments.', 'teal'),
+  'support_services': ('Support Services', 'fa-headset', 'MTB, helpline, and post-report consultation details.', 'teal'),
+  'journey_mapping': ('Journey Mapping', 'fa-route', 'Where each test fits in the patient care continuum.', 'gold'),
+} %}
+
+{% set meta = section_meta.get(active, (active.replace('_',' ').title(), 'fa-file', '', 'teal')) %}
+
+<div class="page-header">
+  <h1><span>{{ meta[0] }}</span></h1>
+  <p>{{ meta[2] }}</p>
+</div>
+
+<!-- Test selector -->
+<div class="test-selector">
+  <label><i class="fas fa-flask" style="color:var(--teal); margin-right:6px;"></i> Test</label>
+  <select class="form-control" onchange="window.location.href='?test='+this.value" id="testSelect">
+    {% for t in tests %}
+    <option value="{{ t }}" {% if t == selected_test %}selected{% endif %}>{{ t }}</option>
+    {% endfor %}
+  </select>
+  {% if session.get('is_admin') %}
+  <button class="btn btn-gold btn-sm" onclick="openAddModal()">
+    <i class="fas fa-plus"></i> Add Record
+  </button>
+  {% else %}
+  <button class="btn btn-secondary btn-sm" onclick="openLoginModal()">
+    <i class="fas fa-lock"></i> Admin Login to Edit
+  </button>
+  {% endif %}
+</div>
+
+{% if session.get('is_admin') %}
+<div class="edit-toolbar">
+  <i class="fas fa-shield-check"></i>
+  <span>Admin mode active — you can add, edit, or delete records below</span>
+</div>
+{% endif %}
+
+<!-- Section intro -->
+<div class="section-intro">
+  <div class="section-intro-icon"><i class="fas {{ meta[1] }}"></i></div>
+  <div>
+    <h2>{{ selected_test }} — {{ meta[0] }}</h2>
+    <p>{{ meta[2] }} Use the table below to view or manage data. Admins can add, edit, and delete records.</p>
+  </div>
+</div>
+
+<!-- Data table -->
+{% if rows %}
+<div class="card" style="padding:0; overflow:hidden;">
+  <div class="table-wrap" style="border:none; border-radius:0;">
+    <table>
+      <thead>
+        <tr>
+          {% for f in fields %}
+          <th>{{ f.replace('_', ' ').title() }}</th>
+          {% endfor %}
+          {% if session.get('is_admin') %}
+          <th>Actions</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr id="row-{{ row['id'] }}">
+          {% for f in fields %}
+          <td>
+            <span class="cell-view">{{ row[f] or '—' }}</span>
+            {% if session.get('is_admin') %}
+            <input class="form-control cell-edit" data-field="{{ f }}" value="{{ row[f] or '' }}"
+                   style="display:none; min-width:120px; padding:4px 8px; font-size:0.8rem;">
+            {% endif %}
+          </td>
+          {% endfor %}
+          {% if session.get('is_admin') %}
+          <td class="actions">
+            <button class="btn btn-secondary btn-sm edit-row-btn" onclick="startEditRow({{ row['id'] }})">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-primary btn-sm save-row-btn" onclick="saveRow({{ row['id'] }}, '{{ selected_test }}')" style="display:none;">
+              <i class="fas fa-save"></i>
+            </button>
+            <button class="btn btn-secondary btn-sm cancel-row-btn" onclick="cancelEditRow({{ row['id'] }})" style="display:none;">
+              <i class="fas fa-times"></i>
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="deleteRow({{ row['id'] }})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="card" style="text-align:center; padding:52px; color:var(--text-dim);">
+  <i class="fas {{ meta[1] }}" style="font-size:2.5rem; margin-bottom:16px; opacity:0.3; display:block;"></i>
+  <div style="font-family:var(--font-head); font-size:1.1rem; margin-bottom:8px; color:var(--white);">
+    No records for {{ selected_test }}
+  </div>
+  <div style="font-size:0.85rem; margin-bottom:20px;">
+    {% if session.get('is_admin') %}
+    Click "Add Record" to add the first entry for this test.
+    {% else %}
+    Login as admin to add records for this section.
+    {% endif %}
+  </div>
+  {% if session.get('is_admin') %}
+  <button class="btn btn-primary" onclick="openAddModal()">
+    <i class="fas fa-plus"></i> Add First Record
+  </button>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- Add Record Modal -->
+<div class="modal-backdrop" id="addModal">
+  <div class="modal" style="width:600px; max-width:95vw; max-height:90vh; overflow-y:auto;">
+    <h2><i class="fas fa-plus-circle" style="color:var(--teal); margin-right:8px;"></i>Add Record</h2>
+    <p>Adding to: <strong style="color:var(--teal);">{{ selected_test }}</strong> — {{ meta[0] }}</p>
+    <div class="form-grid" style="margin-bottom:16px;">
+      {% for f in fields %}
+      <div class="form-group">
+        <label>{{ f.replace('_', ' ').title() }}</label>
+        <textarea class="form-control add-input" data-field="{{ f }}" rows="2"
+                  placeholder="{{ f.replace('_', ' ').title() }}"></textarea>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="addRecord('{{ selected_test }}')">
+        <i class="fas fa-save"></i> Add Record
+      </button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+const SECTION = {{ active | tojson }};
+
+function openAddModal() {
+  document.getElementById('addModal').classList.add('open');
+}
+function closeAddModal() {
+  document.getElementById('addModal').classList.remove('open');
+  document.querySelectorAll('.add-input').forEach(el => el.value = '');
+}
+document.getElementById('addModal').addEventListener('click', function(e) {
+  if (e.target === this) closeAddModal();
+});
+
+async function addRecord(testName) {
+  const data = { test_name: testName };
+  document.querySelectorAll('.add-input').forEach(el => {
+    data[el.dataset.field] = el.value;
+  });
+  const res = await apiPost(`/${SECTION}/save`, data);
+  if (res.success) {
+    showToast('Record added successfully!');
+    setTimeout(() => window.location.reload(), 600);
+  } else {
+    showToast(res.message || 'Error adding record.', true);
+  }
+}
+
+function startEditRow(id) {
+  const row = document.getElementById(`row-${id}`);
+  row.querySelectorAll('.cell-view').forEach(el => el.style.display = 'none');
+  row.querySelectorAll('.cell-edit').forEach(el => el.style.display = 'block');
+  row.querySelector('.edit-row-btn').style.display = 'none';
+  row.querySelector('.save-row-btn').style.display = 'inline-flex';
+  row.querySelector('.cancel-row-btn').style.display = 'inline-flex';
+}
+
+function cancelEditRow(id) {
+  const row = document.getElementById(`row-${id}`);
+  row.querySelectorAll('.cell-view').forEach(el => el.style.display = '');
+  row.querySelectorAll('.cell-edit').forEach(el => el.style.display = 'none');
+  row.querySelector('.edit-row-btn').style.display = 'inline-flex';
+  row.querySelector('.save-row-btn').style.display = 'none';
+  row.querySelector('.cancel-row-btn').style.display = 'none';
+}
+
+async function saveRow(id, testName) {
+  const row = document.getElementById(`row-${id}`);
+  const data = { id, test_name: testName };
+  row.querySelectorAll('.cell-edit').forEach(el => {
+    data[el.dataset.field] = el.value;
+  });
+  const res = await apiPost(`/${SECTION}/save`, data);
+  if (res.success) {
+    showToast('Record updated!');
+    setTimeout(() => window.location.reload(), 600);
+  } else {
+    showToast(res.message || 'Error saving.', true);
+  }
+}
+
+async function deleteRow(id) {
+  if (!confirm('Delete this record? This cannot be undone.')) return;
+  const res = await apiPost(`/${SECTION}/delete`, { id });
+  if (res.success) {
+    document.getElementById(`row-${id}`).remove();
+    showToast('Record deleted.');
+  } else {
+    showToast('Error deleting.', true);
+  }
+}
+</script>
+{% endblock %}

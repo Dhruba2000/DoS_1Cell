@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+  <h1><span>Instructions</span> – Platform Guide</h1>
+  <p>Understanding the 1Cell Diagnostic Operating System</p>
+</div>
+
+<!-- Header info card -->
+<div class="card" style="background: linear-gradient(135deg, rgba(0,196,180,0.08), rgba(16,34,64,0.9)); border-color: rgba(0,196,180,0.3);">
+  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+    <div>
+      <div style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Purpose</div>
+      <div style="font-size:0.9rem; line-height:1.6;">
+        This platform is the <strong style="color:var(--teal);">single source of truth</strong> for all diagnostic tests across clinical, commercial, and operational teams.
+      </div>
+    </div>
+    <div>
+      <div style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Owner</div>
+      <div style="font-size:0.9rem;">Parita Razdan</div>
+      <div style="font-size:0.7rem; color:var(--text-dim); margin-top:2px;">Platform Administrator</div>
+    </div>
+    <div>
+      <div style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Version</div>
+      <div style="font-size:0.9rem;"><span class="badge badge-gold">v1.0</span></div>
+      <div style="font-size:0.7rem; color:var(--text-dim); margin-top:4px;">May 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- Sheet Guide -->
+<div class="card">
+  <div class="card-title"><i class="fas fa-map"></i> Section Guide</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Section</th>
+          <th>Description</th>
+          <th>Access</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set sections = [
+          ('1', 'Master Test Directory', 'Core list of all OncoIndx® tests', 'Sales, Internal'),
+          ('2', 'Biomarker Coverage', 'Gene-level details and variant types', 'Doctor, Sales, Internal'),
+          ('3', 'Clinical Positioning', 'When to use vs not use each test', 'Doctor, Sales, Internal'),
+          ('4', 'Operations', 'Sample + logistics requirements', 'Sales, Internal'),
+          ('5', 'Performance', 'Validation and analytical metrics', 'Doctor, Sales, Internal'),
+          ('6', 'Pricing', 'Commercial pricing details', 'Sales, Internal'),
+          ('7', 'Ordering', 'Codes and ordering workflow', 'Sales, Internal'),
+          ('8', 'Support Services', 'MTB, helpline, consult services', 'Doctor, Patient, Sales, Internal'),
+          ('9', 'Journey Mapping', 'Where each test fits in the care continuum', 'All Users'),
+        ] %}
+        {% for num, name, desc, access in sections %}
+        <tr>
+          <td><span class="badge badge-teal">{{ num }}</span></td>
+          <td style="font-weight:500; color:var(--teal);">{{ name }}</td>
+          <td style="color:var(--text-dim);">{{ desc }}</td>
+          <td><span style="font-size:0.75rem; color:var(--text-dim);">{{ access }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Masters Reference -->
+<div class="card">
+  <div class="card-title"><i class="fas fa-database"></i> Masters Reference</div>
+  <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+    {% set masters = [
+      ('Category', 'fa-folder', ['CGP', 'Disease Specific', 'Liquid Biopsy', 'IHC', 'Digital Pathology']),
+      ('Technology', 'fa-microchip', ['DNA', 'RNA', 'IHC', 'CTC', 'Digital']),
+      ('Variants', 'fa-code-branch', ['SNV', 'CNV', 'Indel', 'Fusion', 'Splice']),
+      ('Biomarkers', 'fa-atom', ['MSI', 'TMB', 'HRD', 'PD-L1', 'CTC Count']),
+    ] %}
+    {% for title, icon, items in masters %}
+    <div>
+      <div style="font-size:0.75rem; color:var(--teal); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+        <i class="fas {{ icon }}"></i> {{ title }}
+      </div>
+      {% for item in items %}
+      <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,196,180,0.08); font-size:0.83rem; color:var(--text-dim);">
+        {{ item }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Test Portfolio -->
+<div class="card">
+  <div class="card-title"><i class="fas fa-flask"></i> OncoIndx® Test Portfolio</div>
+  <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px;">
+    {% set test_list = [
+      ('OncoIndx TBx', 'Tissue Biopsy — CGP', 'fa-microscope', '#00c4b4'),
+      ('OncoIndx LBx', 'Liquid Biopsy — ctDNA', 'fa-tint', '#6b8cce'),
+      ('OncoIncyte', 'Disease-specific panel', 'fa-crosshairs', '#f5a623'),
+      ('OncoIndx Prime Plus', 'Tissue-Liquid-Normal match', 'fa-dna', '#00c4b4'),
+      ('OncoCTC', 'Circulating Tumor Cells', 'fa-circle-dot', '#e8526a'),
+      ('OncoHRD', 'HRD status assessment', 'fa-shield-virus', '#8bc34a'),
+      ('OncoRisk', 'Germline risk profiling', 'fa-triangle-exclamation', '#f5a623'),
+    ] %}
+    {% for name, desc, icon, color in test_list %}
+    <a href="{{ url_for('test_details') }}?test={{ name }}" style="text-decoration:none;">
+      <div style="padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(0,196,180,0.15);
+                  background: rgba(10,22,40,0.6); transition: all .18s; cursor:pointer;"
+           onmouseover="this.style.borderColor='{{ color }}'; this.style.transform='translateY(-2px)'"
+           onmouseout="this.style.borderColor='rgba(0,196,180,0.15)'; this.style.transform='translateY(0)'">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+          <div style="width:30px; height:30px; border-radius:6px; background:rgba(0,0,0,0.3);
+                      border:1px solid {{ color }}33; display:grid; place-items:center; color:{{ color }};">
+            <i class="fas {{ icon }}" style="font-size:0.85rem;"></i>
+          </div>
+          <span style="font-family:var(--font-head); font-size:0.88rem; font-weight:600; color:var(--white);">{{ name }}</span>
+        </div>
+        <div style="font-size:0.76rem; color:var(--text-dim); padding-left:40px;">{{ desc }}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

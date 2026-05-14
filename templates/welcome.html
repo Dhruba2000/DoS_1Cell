@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>1Cell.Ai – Directory of Services</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* ================= ROOT ================= */
+:root{
+  --bg:#0b1a2b;
+  --panel:#10243f;
+  --card:#142b4d;
+
+  --primary:#00c4b4;
+  --primary-dark:#009688;
+  --accent:#f5a623;
+
+  --text:#eaf2ff;
+  --muted:#9bb0cc;
+
+  --border:rgba(255,255,255,0.08);
+}
+
+/* ================= RESET ================= */
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* ================= LAYOUT ================= */
+.container{
+  display:flex;
+  min-height:100vh;
+}
+
+/* LEFT PANEL */
+.left{
+  flex:1.2;
+  padding:80px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+/* RIGHT PANEL */
+.right{
+  flex:1;
+  background:linear-gradient(135deg,#0f2a46,#08121f);
+  padding:60px;
+  display:flex;
+  align-items:center;
+}
+
+/* ================= BRAND ================= */
+.logo{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:40px;
+}
+
+.logo-box{
+  width:56px;height:56px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),#006d8f);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  color:#001;
+}
+
+.logo-text{
+  font-size:1.4rem;
+  font-weight:700;
+}
+
+/* ================= HEADINGS ================= */
+h1{
+  font-size:2.8rem;
+  line-height:1.2;
+  margin-bottom:18px;
+}
+
+h1 span{
+  color:var(--primary);
+}
+
+.subtitle{
+  font-size:1.1rem;
+  color:var(--muted);
+  max-width:520px;
+  margin-bottom:40px;
+  line-height:1.6;
+}
+
+/* ================= FEATURES ================= */
+.features{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.feature{
+  padding:10px 16px;
+  border-radius:999px;
+  background:rgba(0,196,180,0.1);
+  border:1px solid rgba(0,196,180,0.2);
+  font-size:0.85rem;
+}
+
+/* ================= USER BOXES ================= */
+.selection{
+  width:100%;
+}
+
+.selection h2{
+  font-size:1.5rem;
+  margin-bottom:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:30px;
+}
+
+.card{
+  padding:22px;
+  border-radius:14px;
+  background:var(--card);
+  border:2px solid transparent;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.card:hover{
+  border-color:var(--primary);
+  transform:translateY(-3px);
+}
+
+.card.selected{
+  border-color:var(--primary);
+  background:rgba(0,196,180,0.12);
+}
+
+.card i{
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+.card-title{
+  font-size:1.05rem;
+  font-weight:600;
+}
+
+.card-sub{
+  font-size:0.85rem;
+  color:var(--muted);
+}
+
+/* ================= BUTTON ================= */
+.btn{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#002;
+  font-size:1.05rem;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.btn:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+}
+
+/* ================= FOOTER ================= */
+.footer{
+  margin-top:20px;
+  font-size:0.75rem;
+  color:var(--muted);
+  text-align:center;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+  .container{
+    flex-direction:column;
+  }
+
+  .left,.right{
+    padding:30px;
+  }
+
+  h1{
+    font-size:2rem;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LEFT -->
+  <div class="left">
+
+    <div class="logo">
+      <div class="logo-box">1C</div>
+      <div class="logo-text">1Cell.Ai</div>
+    </div>
+
+    <h1>
+      Directory <br>
+      <span>of Services</span>
+    </h1>
+
+    <p class="subtitle">
+      Unified platform for clinical diagnostics, operational workflows, and commercial intelligence across the OncoIndx® ecosystem.
+    </p>
+
+    <div class="features">
+      <div class="feature"><i class="fas fa-dna"></i> 1000+ Gene Panel</div>
+      <div class="feature"><i class="fas fa-vials"></i> Multi-Sample Testing</div>
+      <div class="feature"><i class="fas fa-shield-check"></i> CAP & NABL Certified</div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+
+    <div class="selection">
+
+      <h2>Select Access Role</h2>
+
+      <form method="POST" action="/set_user_type">
+
+        <div class="grid">
+
+          <div class="card" onclick="select(this,'Doctor')">
+            <i class="fas fa-user-md"></i>
+            <div class="card-title">Doctor</div>
+            <div class="card-sub">Clinical insights & decision support</div>
+          </div>
+
+          <div class="card" onclick="select(this,'Patient')">
+            <i class="fas fa-heart"></i>
+            <div class="card-title">Patient</div>
+            <div class="card-sub">Access reports & health data</div>
+          </div>
+
+          <div class="card" onclick="select(this,'Sales Team')">
+            <i class="fas fa-handshake"></i>
+            <div class="card-title">Sales Team</div>
+            <div class="card-sub">Commercial intelligence tools</div>
+          </div>
+
+          <div class="card" onclick="select(this,'Internal Team')">
+            <i class="fas fa-users-cog"></i>
+            <div class="card-title">Internal Team</div>
+            <div class="card-sub">Full system access</div>
+          </div>
+
+        </div>
+
+        <input type="hidden" name="user_type" id="userType">
+
+        <button class="btn" id="enterBtn" disabled>
+          Enter Platform
+        </button>
+
+      </form>
+
+      <div class="footer">
+        © 2026 1Cell Diagnostics India Pvt. Ltd. · CAP Accredited · NABL Licensed
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function select(el,val){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('userType').value = val;
+  document.getElementById('enterBtn').disabled = false;
+}
+</script>
+
+</body>
+</html>

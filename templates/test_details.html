@@ -1,0 +1,1007 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ═══════════════════════════════════════════════
+   TEST DETAILS — PAGE STYLES
+═══════════════════════════════════════════════ */
+
+/* Selector bar */
+.td-selector-bar {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px 20px;
+  margin-bottom: 20px; box-shadow: var(--shadow-sm);
+}
+.td-selector-bar label {
+  font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;
+}
+.td-selector-bar select { max-width: 280px; flex: 1; min-width: 180px; }
+.td-selector-bar .sep  { height: 24px; width: 1px; background: var(--border); }
+
+/* Hero card — matches dark gradient in screenshot */
+.hero-card {
+  background: linear-gradient(135deg, #0d1b2e 0%, #1a3255 60%, #0a4a5a 100%);
+  border: 1px solid rgba(0,196,180,0.2);
+  border-radius: 16px; padding: 28px 32px;
+  margin-bottom: 20px; position: relative; overflow: hidden;
+}
+.hero-card::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,196,180,0.15) 0%, transparent 70%);
+}
+.hero-card::after {
+  content: '';
+  position: absolute; bottom: -40px; right: 80px;
+  width: 140px; height: 140px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,137,123,0.12) 0%, transparent 70%);
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0,196,180,0.15); border: 1px solid rgba(0,196,180,0.3);
+  border-radius: 100px; padding: 4px 14px;
+  font-size: 0.65rem; font-weight: 700; color: #4db6ac;
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #4db6ac;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+
+.hero-title {
+  font-size: 1.8rem; font-weight: 800; color: #fff;
+  letter-spacing: -0.035em; line-height: 1.15; margin-bottom: 10px;
+}
+.hero-title .name-teal { color: #4db6ac; }
+
+.hero-desc {
+  font-size: 0.88rem; color: rgba(255,255,255,0.65);
+  line-height: 1.65; max-width: 640px; margin-bottom: 22px;
+}
+
+.hero-meta {
+  display: flex; gap: 32px; flex-wrap: wrap;
+}
+.hero-meta-item {}
+.hero-meta-label {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.35);
+  margin-bottom: 4px;
+}
+.hero-meta-value {
+  font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.9);
+}
+
+/* Report upload chip inside hero */
+.hero-report-btn {
+  position: absolute; top: 24px; right: 28px; z-index: 2;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+}
+.btn-view-report {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px; border-radius: 10px;
+  background: rgba(0,196,180,0.2); border: 1px solid rgba(0,196,180,0.4);
+  color: #4db6ac; font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; text-decoration: none;
+}
+.btn-view-report:hover {
+  background: rgba(0,196,180,0.35); border-color: #4db6ac; color: #fff;
+}
+.btn-upload-report {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px;
+  background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.35);
+  color: #f5a623; font-size: 0.74rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+}
+.btn-upload-report:hover { background: rgba(245,166,35,0.28); }
+
+/* ── Collapsible sections ── */
+.collapse-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+.collapse-item {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.18s;
+}
+.collapse-item:hover { box-shadow: var(--shadow-md); }
+.collapse-item.open  { border-color: rgba(0,137,123,0.25); }
+
+.collapse-trigger {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 22px; cursor: pointer;
+  user-select: none; transition: background 0.15s;
+}
+.collapse-trigger:hover { background: var(--bg-subtle); }
+
+.collapse-icon-wrap {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem; flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.collapse-text { flex: 1; }
+.collapse-title {
+  font-size: 0.95rem; font-weight: 700; color: var(--text-primary);
+  margin-bottom: 3px;
+}
+.collapse-sub { font-size: 0.78rem; color: var(--text-muted); }
+
+.collapse-chevron {
+  color: var(--text-muted); font-size: 0.85rem; flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.collapse-item.open .collapse-chevron { transform: rotate(180deg); }
+
+.collapse-body {
+  display: none; padding: 0 22px 22px;
+  border-top: 1px solid var(--border);
+}
+.collapse-item.open .collapse-body { display: block; }
+
+/* Section colours */
+.ci-teal   { background: linear-gradient(135deg, #e0f2f0, #b2dfdb); color: #00695c; }
+.ci-blue   { background: linear-gradient(135deg, #e3f2fd, #bbdefb); color: #1565c0; }
+.ci-amber  { background: linear-gradient(135deg, #fff8e1, #ffe082); color: #e65100; }
+.ci-green  { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); color: #2e7d32; }
+.ci-rose   { background: linear-gradient(135deg, #fce4ec, #f8bbd0); color: #880e4f; }
+.ci-violet { background: linear-gradient(135deg, #f3e5f5, #e1bee7); color: #4a148c; }
+
+/* Inside collapse body */
+.field-block { margin-top: 18px; }
+.field-label {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--teal); margin-bottom: 6px;
+}
+.field-value {
+  font-size: 0.85rem; color: var(--text-secondary);
+  line-height: 1.7; white-space: pre-wrap;
+}
+.field-value.empty { color: var(--text-muted); font-style: italic; }
+
+.field-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px; margin-top: 18px;
+}
+.field-chip {
+  background: var(--bg-subtle); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 12px 16px;
+}
+.field-chip .fc-label {
+  font-size: 0.63rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 5px;
+}
+.field-chip .fc-value {
+  font-size: 0.85rem; font-weight: 600; color: var(--text-primary);
+}
+
+/* Quick link chips */
+.ql-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+
+/* Edit mode */
+.edit-section-label {
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--teal); margin: 20px 0 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--border);
+}
+
+/* Upload zone */
+.upload-zone {
+  border: 2px dashed var(--border); border-radius: var(--radius-md);
+  padding: 24px; text-align: center; cursor: pointer;
+  transition: all 0.18s; background: var(--bg-subtle);
+}
+.upload-zone:hover { border-color: var(--teal); background: var(--teal-light); }
+.upload-zone.dragover { border-color: var(--teal); background: var(--teal-light); }
+.upload-zone i { font-size: 1.8rem; color: var(--text-muted); margin-bottom: 8px; display: block; }
+.upload-zone p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 4px; }
+.upload-zone span { font-size: 0.72rem; color: var(--text-muted); }
+
+/* Competitor benchmarking mini-table inside collapse */
+.bench-note {
+  padding: 14px 16px; border-radius: var(--radius-md);
+  background: var(--rose-light); border: 1px solid rgba(217,79,92,0.15);
+  font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6;
+  display: flex; align-items: flex-start; gap: 10px; margin-top: 18px;
+}
+.bench-note i { color: var(--rose); margin-top: 2px; flex-shrink: 0; }
+
+/* Value proposition pills */
+.vp-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px; margin-top: 18px;
+}
+.vp-pill {
+  padding: 14px 16px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--teal-light), #f5fffe);
+  border: 1px solid rgba(0,137,123,0.15);
+}
+.vp-pill i { color: var(--teal); margin-bottom: 8px; display: block; font-size: 1.1rem; }
+.vp-pill strong { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); display: block; margin-bottom: 3px; }
+.vp-pill span { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+</style>
+
+<!-- ─── TEST SELECTOR BAR ─── -->
+<div class="td-selector-bar">
+  <label><i class="fas fa-flask" style="color:var(--teal); margin-right:6px;"></i> Select Test</label>
+  <select class="form-control" onchange="window.location.href='?test='+this.value">
+    {% for t in tests %}
+    <option value="{{ t }}" {% if t == selected_test %}selected{% endif %}>{{ t }}</option>
+    {% endfor %}
+  </select>
+  <div class="sep"></div>
+  {% if session.get('is_admin') %}
+    <button class="btn btn-gold btn-sm" onclick="enterEditMode()">
+      <i class="fas fa-edit"></i> Edit Details
+    </button>
+  {% else %}
+    <span style="font-size:0.76rem; color:var(--text-muted); display:flex; align-items:center; gap:5px;">
+      <i class="fas fa-lock"></i> Admin login to edit
+    </span>
+  {% endif %}
+</div>
+
+<!-- ─── EDIT TOOLBAR ─── -->
+{% if session.get('is_admin') %}
+<div class="edit-toolbar" id="editToolbar" style="display:none;">
+  <div class="edit-toolbar-ico"><i class="fas fa-pencil-alt"></i></div>
+  <div class="edit-toolbar-msg">Edit mode active — fill in all sections then click Save</div>
+  <div class="edit-toolbar-acts">
+    <button class="btn btn-primary btn-sm" onclick="saveDetails()"><i class="fas fa-save"></i> Save All</button>
+    <button class="btn btn-secondary btn-sm" onclick="cancelEdit()"><i class="fas fa-times"></i> Cancel</button>
+  </div>
+</div>
+{% endif %}
+
+
+<!-- ════════════════════════════════════════════
+     VIEW MODE
+════════════════════════════════════════════ -->
+<div id="viewMode">
+
+  <!-- ─── HERO CARD ─── -->
+  <div class="hero-card">
+
+    <!-- Report button — top right -->
+    <div class="hero-report-btn">
+      {% if details and details.get('report_filename') %}
+        <a href="/test_details/report/{{ selected_test | urlencode }}"
+           target="_blank" class="btn-view-report">
+          <i class="fas fa-file-pdf"></i> View Sample Report
+        </a>
+      {% else %}
+        <span style="font-size:0.72rem; color:rgba(255,255,255,0.25); padding:8px 0;">
+          No sample report uploaded
+        </span>
+      {% endif %}
+      {% if session.get('is_admin') %}
+        <button class="btn-upload-report" onclick="openUploadModal()">
+          <i class="fas fa-upload"></i>
+          {% if details and details.get('report_filename') %}Replace Report{% else %}Upload Report{% endif %}
+        </button>
+      {% endif %}
+    </div>
+
+    <!-- Badge -->
+    <div class="hero-badge">Internal Reference — All Teams</div>
+
+    <!-- Title -->
+    <div class="hero-title">
+      {{ selected_test.split(' ')[0] }}
+      <span class="name-teal">{{ selected_test.split(' ')[1:] | join(' ') }}</span>
+    </div>
+
+    <!-- Description -->
+    <div class="hero-desc">
+      {{ details.get('description') if details and details.get('description') else 'No description added yet. Admin can click Edit Details to add a description for this test.' }}
+    </div>
+
+    <!-- Meta row -->
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Test Type</div>
+        <div class="hero-meta-value">{{ details.get('technology_stack') or 'NGS' }}</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Category</div>
+        <div class="hero-meta-value">{{ details.get('category') or '—' }}</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Accreditation</div>
+        <div class="hero-meta-value">{{ details.get('accreditation') or 'CAP Accredited' }}</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Sub-Category</div>
+        <div class="hero-meta-value">{{ details.get('sub_category') or '—' }}</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── COLLAPSIBLE SECTIONS ─── -->
+  <div class="collapse-list">
+
+    <!-- 1. What's Included -->
+    <div class="collapse-item open" id="ci-included">
+      <div class="collapse-trigger" onclick="toggleCollapse('ci-included')">
+        <div class="collapse-icon-wrap ci-teal">
+          <i class="fas fa-dna"></i>
+        </div>
+        <div class="collapse-text">
+          <div class="collapse-title">What's Included in the Test</div>
+          <div class="collapse-sub">Biomarker coverage, analytes &amp; variant types</div>
+        </div>
+        <i class="fas fa-chevron-down collapse-chevron"></i>
+      </div>
+      <div class="collapse-body">
+        <div class="field-grid">
+          <div class="field-chip">
+            <div class="fc-label">Genes / Biomarkers</div>
+            <div class="fc-value">{{ details.get('genes_biomarkers') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Variant Types</div>
+            <div class="fc-value">{{ details.get('variant_types') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Use Case</div>
+            <div class="fc-value">{{ details.get('use_case') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Accreditation</div>
+            <div class="fc-value">{{ details.get('accreditation') or 'CAP Accredited' }}</div>
+          </div>
+        </div>
+        <div class="ql-row" style="margin-top:16px;">
+          {% if 'biomarker_coverage' in acl %}
+          <a href="{{ url_for('biomarker_coverage') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-dna"></i> Full Biomarker Coverage
+          </a>
+          {% endif %}
+          {% if 'master_test_directory' in acl %}
+          <a href="{{ url_for('master_test_directory') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-list"></i> Master Directory
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. When Should You Use This Test -->
+    <div class="collapse-item" id="ci-when">
+      <div class="collapse-trigger" onclick="toggleCollapse('ci-when')">
+        <div class="collapse-icon-wrap ci-blue">
+          <i class="fas fa-stethoscope"></i>
+        </div>
+        <div class="collapse-text">
+          <div class="collapse-title">When Should You Use This Test</div>
+          <div class="collapse-sub">Clinical positioning, use cases &amp; patient journey</div>
+        </div>
+        <i class="fas fa-chevron-down collapse-chevron"></i>
+      </div>
+      <div class="collapse-body">
+        <div class="field-block">
+          <div class="field-label">Indications</div>
+          <div class="field-value {% if not details.get('indications') %}empty{% endif %}">
+            {{ details.get('indications') or 'No indications specified yet.' }}
+          </div>
+        </div>
+        <div class="field-block">
+          <div class="field-label">Patient Profile</div>
+          <div class="field-value {% if not details.get('patient_profile') %}empty{% endif %}">
+            {{ details.get('patient_profile') or 'Not specified.' }}
+          </div>
+        </div>
+        <div class="field-block">
+          <div class="field-label">Clinical Questions Answered</div>
+          <div class="field-value {% if not details.get('clinical_questions') %}empty{% endif %}">
+            {{ details.get('clinical_questions') or 'Not specified.' }}
+          </div>
+        </div>
+        <div class="ql-row">
+          {% if 'clinical_positioning' in acl %}
+          <a href="{{ url_for('clinical_positioning') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-stethoscope"></i> Full Clinical Positioning
+          </a>
+          {% endif %}
+          {% if 'journey_mapping' in acl %}
+          <a href="{{ url_for('journey_mapping') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-route"></i> Journey Mapping
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Ordering Details -->
+    <div class="collapse-item" id="ci-ordering">
+      <div class="collapse-trigger" onclick="toggleCollapse('ci-ordering')">
+        <div class="collapse-icon-wrap ci-amber">
+          <i class="fas fa-box-open"></i>
+        </div>
+        <div class="collapse-text">
+          <div class="collapse-title">Ordering Details</div>
+          <div class="collapse-sub">Sample requirements, logistics &amp; pricing</div>
+        </div>
+        <i class="fas fa-chevron-down collapse-chevron"></i>
+      </div>
+      <div class="collapse-body">
+        <div class="field-grid">
+          {% if ordering %}
+          <div class="field-chip">
+            <div class="fc-label">Test Code</div>
+            <div class="fc-value">{{ ordering.get('test_code') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Order Channel</div>
+            <div class="fc-value">{{ ordering.get('order_channel') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">TAT Commitment</div>
+            <div class="fc-value">{{ ordering.get('tat_commitment') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Consent Needed</div>
+            <div class="fc-value">{{ ordering.get('consent_needed') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Report Delivery</div>
+            <div class="fc-value">{{ ordering.get('report_delivery_mode') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Required Forms</div>
+            <div class="fc-value">{{ ordering.get('required_forms') or '—' }}</div>
+          </div>
+          {% else %}
+          <div style="grid-column:1/-1; color:var(--text-muted); font-size:0.82rem; font-style:italic; padding:8px 0;">
+            No ordering details added yet.
+          </div>
+          {% endif %}
+        </div>
+        {% if pricing %}
+        <div class="field-block" style="margin-top:16px;">
+          <div class="field-label">Pricing</div>
+          <div class="field-grid" style="margin-top:8px;">
+            <div class="field-chip">
+              <div class="fc-label">List Price</div>
+              <div class="fc-value">{{ pricing.get('list_price') or '—' }}</div>
+            </div>
+            <div class="field-chip">
+              <div class="fc-label">Reimbursement</div>
+              <div class="fc-value">{{ pricing.get('reimbursement_status') or '—' }}</div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        <div class="ql-row">
+          {% if 'ordering' in acl %}
+          <a href="{{ url_for('ordering') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-shopping-cart"></i> Full Ordering Details
+          </a>
+          {% endif %}
+          {% if 'pricing' in acl %}
+          <a href="{{ url_for('pricing') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-tags"></i> Pricing
+          </a>
+          {% endif %}
+          {% if 'operations' in acl %}
+          <a href="{{ url_for('operations') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-cogs"></i> Operations / Sample Logistics
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Performance Details -->
+    <div class="collapse-item" id="ci-perf">
+      <div class="collapse-trigger" onclick="toggleCollapse('ci-perf')">
+        <div class="collapse-icon-wrap ci-green">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="collapse-text">
+          <div class="collapse-title">Performance Details</div>
+          <div class="collapse-sub">Sensitivity, specificity &amp; limits of detection</div>
+        </div>
+        <i class="fas fa-chevron-down collapse-chevron"></i>
+      </div>
+      <div class="collapse-body">
+        <div class="field-grid">
+          {% if performance %}
+          <div class="field-chip">
+            <div class="fc-label">Sensitivity</div>
+            <div class="fc-value">{{ performance.get('sensitivity') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Specificity</div>
+            <div class="fc-value">{{ performance.get('specificity') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Concordance</div>
+            <div class="fc-value">{{ performance.get('concordance') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">LOD (VAF %)</div>
+            <div class="fc-value">{{ performance.get('lod') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Validation Cohort</div>
+            <div class="fc-value">{{ performance.get('validation_cohort_size') or '—' }}</div>
+          </div>
+          <div class="field-chip">
+            <div class="fc-label">Cancer Types</div>
+            <div class="fc-value">{{ performance.get('cancer_types') or '—' }}</div>
+          </div>
+          {% else %}
+          <div style="grid-column:1/-1; color:var(--text-muted); font-size:0.82rem; font-style:italic; padding:8px 0;">
+            No performance data added yet.
+          </div>
+          {% endif %}
+        </div>
+        {% if performance and performance.get('publications') %}
+        <div class="field-block">
+          <div class="field-label">Publications</div>
+          <div class="field-value">{{ performance.get('publications') }}</div>
+        </div>
+        {% endif %}
+        <div class="ql-row">
+          {% if 'performance' in acl %}
+          <a href="{{ url_for('performance') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-chart-line"></i> Full Performance Data
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Competitor Benchmarking -->
+    <div class="collapse-item" id="ci-comp">
+      <div class="collapse-trigger" onclick="toggleCollapse('ci-comp')">
+        <div class="collapse-icon-wrap ci-rose">
+          <i class="fas fa-scale-balanced"></i>
+        </div>
+        <div class="collapse-text">
+          <div class="collapse-title">Competitor Benchmarking</div>
+          <div class="collapse-sub">Head-to-head feature, performance &amp; positioning comparison</div>
+        </div>
+        <i class="fas fa-chevron-down collapse-chevron"></i>
+      </div>
+      <div class="collapse-body">
+        {% if details and details.get('competitor_benchmarking') %}
+        <div class="field-block">
+          <div class="field-value">{{ details.get('competitor_benchmarking') }}</div>
+        </div>
+        {% else %}
+        <div class="bench-note">
+          <i class="fas fa-info-circle"></i>
+          <div>
+            Detailed competitor comparison is available in the
+            <strong>Product Comparison Matrix</strong> page.
+            Admin can also add test-specific benchmarking notes in Edit mode.
+          </div>
+        </div>
+        {% endif %}
+        <div class="ql-row">
+          {% if 'comparison' in acl %}
+          <a href="{{ url_for('comparison') }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-table-columns"></i> Open Comparison Matrix
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Value Proposition -->
+    <div class="collapse-item" id="ci-vp">
+      <div class="collapse-trigger" onclick="toggleCollapse('ci-vp')">
+        <div class="collapse-icon-wrap ci-violet">
+          <i class="fas fa-gem"></i>
+        </div>
+        <div class="collapse-text">
+          <div class="collapse-title">Value Proposition</div>
+          <div class="collapse-sub">Core pillars, proof points &amp; audience-specific messaging</div>
+        </div>
+        <i class="fas fa-chevron-down collapse-chevron"></i>
+      </div>
+      <div class="collapse-body">
+        {% if details and details.get('value_proposition') %}
+        <div class="field-block">
+          <div class="field-value">{{ details.get('value_proposition') }}</div>
+        </div>
+        {% else %}
+        <div class="vp-grid">
+          <div class="vp-pill">
+            <i class="fas fa-shield-halved"></i>
+            <strong>Accuracy</strong>
+            <span>100% PPV / NPV on SNVs, CAP-accredited laboratory</span>
+          </div>
+          <div class="vp-pill">
+            <i class="fas fa-layer-group"></i>
+            <strong>Comprehensive</strong>
+            <span>1000+ gene panel covering all major variant classes</span>
+          </div>
+          <div class="vp-pill">
+            <i class="fas fa-vials"></i>
+            <strong>Tissue-Liquid-Normal</strong>
+            <span>Matched trio sequencing for true somatic variant calling</span>
+          </div>
+          <div class="vp-pill">
+            <i class="fas fa-headset"></i>
+            <strong>Clinical Support</strong>
+            <span>Molecular Tumour Board, post-report consult, dedicated RM</span>
+          </div>
+        </div>
+        <div style="margin-top:14px; font-size:0.78rem; color:var(--text-muted); font-style:italic;">
+          Admin can add custom value proposition notes in Edit mode.
+        </div>
+        {% endif %}
+        <div class="ql-row">
+          {% if 'support_services' in acl %}
+          <a href="{{ url_for('support_services') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-headset"></i> Support Services
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /collapse-list -->
+
+</div><!-- /viewMode -->
+
+
+<!-- ════════════════════════════════════════════
+     EDIT MODE
+════════════════════════════════════════════ -->
+<div id="editMode" style="display:none;">
+
+  <!-- Description -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">
+        <div class="card-icon"><i class="fas fa-align-left"></i></div>
+        Hero Description
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Shown in the hero card for all users</label>
+      <textarea class="form-control edit-input" data-field="description" rows="3"
+        placeholder="e.g. Comprehensive genomic profiling for endometrial cancer — from early-stage classification to recurrent disease monitoring...">{{ details.get('description', '') }}</textarea>
+    </div>
+  </div>
+
+  <!-- Core fields -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">
+        <div class="card-icon"><i class="fas fa-info-circle"></i></div>
+        Core Test Information
+      </div>
+    </div>
+    <div class="form-grid">
+      {% for key, label, ph in [
+        ('use_case',         'Use Case',         'e.g. Advanced solid tumours'),
+        ('category',         'Category',         'e.g. CGP'),
+        ('sub_category',     'Sub-Category',     'e.g. Tissue-Liquid-Normal'),
+        ('technology_stack', 'Test Type',        'e.g. NGS — Tissue + ctDNA'),
+        ('accreditation',    'Accreditation',    'e.g. Yes — CAP accredited'),
+      ] %}
+      <div class="form-group">
+        <label class="form-label">{{ label }}</label>
+        <input type="text" class="form-control edit-input" data-field="{{ key }}"
+               value="{{ details.get(key, '') }}" placeholder="{{ ph }}">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- What's Included -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">
+        <div class="card-icon" style="background:#e0f2f0; color:#00695c;"><i class="fas fa-dna"></i></div>
+        What's Included in the Test
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1;">
+        <label class="form-label">Genes / Biomarkers</label>
+        <textarea class="form-control edit-input" data-field="genes_biomarkers" rows="3"
+          placeholder="e.g. 1000+ genes, TMB, MSI, HRD, PD-L1, PGx...">{{ details.get('genes_biomarkers', '') }}</textarea>
+      </div>
+      <div class="form-group" style="grid-column:1/-1;">
+        <label class="form-label">Variant Types</label>
+        <textarea class="form-control edit-input" data-field="variant_types" rows="2"
+          placeholder="e.g. SNV, INDEL, CNA, Fusion, Splice Variants, Gene Expression...">{{ details.get('variant_types', '') }}</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- When to Use -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">
+        <div class="card-icon" style="background:#e3f2fd; color:#1565c0;"><i class="fas fa-stethoscope"></i></div>
+        When Should You Use This Test
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1;">
+        <label class="form-label">Indications</label>
+        <textarea class="form-control edit-input" data-field="indications" rows="3"
+          placeholder="Enter clinical indications...">{{ details.get('indications', '') }}</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Patient Profile</label>
+        <textarea class="form-control edit-input" data-field="patient_profile" rows="3"
+          placeholder="Describe ideal patient profile...">{{ details.get('patient_profile', '') }}</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Clinical Questions Answered</label>
+        <textarea class="form-control edit-input" data-field="clinical_questions" rows="3"
+          placeholder="List clinical questions this test addresses...">{{ details.get('clinical_questions', '') }}</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Competitor Benchmarking Notes -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">
+        <div class="card-icon" style="background:#fce4ec; color:#880e4f;"><i class="fas fa-scale-balanced"></i></div>
+        Competitor Benchmarking Notes
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Test-specific competitive notes (shown in the Benchmarking section)</label>
+      <textarea class="form-control edit-input" data-field="competitor_benchmarking" rows="4"
+        placeholder="e.g. vs FoundationOne CDx: OncoIndx TBx additionally includes RNA-based fusions, normal-match for germline separation, and CTC profiling...">{{ details.get('competitor_benchmarking', '') }}</textarea>
+    </div>
+  </div>
+
+  <!-- Value Proposition -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">
+        <div class="card-icon" style="background:#f3e5f5; color:#4a148c;"><i class="fas fa-gem"></i></div>
+        Value Proposition
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Core pillars, proof points &amp; audience-specific messaging</label>
+      <textarea class="form-control edit-input" data-field="value_proposition" rows="4"
+        placeholder="e.g. For oncologists: highest analytical accuracy with CAP accreditation. For patients: single comprehensive test avoiding repeat biopsies...">{{ details.get('value_proposition', '') }}</textarea>
+    </div>
+  </div>
+
+  <!-- Sample Report Upload -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">
+        <div class="card-icon" style="background:#fff8e1; color:#e65100;"><i class="fas fa-file-pdf"></i></div>
+        Sample Report Upload
+      </div>
+    </div>
+    {% if details and details.get('report_filename') %}
+    <div style="display:flex; align-items:center; gap:12px; padding:12px 16px;
+                background:var(--green-light); border:1px solid rgba(39,174,96,0.2);
+                border-radius:var(--radius-md); margin-bottom:16px;">
+      <i class="fas fa-file-pdf" style="color:var(--green); font-size:1.2rem;"></i>
+      <div style="flex:1;">
+        <div style="font-size:0.82rem; font-weight:600; color:var(--text-primary);">{{ details.get('report_filename') }}</div>
+        <div style="font-size:0.72rem; color:var(--text-muted);">Current sample report</div>
+      </div>
+      <a href="/test_details/report/{{ selected_test | urlencode }}" target="_blank" class="btn btn-secondary btn-sm">
+        <i class="fas fa-eye"></i> View
+      </a>
+      <button class="btn btn-danger btn-sm" onclick="deleteReport()">
+        <i class="fas fa-trash"></i> Remove
+      </button>
+    </div>
+    {% endif %}
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('reportFile').click()"
+         ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p><strong>Click to upload</strong> or drag and drop a PDF</p>
+      <span>PDF only · Max 20MB</span>
+    </div>
+    <input type="file" id="reportFile" accept=".pdf" style="display:none;" onchange="uploadReport(this)">
+    <div id="uploadProgress" style="display:none; margin-top:12px;">
+      <div style="height:4px; background:var(--border); border-radius:4px; overflow:hidden;">
+        <div id="uploadBar" style="height:100%; background:var(--teal); width:0%; transition:width 0.3s;"></div>
+      </div>
+      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;" id="uploadStatus">Uploading...</div>
+    </div>
+  </div>
+
+</div><!-- /editMode -->
+
+
+<!-- ── Upload Modal (Report view) ── -->
+<div class="modal-backdrop" id="uploadModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-head-row">
+        <div class="modal-head-ico" style="background:#fff8e1; color:#e65100;">
+          <i class="fas fa-file-pdf"></i>
+        </div>
+        <h2>Upload Sample Report</h2>
+      </div>
+      <p>Upload a PDF sample report for <strong>{{ selected_test }}</strong>. Visible to all users.</p>
+    </div>
+    <div class="modal-body">
+      <div class="upload-zone" id="modalUploadZone"
+           onclick="document.getElementById('modalReportFile').click()"
+           ondragover="onDragOver(event)" ondragleave="onDragLeave(event)"
+           ondrop="onModalDrop(event)">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p><strong>Click to browse</strong> or drag &amp; drop</p>
+        <span>PDF only · Max 20MB</span>
+      </div>
+      <input type="file" id="modalReportFile" accept=".pdf" style="display:none;"
+             onchange="uploadReport(this, true)">
+      <div id="modalUploadProgress" style="display:none; margin-top:12px;">
+        <div style="height:4px; background:var(--border); border-radius:4px; overflow:hidden;">
+          <div id="modalUploadBar" style="height:100%; background:var(--teal); width:0%;"></div>
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;" id="modalUploadStatus">Uploading...</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+const selectedTest = {{ selected_test | tojson }};
+
+/* ── Collapse ── */
+function toggleCollapse(id) {
+  const item = document.getElementById(id);
+  item.classList.toggle('open');
+}
+
+/* ── Edit Mode ── */
+function enterEditMode() {
+  document.getElementById('viewMode').style.display = 'none';
+  document.getElementById('editMode').style.display = 'block';
+  document.getElementById('editToolbar').style.display = 'flex';
+}
+function cancelEdit() {
+  document.getElementById('viewMode').style.display = 'block';
+  document.getElementById('editMode').style.display = 'none';
+  document.getElementById('editToolbar').style.display = 'none';
+}
+
+async function saveDetails() {
+  const data = { test_name: selectedTest };
+  document.querySelectorAll('.edit-input').forEach(el => {
+    data[el.dataset.field] = el.value;
+  });
+  const res = await apiPost('/test_details/save', data);
+  if (res.success) {
+    showToast('Test details saved successfully!');
+    setTimeout(() => window.location.reload(), 700);
+  } else {
+    showToast(res.message || 'Error saving.', true);
+  }
+}
+
+/* ── Upload Modal ── */
+function openUploadModal() {
+  document.getElementById('uploadModal').classList.add('open');
+}
+function closeUploadModal() {
+  document.getElementById('uploadModal').classList.remove('open');
+}
+document.getElementById('uploadModal').addEventListener('click', function(e) {
+  if (e.target === this) closeUploadModal();
+});
+
+/* ── Drag & Drop ── */
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('dragover');
+}
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('dragover');
+}
+function onDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) doUpload(file, false);
+}
+function onModalDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) doUpload(file, true);
+}
+
+/* ── Upload ── */
+function uploadReport(input, isModal = false) {
+  const file = input.files[0];
+  if (file) doUpload(file, isModal);
+}
+
+function doUpload(file, isModal) {
+  if (file.type !== 'application/pdf') {
+    showToast('Only PDF files are allowed.', true);
+    return;
+  }
+  if (file.size > 20 * 1024 * 1024) {
+    showToast('File size must be under 20MB.', true);
+    return;
+  }
+
+  const barId    = isModal ? 'modalUploadBar'      : 'uploadBar';
+  const progId   = isModal ? 'modalUploadProgress' : 'uploadProgress';
+  const statId   = isModal ? 'modalUploadStatus'   : 'uploadStatus';
+
+  document.getElementById(progId).style.display = 'block';
+  document.getElementById(statId).textContent   = 'Uploading...';
+
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('test_name', selectedTest);
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', '/test_details/upload_report');
+
+  xhr.upload.onprogress = (e) => {
+    if (e.lengthComputable) {
+      const pct = Math.round((e.loaded / e.total) * 100);
+      document.getElementById(barId).style.width  = pct + '%';
+      document.getElementById(statId).textContent = `Uploading... ${pct}%`;
+    }
+  };
+
+  xhr.onload = () => {
+    const res = JSON.parse(xhr.responseText);
+    if (res.success) {
+      showToast('Sample report uploaded successfully!');
+      setTimeout(() => window.location.reload(), 800);
+    } else {
+      showToast(res.message || 'Upload failed.', true);
+      document.getElementById(progId).style.display = 'none';
+    }
+  };
+
+  xhr.onerror = () => {
+    showToast('Network error during upload.', true);
+    document.getElementById(progId).style.display = 'none';
+  };
+
+  xhr.send(fd);
+}
+
+async function deleteReport() {
+  if (!confirm('Remove the sample report for this test?')) return;
+  const res = await apiPost('/test_details/delete_report', { test_name: selectedTest });
+  if (res.success) {
+    showToast('Report removed.');
+    setTimeout(() => window.location.reload(), 600);
+  } else {
+    showToast(res.message || 'Error removing report.', true);
+  }
+}
+</script>
+{% endblock %}

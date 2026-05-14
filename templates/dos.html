@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <div class="page-title">Directory of <span class="hi">Services</span></div>
+        <div class="page-desc">1Cell.AI product portfolio and operational summary</div>
+    </div>
+</div>
+
+<div class="tbl-wrap">
+    <div class="tbl-header">
+        <div class="tbl-title"><i class="fas fa-hospital"></i> DOS</div>
+    </div>
+
+    <div class="tbl-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Test Name</th>
+                    <th>Purpose</th>
+                    <th>Sample</th>
+                    <th>TAT</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in rows %}
+                <tr>
+                    <td>{{ r[0] }}</td>
+                    <td>{{ r[1] }}</td>
+                    <td>{{ r[2] }}</td>
+                    <td>{{ r[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
