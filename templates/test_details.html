@@ -3,7 +3,7 @@
 
 <style>
 /* ═══════════════════════════════════════════════
-   TEST DETAILS — PAGE STYLES
+   TEST DETAILS & DOCUMENTATION HUB — STYLES
 ═══════════════════════════════════════════════ */
 
 /* Selector bar */
@@ -20,7 +20,7 @@
 .td-selector-bar select { max-width: 280px; flex: 1; min-width: 180px; }
 .td-selector-bar .sep  { height: 24px; width: 1px; background: var(--border); }
 
-/* Hero card — matches dark gradient in screenshot */
+/* Hero card */
 .hero-card {
   background: linear-gradient(135deg, #0d1b2e 0%, #1a3255 60%, #0a4a5a 100%);
   border: 1px solid rgba(0,196,180,0.2);
@@ -63,26 +63,20 @@
   letter-spacing: -0.035em; line-height: 1.15; margin-bottom: 10px;
 }
 .hero-title .name-teal { color: #4db6ac; }
-
 .hero-desc {
   font-size: 0.88rem; color: rgba(255,255,255,0.65);
   line-height: 1.65; max-width: 640px; margin-bottom: 22px;
 }
 
-.hero-meta {
-  display: flex; gap: 32px; flex-wrap: wrap;
-}
-.hero-meta-item {}
+.hero-meta { display: flex; gap: 32px; flex-wrap: wrap; }
 .hero-meta-label {
   font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
   text-transform: uppercase; color: rgba(255,255,255,0.35);
   margin-bottom: 4px;
 }
-.hero-meta-value {
-  font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.9);
-}
+.hero-meta-value { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.9); }
 
-/* Report upload chip inside hero */
+/* Report upload action box inside hero */
 .hero-report-btn {
   position: absolute; top: 24px; right: 28px; z-index: 2;
   display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
@@ -94,9 +88,7 @@
   color: #4db6ac; font-size: 0.8rem; font-weight: 600;
   cursor: pointer; transition: all 0.18s; text-decoration: none;
 }
-.btn-view-report:hover {
-  background: rgba(0,196,180,0.35); border-color: #4db6ac; color: #fff;
-}
+.btn-view-report:hover { background: rgba(0,196,180,0.35); border-color: #4db6ac; color: #fff; }
 .btn-upload-report {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 14px; border-radius: 8px;
@@ -106,52 +98,73 @@
 }
 .btn-upload-report:hover { background: rgba(245,166,35,0.28); }
 
-/* ── Collapsible sections ── */
-.collapse-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+/* Document Hub Extension Styling */
+.doc-hub-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f4faf9 100%) !important;
+  border: 2px solid var(--teal-mid) !important;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+  padding: 24px !important;
+}
+.doc-hub-card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--teal);
+}
+.doc-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 15px;
+}
+.doc-column {
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px;
+}
+.doc-column-title {
+  font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--navy-mid); border-bottom: 2px solid var(--bg-base); padding-bottom: 8px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.file-row {
+  display: flex; align-items: center; justify-content: space-between; padding: 10px 12px;
+  background: var(--bg-subtle); border-radius: var(--radius-sm); margin-bottom: 8px; border: 1px solid transparent; transition: all 0.2s;
+}
+.file-row:hover { border-color: var(--teal-bright); background: #fff; transform: translateY(-1px); }
+.file-info { display: flex; align-items: center; gap: 10px; max-width: 70%; }
+.file-icon { font-size: 1.1rem; color: var(--rose); }
+.file-name { font-size: 0.78rem; font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-meta { font-size: 0.65rem; color: var(--text-muted); display: block; }
+.action-pill-box { display: flex; gap: 6px; }
+.action-pill {
+  padding: 4px 10px; font-size: 0.68rem; font-weight: 700; border-radius: 100px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px; transition: background 0.2s; text-decoration: none;
+}
+.pill-view { background: var(--teal-light); color: var(--teal); border: none; }
+.pill-view:hover { background: var(--teal); color: #fff; }
+.pill-del { background: var(--rose-light); color: var(--rose); border: none; }
+.pill-del:hover { background: var(--rose); color: #fff; }
+.highlight-badge {
+  background: var(--gold-light); color: #9a6e00; border: 1px solid rgba(230,168,23,0.3);
+  font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;
+}
 
+/* Collapsible views */
+.collapse-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
 .collapse-item {
-  background: var(--bg-surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.18s;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow 0.18s;
 }
 .collapse-item:hover { box-shadow: var(--shadow-md); }
 .collapse-item.open  { border-color: rgba(0,137,123,0.25); }
-
-.collapse-trigger {
-  display: flex; align-items: center; gap: 16px;
-  padding: 18px 22px; cursor: pointer;
-  user-select: none; transition: background 0.15s;
-}
+.collapse-trigger { display: flex; align-items: center; gap: 16px; padding: 18px 22px; cursor: pointer; user-select: none; transition: background 0.15s; }
 .collapse-trigger:hover { background: var(--bg-subtle); }
-
-.collapse-icon-wrap {
-  width: 44px; height: 44px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.15rem; flex-shrink: 0;
-  transition: transform 0.2s;
-}
-
+.collapse-icon-wrap { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
 .collapse-text { flex: 1; }
-.collapse-title {
-  font-size: 0.95rem; font-weight: 700; color: var(--text-primary);
-  margin-bottom: 3px;
-}
+.collapse-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
 .collapse-sub { font-size: 0.78rem; color: var(--text-muted); }
-
-.collapse-chevron {
-  color: var(--text-muted); font-size: 0.85rem; flex-shrink: 0;
-  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
-}
+.collapse-chevron { color: var(--text-muted); font-size: 0.85rem; flex-shrink: 0; transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
 .collapse-item.open .collapse-chevron { transform: rotate(180deg); }
-
-.collapse-body {
-  display: none; padding: 0 22px 22px;
-  border-top: 1px solid var(--border);
-}
+.collapse-body { display: none; padding: 0 22px 22px; border-top: 1px solid var(--border); }
 .collapse-item.open .collapse-body { display: block; }
 
-/* Section colours */
+/* Color Themes */
 .ci-teal   { background: linear-gradient(135deg, #e0f2f0, #b2dfdb); color: #00695c; }
 .ci-blue   { background: linear-gradient(135deg, #e3f2fd, #bbdefb); color: #1565c0; }
 .ci-amber  { background: linear-gradient(135deg, #fff8e1, #ffe082); color: #e65100; }
@@ -159,81 +172,34 @@
 .ci-rose   { background: linear-gradient(135deg, #fce4ec, #f8bbd0); color: #880e4f; }
 .ci-violet { background: linear-gradient(135deg, #f3e5f5, #e1bee7); color: #4a148c; }
 
-/* Inside collapse body */
+/* Blocks and chips */
 .field-block { margin-top: 18px; }
-.field-label {
-  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--teal); margin-bottom: 6px;
-}
-.field-value {
-  font-size: 0.85rem; color: var(--text-secondary);
-  line-height: 1.7; white-space: pre-wrap;
-}
+.field-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin-bottom: 6px; }
+.field-value { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; white-space: pre-wrap; }
 .field-value.empty { color: var(--text-muted); font-style: italic; }
-
-.field-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px; margin-top: 18px;
-}
-.field-chip {
-  background: var(--bg-subtle); border: 1px solid var(--border);
-  border-radius: var(--radius-md); padding: 12px 16px;
-}
-.field-chip .fc-label {
-  font-size: 0.63rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 5px;
-}
-.field-chip .fc-value {
-  font-size: 0.85rem; font-weight: 600; color: var(--text-primary);
-}
-
-/* Quick link chips */
+.field-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 18px; }
+.field-chip { background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 16px; }
+.field-chip .fc-label { font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 5px; }
+.field-chip .fc-value { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
 .ql-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 
-/* Edit mode */
-.edit-section-label {
-  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--teal); margin: 20px 0 10px;
-  padding-bottom: 6px; border-bottom: 1px solid var(--border);
-}
-
-/* Upload zone */
-.upload-zone {
-  border: 2px dashed var(--border); border-radius: var(--radius-md);
-  padding: 24px; text-align: center; cursor: pointer;
-  transition: all 0.18s; background: var(--bg-subtle);
-}
-.upload-zone:hover { border-color: var(--teal); background: var(--teal-light); }
-.upload-zone.dragover { border-color: var(--teal); background: var(--teal-light); }
+/* Administration Panels & Form Zones */
+.edit-section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.upload-zone { border: 2px dashed var(--border); border-radius: var(--radius-md); padding: 24px; text-align: center; cursor: pointer; transition: all 0.18s; background: var(--bg-subtle); }
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--teal); background: var(--teal-light); }
 .upload-zone i { font-size: 1.8rem; color: var(--text-muted); margin-bottom: 8px; display: block; }
 .upload-zone p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 4px; }
 .upload-zone span { font-size: 0.72rem; color: var(--text-muted); }
 
-/* Competitor benchmarking mini-table inside collapse */
-.bench-note {
-  padding: 14px 16px; border-radius: var(--radius-md);
-  background: var(--rose-light); border: 1px solid rgba(217,79,92,0.15);
-  font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6;
-  display: flex; align-items: flex-start; gap: 10px; margin-top: 18px;
-}
+.bench-note { padding: 14px 16px; border-radius: var(--radius-md); background: var(--rose-light); border: 1px solid rgba(217,79,92,0.15); font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; display: flex; align-items: flex-start; gap: 10px; margin-top: 18px; }
 .bench-note i { color: var(--rose); margin-top: 2px; flex-shrink: 0; }
-
-/* Value proposition pills */
-.vp-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px; margin-top: 18px;
-}
-.vp-pill {
-  padding: 14px 16px; border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--teal-light), #f5fffe);
-  border: 1px solid rgba(0,137,123,0.15);
-}
+.vp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 18px; }
+.vp-pill { padding: 14px 16px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--teal-light), #f5fffe); border: 1px solid rgba(0,137,123,0.15); }
 .vp-pill i { color: var(--teal); margin-bottom: 8px; display: block; font-size: 1.1rem; }
 .vp-pill strong { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); display: block; margin-bottom: 3px; }
 .vp-pill span { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
 </style>
 
-<!-- ─── TEST SELECTOR BAR ─── -->
 <div class="td-selector-bar">
   <label><i class="fas fa-flask" style="color:var(--teal); margin-right:6px;"></i> Select Test</label>
   <select class="form-control" onchange="window.location.href='?test='+this.value">
@@ -253,73 +219,56 @@
   {% endif %}
 </div>
 
-<!-- ─── EDIT TOOLBAR ─── -->
 {% if session.get('is_admin') %}
 <div class="edit-toolbar" id="editToolbar" style="display:none;">
   <div class="edit-toolbar-ico"><i class="fas fa-pencil-alt"></i></div>
   <div class="edit-toolbar-msg">Edit mode active — fill in all sections then click Save</div>
   <div class="edit-toolbar-acts">
-    <button class="btn btn-primary btn-sm" onclick="saveDetails()"><i class="fas fa-save"></i> Save All</button>
+    <button class="btn btn-primary btn-sm" onclick="saveDetails()"><i class="fas fa-save"></i> Save All Specifications</button>
     <button class="btn btn-secondary btn-sm" onclick="cancelEdit()"><i class="fas fa-times"></i> Cancel</button>
   </div>
 </div>
 {% endif %}
 
-
-<!-- ════════════════════════════════════════════
-     VIEW MODE
-════════════════════════════════════════════ -->
 <div id="viewMode">
 
-  <!-- ─── HERO CARD ─── -->
   <div class="hero-card">
-
-    <!-- Report button — top right -->
     <div class="hero-report-btn">
       {% if details and details.get('report_filename') %}
-        <a href="/test_details/report/{{ selected_test | urlencode }}"
-           target="_blank" class="btn-view-report">
+        <a href="/test_details/report/{{ selected_test | urlencode }}" target="_blank" class="btn-view-report">
           <i class="fas fa-file-pdf"></i> View Sample Report
         </a>
       {% else %}
-        <span style="font-size:0.72rem; color:rgba(255,255,255,0.25); padding:8px 0;">
-          No sample report uploaded
-        </span>
+        <span style="font-size:0.72rem; color:rgba(255,255,255,0.25); padding:8px 0;">No sample report uploaded</span>
       {% endif %}
       {% if session.get('is_admin') %}
         <button class="btn-upload-report" onclick="openUploadModal()">
           <i class="fas fa-upload"></i>
-          {% if details and details.get('report_filename') %}Replace Report{% else %}Upload Report{% endif %}
+          {% if details and details.get('report_filename') %}Replace Report Framework{% else %}Upload Report{% endif %}
         </button>
       {% endif %}
     </div>
 
-    <!-- Badge -->
     <div class="hero-badge">Internal Reference — All Teams</div>
-
-    <!-- Title -->
     <div class="hero-title">
       {{ selected_test.split(' ')[0] }}
       <span class="name-teal">{{ selected_test.split(' ')[1:] | join(' ') }}</span>
     </div>
-
-    <!-- Description -->
     <div class="hero-desc">
       {{ details.get('description') if details and details.get('description') else 'No description added yet. Admin can click Edit Details to add a description for this test.' }}
     </div>
 
-    <!-- Meta row -->
     <div class="hero-meta">
       <div class="hero-meta-item">
-        <div class="hero-meta-label">Test Type</div>
+        <div class="hero-meta-label">Technology Stack / Sequencer Platform</div>
         <div class="hero-meta-value">{{ details.get('technology_stack') or 'NGS' }}</div>
       </div>
       <div class="hero-meta-item">
-        <div class="hero-meta-label">Category</div>
+        <div class="hero-meta-label">Core Category</div>
         <div class="hero-meta-value">{{ details.get('category') or '—' }}</div>
       </div>
       <div class="hero-meta-item">
-        <div class="hero-meta-label">Accreditation</div>
+        <div class="hero-meta-label">Laboratory Accreditation / Compliance</div>
         <div class="hero-meta-value">{{ details.get('accreditation') or 'CAP Accredited' }}</div>
       </div>
       <div class="hero-meta-item">
@@ -329,225 +278,257 @@
     </div>
   </div>
 
+  <div class="collapse-item open" id="ci-dochub" style="margin-bottom: 20px;">
+    <div class="collapse-trigger" onclick="toggleCollapse('ci-dochub')" style="background: linear-gradient(135deg, #ffffff 0%, #f4faf9 100%); border-bottom: 1px solid var(--border);">
+      <div class="collapse-icon-wrap" style="background: var(--teal); color: #fff; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+        <i class="fa-solid fa-cloud-arrow-down"></i>
+      </div>
+      <div class="collapse-text">
+        <div class="collapse-title" style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 800; color: var(--text-primary);">Clinical Documentation & Reporting Hub</span>
+          <span class="highlight-badge"><i class="fa-solid fa-star"></i> Primary Resources</span>
+        </div>
+        <div class="collapse-sub">Access verified assay metrics, structural maps, validations, and brochures</div>
+      </div>
+      <i class="fas fa-chevron-down collapse-chevron"></i>
+    </div>
+    
+    <div class="collapse-body" style="padding: 22px; background: #fafdfc;">
+      {% if session.get('is_admin') %}
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+          <button type="button" class="btn btn-primary btn-sm" onclick="openDocModal()">
+            <i class="fa-solid fa-plus"></i> Upload Resource (Max 200MB)
+          </button>
+        </div>
+      {% endif %}
 
-  <!-- ─── COLLAPSIBLE SECTIONS ─── -->
+      <div class="doc-grid">
+        <div class="doc-column">
+          <div class="doc-column-title">
+            <i class="fa-solid fa-file-pdf" style="color: var(--teal);"></i>
+            <span>Official Brochure (Limit 1)</span>
+          </div>
+          {% if docs and docs['brochure'] %}
+            {% for d in docs['brochure'] %}
+              <div class="file-row">
+                <div class="file-info">
+                  <i class="fa-solid fa-file-lines file-icon" style="color: var(--teal);"></i>
+                  <div style="overflow:hidden;">
+                    <div class="file-name" title="{{ d.display_name }}">{{ d.display_name }}</div>
+                    <span class="file-meta">Size: {{ d.file_size }}</span>
+                  </div>
+                </div>
+                <div class="action-pill-box">
+                  <a href="/view_doc/{{ d.filename }}" target="_blank" class="action-pill pill-view"><i class="fa-solid fa-eye"></i> Open</a>
+                  {% if session.get('is_admin') %}
+                    <button type="button" onclick="deleteDoc({{ d.id }})" class="action-pill pill-del"><i class="fa-solid fa-trash"></i></button>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="text-xs text-muted" style="text-align:center; padding: 15px 0; font-size:0.75rem;">No product brochures attached.</div>
+          {% endif %}
+        </div>
+
+        <div class="doc-column" style="border: 1.5px dashed var(--teal-bright); background: #fafffe;">
+          <div class="doc-column-title" style="color: var(--teal); font-weight: 800;">
+            <i class="fa-solid fa-clipboard-check" style="color: var(--teal-bright);"></i>
+            <span>Sample Reports (2-3 Variants)</span>
+          </div>
+          {% if docs and docs['sample_report'] %}
+            {% for d in docs['sample_report'] %}
+              <div class="file-row" style="background: #edf9f7;">
+                <div class="file-info">
+                  <i class="fa-solid fa-file-pdf file-icon" style="color: var(--rose);"></i>
+                  <div style="overflow:hidden;">
+                    <div class="file-name" style="color: var(--teal); font-weight:700;" title="{{ d.display_name }}">{{ d.display_name }}</div>
+                    <span class="file-meta">Size: {{ d.file_size }}</span>
+                  </div>
+                </div>
+                <div class="action-pill-box">
+                  <a href="/view_doc/{{ d.filename }}" target="_blank" class="action-pill pill-view" style="background: var(--teal); color: #fff;"><i class="fa-solid fa-folder-open"></i> View Report</a>
+                  {% if session.get('is_admin') %}
+                    <button type="button" onclick="deleteDoc({{ d.id }})" class="action-pill pill-del"><i class="fa-solid fa-trash"></i></button>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="text-xs text-muted" style="text-align:center; padding: 15px 0; font-size:0.75rem;">No active sample reports available.</div>
+          {% endif %}
+        </div>
+
+        <div class="doc-column">
+          <div class="doc-column-title">
+            <i class="fa-solid fa-graduation-cap" style="color: var(--violet);"></i>
+            <span>Case Studies (4-5 Cases)</span>
+          </div>
+          {% if docs and docs['case_study'] %}
+            {% for d in docs['case_study'] %}
+              <div class="file-row">
+                <div class="file-info">
+                  <i class="fa-solid fa-book-medical file-icon" style="color: var(--violet);"></i>
+                  <div style="overflow:hidden;">
+                    <div class="file-name" title="{{ d.display_name }}">{{ d.display_name }}</div>
+                    <span class="file-meta">Size: {{ d.file_size }}</span>
+                  </div>
+                </div>
+                <div class="action-pill-box">
+                  <a href="/view_doc/{{ d.filename }}" target="_blank" class="action-pill pill-view"><i class="fa-solid fa-eye"></i> Read Case</a>
+                  {% if session.get('is_admin') %}
+                    <button type="button" onclick="deleteDoc({{ d.id }})" class="action-pill pill-del"><i class="fa-solid fa-trash"></i></button>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="text-xs text-muted" style="text-align:center; padding: 15px 0; font-size:0.75rem;">No case validation matches recorded.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="collapse-list">
 
-    <!-- 1. What's Included -->
     <div class="collapse-item open" id="ci-included">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-included')">
-        <div class="collapse-icon-wrap ci-teal">
-          <i class="fas fa-dna"></i>
-        </div>
+        <div class="collapse-icon-wrap ci-teal"><i class="fas fa-dna"></i></div>
         <div class="collapse-text">
-          <div class="collapse-title">What's Included in the Test</div>
-          <div class="collapse-sub">Biomarker coverage, analytes &amp; variant types</div>
+          <div class="collapse-title">What's Included &amp; Core Parameters</div>
+          <div class="collapse-sub">Covered genes, core biomarkers &amp; variant profiling scope</div>
         </div>
         <i class="fas fa-chevron-down collapse-chevron"></i>
       </div>
       <div class="collapse-body">
         <div class="field-grid">
           <div class="field-chip">
-            <div class="fc-label">Genes / Biomarkers</div>
+            <div class="fc-label">Covered Genes &amp; Core Biomarkers</div>
             <div class="fc-value">{{ details.get('genes_biomarkers') or '—' }}</div>
           </div>
           <div class="field-chip">
-            <div class="fc-label">Variant Types</div>
+            <div class="fc-label">Detectable Variant Classes</div>
             <div class="fc-value">{{ details.get('variant_types') or '—' }}</div>
           </div>
           <div class="field-chip">
-            <div class="fc-label">Use Case</div>
+            <div class="fc-label">Primary Clinical Use-Case</div>
             <div class="fc-value">{{ details.get('use_case') or '—' }}</div>
           </div>
           <div class="field-chip">
-            <div class="fc-label">Accreditation</div>
+            <div class="fc-label">Laboratory Accreditation / Compliance</div>
             <div class="fc-value">{{ details.get('accreditation') or 'CAP Accredited' }}</div>
           </div>
         </div>
         <div class="ql-row" style="margin-top:16px;">
           {% if 'biomarker_coverage' in acl %}
-          <a href="{{ url_for('biomarker_coverage') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-dna"></i> Full Biomarker Coverage
-          </a>
+          <a href="{{ url_for('biomarker_coverage') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-dna"></i> Full Biomarker Coverage</a>
           {% endif %}
           {% if 'master_test_directory' in acl %}
-          <a href="{{ url_for('master_test_directory') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-list"></i> Master Directory
-          </a>
+          <a href="{{ url_for('master_test_directory') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-list"></i> Master Directory</a>
           {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- 2. When Should You Use This Test -->
     <div class="collapse-item" id="ci-when">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-when')">
-        <div class="collapse-icon-wrap ci-blue">
-          <i class="fas fa-stethoscope"></i>
-        </div>
+        <div class="collapse-icon-wrap ci-blue"><i class="fas fa-stethoscope"></i></div>
         <div class="collapse-text">
-          <div class="collapse-title">When Should You Use This Test</div>
-          <div class="collapse-sub">Clinical positioning, use cases &amp; patient journey</div>
+          <div class="collapse-title">Target Patient Selection &amp; Indications</div>
+          <div class="collapse-sub">Clinical positioning, user indications &amp; profile data</div>
         </div>
         <i class="fas fa-chevron-down collapse-chevron"></i>
       </div>
       <div class="collapse-body">
         <div class="field-block">
-          <div class="field-label">Indications</div>
-          <div class="field-value {% if not details.get('indications') %}empty{% endif %}">
-            {{ details.get('indications') or 'No indications specified yet.' }}
-          </div>
+          <div class="field-label">Clinical Indications</div>
+          <div class="field-value {% if not details.get('indications') %}empty{% endif %}">{{ details.get('indications') or 'No clinical indications specified yet.' }}</div>
         </div>
         <div class="field-block">
-          <div class="field-label">Patient Profile</div>
-          <div class="field-value {% if not details.get('patient_profile') %}empty{% endif %}">
-            {{ details.get('patient_profile') or 'Not specified.' }}
-          </div>
+          <div class="field-label">Target Patient Profile</div>
+          <div class="field-value {% if not details.get('patient_profile') %}empty{% endif %}">{{ details.get('patient_profile') or 'Not specified.' }}</div>
         </div>
         <div class="field-block">
-          <div class="field-label">Clinical Questions Answered</div>
-          <div class="field-value {% if not details.get('clinical_questions') %}empty{% endif %}">
-            {{ details.get('clinical_questions') or 'Not specified.' }}
-          </div>
+          <div class="field-label">Key Clinical Questions Solved</div>
+          <div class="field-value {% if not details.get('clinical_questions') %}empty{% endif %}">{{ details.get('clinical_questions') or 'Not specified.' }}</div>
         </div>
         <div class="ql-row">
           {% if 'clinical_positioning' in acl %}
-          <a href="{{ url_for('clinical_positioning') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-stethoscope"></i> Full Clinical Positioning
-          </a>
+          <a href="{{ url_for('clinical_positioning') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-stethoscope"></i> Full Clinical Positioning</a>
           {% endif %}
           {% if 'journey_mapping' in acl %}
-          <a href="{{ url_for('journey_mapping') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-route"></i> Journey Mapping
-          </a>
+          <a href="{{ url_for('journey_mapping') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-route"></i> Journey Mapping</a>
           {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- 3. Ordering Details -->
     <div class="collapse-item" id="ci-ordering">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-ordering')">
-        <div class="collapse-icon-wrap ci-amber">
-          <i class="fas fa-box-open"></i>
-        </div>
+        <div class="collapse-icon-wrap ci-amber"><i class="fas fa-box-open"></i></div>
         <div class="collapse-text">
           <div class="collapse-title">Ordering Details</div>
-          <div class="collapse-sub">Sample requirements, logistics &amp; pricing</div>
+          <div class="collapse-sub">Sample requirements, logistics &amp; pricing structure</div>
         </div>
         <i class="fas fa-chevron-down collapse-chevron"></i>
       </div>
       <div class="collapse-body">
         <div class="field-grid">
           {% if ordering %}
-          <div class="field-chip">
-            <div class="fc-label">Test Code</div>
-            <div class="fc-value">{{ ordering.get('test_code') or '—' }}</div>
-          </div>
-          <div class="field-chip">
-            <div class="fc-label">Order Channel</div>
-            <div class="fc-value">{{ ordering.get('order_channel') or '—' }}</div>
-          </div>
-          <div class="field-chip">
-            <div class="fc-label">TAT Commitment</div>
-            <div class="fc-value">{{ ordering.get('tat_commitment') or '—' }}</div>
-          </div>
-          <div class="field-chip">
-            <div class="fc-label">Consent Needed</div>
-            <div class="fc-value">{{ ordering.get('consent_needed') or '—' }}</div>
-          </div>
-          <div class="field-chip">
-            <div class="fc-label">Report Delivery</div>
-            <div class="fc-value">{{ ordering.get('report_delivery_mode') or '—' }}</div>
-          </div>
-          <div class="field-chip">
-            <div class="fc-label">Required Forms</div>
-            <div class="fc-value">{{ ordering.get('required_forms') or '—' }}</div>
-          </div>
+          <div class="field-chip"><div class="fc-label">Test Code</div><div class="fc-value">{{ ordering.get('test_code') or '—' }}</div></div>
+          <div class="field-chip"><div class="fc-label">Order Channel</div><div class="fc-value">{{ ordering.get('order_channel') or '—' }}</div></div>
+          <div class="field-chip"><div class="fc-label">TAT Commitment</div><div class="fc-value">{{ ordering.get('tat_commitment') or '—' }}</div></div>
+          <div class="field-chip"><div class="fc-label">Consent Needed</div><div class="fc-value">{{ ordering.get('consent_needed') or '—' }}</div></div>
+          <div class="field-chip"><div class="fc-label">Report Delivery</div><div class="fc-value">{{ ordering.get('report_delivery_mode') or '—' }}</div></div>
+          <div class="field-chip"><div class="fc-label">Required Forms</div><div class="fc-value">{{ ordering.get('required_forms') or '—' }}</div></div>
           {% else %}
-          <div style="grid-column:1/-1; color:var(--text-muted); font-size:0.82rem; font-style:italic; padding:8px 0;">
-            No ordering details added yet.
-          </div>
+          <div style="grid-column:1/-1; color:var(--text-muted); font-size:0.82rem; font-style:italic; padding:8px 0;">No ordering details added yet.</div>
           {% endif %}
         </div>
         {% if pricing %}
         <div class="field-block" style="margin-top:16px;">
           <div class="field-label">Pricing</div>
           <div class="field-grid" style="margin-top:8px;">
-            <div class="field-chip">
-              <div class="fc-label">List Price</div>
-              <div class="fc-value">{{ pricing.get('list_price') or '—' }}</div>
-            </div>
-            <div class="field-chip">
-              <div class="fc-label">Reimbursement</div>
-              <div class="fc-value">{{ pricing.get('reimbursement_status') or '—' }}</div>
-            </div>
+            <div class="field-chip"><div class="fc-label">List Price</div><div class="fc-value">{{ pricing.get('list_price') or '—' }}</div></div>
+            <div class="field-chip"><div class="fc-label">Reimbursement</div><div class="fc-value">{{ pricing.get('reimbursement_status') or '—' }}</div></div>
           </div>
         </div>
         {% endif %}
         <div class="ql-row">
           {% if 'ordering' in acl %}
-          <a href="{{ url_for('ordering') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-shopping-cart"></i> Full Ordering Details
-          </a>
+          <a href="{{ url_for('ordering') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-shopping-cart"></i> Full Ordering Details</a>
           {% endif %}
           {% if 'pricing' in acl %}
-          <a href="{{ url_for('pricing') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-tags"></i> Pricing
-          </a>
+          <a href="{{ url_for('pricing') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-tags"></i> Pricing Matrix</a>
           {% endif %}
           {% if 'operations' in acl %}
-          <a href="{{ url_for('operations') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-cogs"></i> Operations / Sample Logistics
-          </a>
+          <a href="{{ url_for('operations') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-cogs"></i> Operations / Sample Logistics</a>
           {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- 4. Performance Details -->
     <div class="collapse-item" id="ci-perf">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-perf')">
-        <div class="collapse-icon-wrap ci-green">
-          <i class="fas fa-chart-line"></i>
-        </div>
+        <div class="collapse-icon-wrap ci-green"><i class="fas fa-chart-line"></i></div>
         <div class="collapse-text">
           <div class="collapse-title">Performance Details</div>
-          <div class="collapse-sub">Sensitivity, specificity &amp; limits of detection</div>
+          <div class="collapse-sub">Sensitivity, specificity &amp; validation analytics</div>
         </div>
         <i class="fas fa-chevron-down collapse-chevron"></i>
       </div>
       <div class="collapse-body">
         <div class="field-grid">
           {% if performance %}
-          <div class="field-chip">
-            <div class="fc-label">Sensitivity</div>
-            <div class="fc-value">{{ performance.get('sensitivity') or '—' }}</div>
-          </div>
-          <div class="field-chip">
-            <div class="fc-label">Specificity</div>
-            <div class="fc-value">{{ performance.get('specificity') or '—' }}</div>
-          </div>
-          <div class="field-chip">
-            <div class="fc-label">Concordance</div>
-            <div class="fc-value">{{ performance.get('concordance') or '—' }}</div>
-          </div>
-          <div class="field-chip">
-            <div class="fc-label">LOD (VAF %)</div>
-            <div class="fc-value">{{ performance.get('lod') or '—' }}</div>
-          </div>
-          <div class="field-chip">
-            <div class="fc-label">Validation Cohort</div>
-            <div class="fc-value">{{ performance.get('validation_cohort_size') or '—' }}</div>
-          </div>
-          <div class="field-chip">
-            <div class="fc-label">Cancer Types</div>
-            <div class="fc-value">{{ performance.get('cancer_types') or '—' }}</div>
-          </div>
+          <div class="field-chip"><div class="fc-label">Sensitivity</div><div class="fc-value">{{ performance.get('sensitivity') or '—' }}</div></div>
+          <div class="field-chip"><div class="fc-label">Specificity</div><div class="fc-value">{{ performance.get('specificity') or '—' }}</div></div>
+          <div class="field-chip"><div class="fc-label">Concordance</div><div class="fc-value">{{ performance.get('concordance') or '—' }}</div></div>
+          <div class="field-chip"><div class="fc-label">LOD (VAF %)</div><div class="fc-value">{{ performance.get('lod') or '—' }}</div></div>
+          <div class="field-chip"><div class="fc-label">Validation Cohort</div><div class="fc-value">{{ performance.get('validation_cohort_size') or '—' }}</div></div>
+          <div class="field-chip"><div class="fc-label">Cancer Types</div><div class="fc-value">{{ performance.get('cancer_types') or '—' }}</div></div>
           {% else %}
-          <div style="grid-column:1/-1; color:var(--text-muted); font-size:0.82rem; font-style:italic; padding:8px 0;">
-            No performance data added yet.
-          </div>
+          <div style="grid-column:1/-1; color:var(--text-muted); font-size:0.82rem; font-style:italic; padding:8px 0;">No performance data added yet.</div>
           {% endif %}
         </div>
         {% if performance and performance.get('publications') %}
@@ -558,300 +539,266 @@
         {% endif %}
         <div class="ql-row">
           {% if 'performance' in acl %}
-          <a href="{{ url_for('performance') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-chart-line"></i> Full Performance Data
-          </a>
+          <a href="{{ url_for('performance') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-chart-line"></i> Full Performance Data</a>
           {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- 5. Competitor Benchmarking -->
     <div class="collapse-item" id="ci-comp">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-comp')">
-        <div class="collapse-icon-wrap ci-rose">
-          <i class="fas fa-scale-balanced"></i>
-        </div>
+        <div class="collapse-icon-wrap ci-rose"><i class="fas fa-scale-balanced"></i></div>
         <div class="collapse-text">
-          <div class="collapse-title">Competitor Benchmarking</div>
-          <div class="collapse-sub">Head-to-head feature, performance &amp; positioning comparison</div>
+          <div class="collapse-title">Competitor Market Benchmarking</div>
+          <div class="collapse-sub">Head-to-head feature matrix, performance &amp; market alignment</div>
         </div>
         <i class="fas fa-chevron-down collapse-chevron"></i>
       </div>
       <div class="collapse-body">
         {% if details and details.get('competitor_benchmarking') %}
-        <div class="field-block">
-          <div class="field-value">{{ details.get('competitor_benchmarking') }}</div>
-        </div>
+        <div class="field-block"><div class="field-value">{{ details.get('competitor_benchmarking') }}</div></div>
         {% else %}
         <div class="bench-note">
           <i class="fas fa-info-circle"></i>
-          <div>
-            Detailed competitor comparison is available in the
-            <strong>Product Comparison Matrix</strong> page.
-            Admin can also add test-specific benchmarking notes in Edit mode.
-          </div>
+          <div>Detailed competitor comparison is available in the <strong>Product Comparison Matrix</strong> page. Admin can also add test-specific benchmarking notes in Edit mode.</div>
         </div>
         {% endif %}
         <div class="ql-row">
           {% if 'comparison' in acl %}
-          <a href="{{ url_for('comparison') }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-table-columns"></i> Open Comparison Matrix
-          </a>
+          <a href="{{ url_for('comparison') }}" class="btn btn-secondary btn-sm"><i class="fas fa-table-columns"></i> Open Comparison Matrix</a>
           {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- 6. Value Proposition -->
     <div class="collapse-item" id="ci-vp">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-vp')">
-        <div class="collapse-icon-wrap ci-violet">
-          <i class="fas fa-gem"></i>
-        </div>
+        <div class="collapse-icon-wrap ci-violet"><i class="fas fa-gem"></i></div>
         <div class="collapse-text">
           <div class="collapse-title">Value Proposition</div>
-          <div class="collapse-sub">Core pillars, proof points &amp; audience-specific messaging</div>
+          <div class="collapse-sub">Core pillars, strategic messaging &amp; analytical proof points</div>
         </div>
         <i class="fas fa-chevron-down collapse-chevron"></i>
       </div>
       <div class="collapse-body">
         {% if details and details.get('value_proposition') %}
-        <div class="field-block">
-          <div class="field-value">{{ details.get('value_proposition') }}</div>
-        </div>
+        <div class="field-block"><div class="field-value">{{ details.get('value_proposition') }}</div></div>
         {% else %}
         <div class="vp-grid">
           <div class="vp-pill">
             <i class="fas fa-shield-halved"></i>
-            <strong>Accuracy</strong>
-            <span>100% PPV / NPV on SNVs, CAP-accredited laboratory</span>
+            <strong>Accuracy</strong><span>100% PPV / NPV on SNVs, CAP-accredited laboratory</span>
           </div>
           <div class="vp-pill">
             <i class="fas fa-layer-group"></i>
-            <strong>Comprehensive</strong>
-            <span>1000+ gene panel covering all major variant classes</span>
+            <strong>Comprehensive</strong><span>1000+ gene panel covering all major variant classes</span>
           </div>
           <div class="vp-pill">
             <i class="fas fa-vials"></i>
-            <strong>Tissue-Liquid-Normal</strong>
-            <span>Matched trio sequencing for true somatic variant calling</span>
+            <strong>Tissue-Liquid-Normal</strong><span>Matched trio sequencing for true somatic variant calling</span>
           </div>
           <div class="vp-pill">
             <i class="fas fa-headset"></i>
-            <strong>Clinical Support</strong>
-            <span>Molecular Tumour Board, post-report consult, dedicated RM</span>
+            <strong>Clinical Support</strong><span>Molecular Tumour Board, post-report consult, dedicated RM</span>
           </div>
         </div>
-        <div style="margin-top:14px; font-size:0.78rem; color:var(--text-muted); font-style:italic;">
-          Admin can add custom value proposition notes in Edit mode.
-        </div>
+        <div style="margin-top:14px; font-size:0.78rem; color:var(--text-muted); font-style:italic;">Admin can add custom value proposition notes in Edit mode.</div>
         {% endif %}
         <div class="ql-row">
           {% if 'support_services' in acl %}
-          <a href="{{ url_for('support_services') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-headset"></i> Support Services
-          </a>
+          <a href="{{ url_for('support_services') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-headset"></i> Support Services Portal</a>
           {% endif %}
         </div>
       </div>
     </div>
 
-  </div><!-- /collapse-list -->
-
-</div><!-- /viewMode -->
-
-
-<!-- ════════════════════════════════════════════
-     EDIT MODE
-════════════════════════════════════════════ -->
+  </div></div>{% if session.get('is_admin') %}
 <div id="editMode" style="display:none;">
+  <form id="specificationForm" action="/update_test_details" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="test_name" value="{{ selected_test }}">
 
-  <!-- Description -->
-  <div class="card">
-    <div class="card-head">
-      <div class="card-title">
-        <div class="card-icon"><i class="fas fa-align-left"></i></div>
-        Hero Description
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Shown in the hero card for all users</label>
-      <textarea class="form-control edit-input" data-field="description" rows="3"
-        placeholder="e.g. Comprehensive genomic profiling for endometrial cancer — from early-stage classification to recurrent disease monitoring...">{{ details.get('description', '') }}</textarea>
-    </div>
-  </div>
-
-  <!-- Core fields -->
-  <div class="card">
-    <div class="card-head">
-      <div class="card-title">
-        <div class="card-icon"><i class="fas fa-info-circle"></i></div>
-        Core Test Information
-      </div>
-    </div>
-    <div class="form-grid">
-      {% for key, label, ph in [
-        ('use_case',         'Use Case',         'e.g. Advanced solid tumours'),
-        ('category',         'Category',         'e.g. CGP'),
-        ('sub_category',     'Sub-Category',     'e.g. Tissue-Liquid-Normal'),
-        ('technology_stack', 'Test Type',        'e.g. NGS — Tissue + ctDNA'),
-        ('accreditation',    'Accreditation',    'e.g. Yes — CAP accredited'),
-      ] %}
-      <div class="form-group">
-        <label class="form-label">{{ label }}</label>
-        <input type="text" class="form-control edit-input" data-field="{{ key }}"
-               value="{{ details.get(key, '') }}" placeholder="{{ ph }}">
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-
-  <!-- What's Included -->
-  <div class="card">
-    <div class="card-head">
-      <div class="card-title">
-        <div class="card-icon" style="background:#e0f2f0; color:#00695c;"><i class="fas fa-dna"></i></div>
-        What's Included in the Test
-      </div>
-    </div>
-    <div class="form-grid">
-      <div class="form-group" style="grid-column:1/-1;">
-        <label class="form-label">Genes / Biomarkers</label>
-        <textarea class="form-control edit-input" data-field="genes_biomarkers" rows="3"
-          placeholder="e.g. 1000+ genes, TMB, MSI, HRD, PD-L1, PGx...">{{ details.get('genes_biomarkers', '') }}</textarea>
-      </div>
-      <div class="form-group" style="grid-column:1/-1;">
-        <label class="form-label">Variant Types</label>
-        <textarea class="form-control edit-input" data-field="variant_types" rows="2"
-          placeholder="e.g. SNV, INDEL, CNA, Fusion, Splice Variants, Gene Expression...">{{ details.get('variant_types', '') }}</textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- When to Use -->
-  <div class="card">
-    <div class="card-head">
-      <div class="card-title">
-        <div class="card-icon" style="background:#e3f2fd; color:#1565c0;"><i class="fas fa-stethoscope"></i></div>
-        When Should You Use This Test
-      </div>
-    </div>
-    <div class="form-grid">
-      <div class="form-group" style="grid-column:1/-1;">
-        <label class="form-label">Indications</label>
-        <textarea class="form-control edit-input" data-field="indications" rows="3"
-          placeholder="Enter clinical indications...">{{ details.get('indications', '') }}</textarea>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="card-icon"><i class="fas fa-align-left"></i></div>Test Core Description</div>
       </div>
       <div class="form-group">
-        <label class="form-label">Patient Profile</label>
-        <textarea class="form-control edit-input" data-field="patient_profile" rows="3"
-          placeholder="Describe ideal patient profile...">{{ details.get('patient_profile', '') }}</textarea>
+        <label class="form-label">Shown in the hero card summary framework for all users</label>
+        <textarea name="description" class="form-control edit-input" data-field="description" rows="3" placeholder="e.g. Comprehensive genomic profiling for endometrial cancer...">{{ details.get('description', '') }}</textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="card-icon"><i class="fas fa-info-circle"></i></div>Clinical Context &amp; Core Parameters</div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Primary Clinical Use-Case</label>
+          <input type="text" name="use_case" class="form-control edit-input" data-field="use_case" value="{{ details.get('use_case', '') }}" placeholder="e.g. Advanced solid tumours">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Core Category</label>
+          <input type="text" name="category" class="form-control edit-input" data-field="category" value="{{ details.get('category', '') }}" placeholder="e.g. CGP">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sub-Category</label>
+          <input type="text" name="sub_category" class="form-control edit-input" data-field="sub_category" value="{{ details.get('sub_category', '') }}" placeholder="e.g. Tissue-Liquid-Normal">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Technology Stack / Sequencer Platform</label>
+          <input type="text" name="technology_stack" class="form-control edit-input" data-field="technology_stack" value="{{ details.get('technology_stack', '') }}" placeholder="e.g. NGS — Tissue + ctDNA">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Laboratory Accreditation / Compliance</label>
+          <input type="text" name="accreditation" class="form-control edit-input" data-field="accreditation" value="{{ details.get('accreditation', '') }}" placeholder="e.g. Yes — CAP accredited">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="card-icon" style="background:#e0f2f0; color:#00695c;"><i class="fas fa-dna"></i></div>Assay Scope &amp; Variant Profiling</div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Covered Genes &amp; Core Biomarkers</label>
+          <textarea name="genes_biomarkers" class="form-control edit-input" data-field="genes_biomarkers" rows="3" placeholder="e.g. 1000+ genes, TMB, MSI, HRD...">{{ details.get('genes_biomarkers', '') }}</textarea>
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Detectable Variant Classes</label>
+          <textarea name="variant_types" class="form-control edit-input" data-field="variant_types" rows="2" placeholder="e.g. SNV, INDEL, CNA, Fusion...">{{ details.get('variant_types', '') }}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="card-icon" style="background:#e3f2fd; color:#1565c0;"><i class="fas fa-stethoscope"></i></div>Target Patient Selection &amp; Indications</div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Clinical Indications</label>
+          <textarea name="indications" class="form-control edit-input" data-field="indications" rows="3" placeholder="Enter specific physiological profiling routes...">{{ details.get('indications', '') }}</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target Patient Profile</label>
+          <textarea name="patient_profile" class="form-control edit-input" data-field="patient_profile" rows="3" placeholder="Describe clinical selection paths...">{{ details.get('patient_profile', '') }}</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Key Clinical Questions Solved</label>
+          <textarea name="clinical_questions" class="form-control edit-input" data-field="clinical_questions" rows="3" placeholder="List questions addressed...">{{ details.get('clinical_questions', '') }}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="card-icon" style="background:#fce4ec; color:#880e4f;"><i class="fas fa-scale-balanced"></i></div>Competitor Market Benchmarking</div>
       </div>
       <div class="form-group">
-        <label class="form-label">Clinical Questions Answered</label>
-        <textarea class="form-control edit-input" data-field="clinical_questions" rows="3"
-          placeholder="List clinical questions this test addresses...">{{ details.get('clinical_questions', '') }}</textarea>
+        <label class="form-label">Test-specific parameters or alternative competitive products</label>
+        <textarea name="competitor_benchmarking" class="form-control edit-input" data-field="competitor_benchmarking" rows="4" placeholder="Compare assay properties head-to-head...">{{ details.get('competitor_benchmarking', '') }}</textarea>
       </div>
     </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="card-icon" style="background:#f3e5f5; color:#4a148c;"><i class="fas fa-gem"></i></div>Value Proposition Matrix</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Core targets, clinical alignment arguments, or data proofs</label>
+        <textarea name="value_proposition" class="form-control edit-input" data-field="value_proposition" rows="4" placeholder="Enter proof vectors structural highlights...">{{ details.get('value_proposition', '') }}</textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="card-icon" style="background:#fff8e1; color:#e65100;"><i class="fas fa-file-pdf"></i></div>Attach Diagnostic Report Framework PDF</div>
+      </div>
+      
+      {% if details and details.get('report_filename') %}
+      <div style="display:flex; align-items:center; gap:12px; padding:12px 16px; background:var(--green-light); border:1px solid rgba(39,174,96,0.2); border-radius:var(--radius-md); margin-bottom:16px;">
+        <i class="fas fa-file-pdf" style="color:var(--green); font-size:1.2rem;"></i>
+        <div style="flex:1;">
+          <div style="font-size:0.82rem; font-weight:600; color:var(--text-primary);">{{ details.get('report_filename') }}</div>
+          <div class="text-xs text-teal mt-4" style="font-size:0.72rem;">Current file mapping active framework.</div>
+        </div>
+        <a href="/test_details/report/{{ selected_test | urlencode }}" target="_blank" class="btn btn-secondary btn-sm"><i class="fas fa-eye"></i> View</a>
+        <button type="button" class="btn btn-danger btn-sm" onclick="deleteReport()"><i class="fas fa-trash"></i> Remove</button>
+      </div>
+      {% endif %}
+
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('reportFile').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p><strong>Click to upload</strong> or drag and drop framework target</p>
+        <span>PDF frameworks only · Max 20MB</span>
+      </div>
+      <input type="file" name="report_file" id="reportFile" accept=".pdf" style="display:none;" onchange="uploadReport(this)">
+      
+      <div id="uploadProgress" style="display:none; margin-top:12px;">
+        <div style="height:4px; background:var(--border); border-radius:4px; overflow:hidden;">
+          <div id="uploadBar" style="height:100%; background:var(--teal); width:0%; transition:width 0.3s;"></div>
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;" id="uploadStatus">Processing Framework...</div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+
+<div class="modal-backdrop" id="docUploadModal">
+  <div class="modal">
+    <form action="/upload_test_doc" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="test_name" value="{{ selected_test }}">
+      <div class="modal-head">
+        <h2>Upload Media Resource</h2>
+      </div>
+      <div class="modal-body">
+        <div class="form-group mb-12" style="margin-bottom:12px;">
+          <label class="form-label">Target Document Stream</label>
+          <select name="doc_type" class="form-control" required>
+            <option value="brochure">Brochure (Limit 1)</option>
+            <option value="sample_report">Sample Diagnostic Report (Limit 2-3)</option>
+            <option value="case_study">Clinical Case Study (Limit 4-5)</option>
+          </select>
+        </div>
+        <div class="form-group mb-12" style="margin-bottom:12px;">
+          <label class="form-label">Display Friendly Label</label>
+          <input type="text" name="display_name" class="form-control" placeholder="e.g. Lung Core Sample Report v2" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Select File System Path (Max 200MB)</label>
+          <input type="file" name="file" class="form-control" required>
+        </div>
+      </div>
+      <div class="modal-foot" style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
+        <button type="button" class="btn btn-secondary" onclick="closeDocModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Process File Injection</button>
+      </div>
+    </form>
   </div>
-
-  <!-- Competitor Benchmarking Notes -->
-  <div class="card">
-    <div class="card-head">
-      <div class="card-title">
-        <div class="card-icon" style="background:#fce4ec; color:#880e4f;"><i class="fas fa-scale-balanced"></i></div>
-        Competitor Benchmarking Notes
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Test-specific competitive notes (shown in the Benchmarking section)</label>
-      <textarea class="form-control edit-input" data-field="competitor_benchmarking" rows="4"
-        placeholder="e.g. vs FoundationOne CDx: OncoIndx TBx additionally includes RNA-based fusions, normal-match for germline separation, and CTC profiling...">{{ details.get('competitor_benchmarking', '') }}</textarea>
-    </div>
-  </div>
-
-  <!-- Value Proposition -->
-  <div class="card">
-    <div class="card-head">
-      <div class="card-title">
-        <div class="card-icon" style="background:#f3e5f5; color:#4a148c;"><i class="fas fa-gem"></i></div>
-        Value Proposition
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Core pillars, proof points &amp; audience-specific messaging</label>
-      <textarea class="form-control edit-input" data-field="value_proposition" rows="4"
-        placeholder="e.g. For oncologists: highest analytical accuracy with CAP accreditation. For patients: single comprehensive test avoiding repeat biopsies...">{{ details.get('value_proposition', '') }}</textarea>
-    </div>
-  </div>
-
-  <!-- Sample Report Upload -->
-  <div class="card">
-    <div class="card-head">
-      <div class="card-title">
-        <div class="card-icon" style="background:#fff8e1; color:#e65100;"><i class="fas fa-file-pdf"></i></div>
-        Sample Report Upload
-      </div>
-    </div>
-    {% if details and details.get('report_filename') %}
-    <div style="display:flex; align-items:center; gap:12px; padding:12px 16px;
-                background:var(--green-light); border:1px solid rgba(39,174,96,0.2);
-                border-radius:var(--radius-md); margin-bottom:16px;">
-      <i class="fas fa-file-pdf" style="color:var(--green); font-size:1.2rem;"></i>
-      <div style="flex:1;">
-        <div style="font-size:0.82rem; font-weight:600; color:var(--text-primary);">{{ details.get('report_filename') }}</div>
-        <div style="font-size:0.72rem; color:var(--text-muted);">Current sample report</div>
-      </div>
-      <a href="/test_details/report/{{ selected_test | urlencode }}" target="_blank" class="btn btn-secondary btn-sm">
-        <i class="fas fa-eye"></i> View
-      </a>
-      <button class="btn btn-danger btn-sm" onclick="deleteReport()">
-        <i class="fas fa-trash"></i> Remove
-      </button>
-    </div>
-    {% endif %}
-    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('reportFile').click()"
-         ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
-      <i class="fas fa-cloud-upload-alt"></i>
-      <p><strong>Click to upload</strong> or drag and drop a PDF</p>
-      <span>PDF only · Max 20MB</span>
-    </div>
-    <input type="file" id="reportFile" accept=".pdf" style="display:none;" onchange="uploadReport(this)">
-    <div id="uploadProgress" style="display:none; margin-top:12px;">
-      <div style="height:4px; background:var(--border); border-radius:4px; overflow:hidden;">
-        <div id="uploadBar" style="height:100%; background:var(--teal); width:0%; transition:width 0.3s;"></div>
-      </div>
-      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;" id="uploadStatus">Uploading...</div>
-    </div>
-  </div>
-
-</div><!-- /editMode -->
+</div>
 
 
-<!-- ── Upload Modal (Report view) ── -->
 <div class="modal-backdrop" id="uploadModal">
   <div class="modal">
     <div class="modal-head">
-      <div class="modal-head-row">
-        <div class="modal-head-ico" style="background:#fff8e1; color:#e65100;">
+      <div class="modal-head-row" style="display:flex; align-items:center; gap:10px;">
+        <div class="modal-head-ico" style="background:#fff8e1; color:#e65100; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:6px;">
           <i class="fas fa-file-pdf"></i>
         </div>
         <h2>Upload Sample Report</h2>
       </div>
-      <p>Upload a PDF sample report for <strong>{{ selected_test }}</strong>. Visible to all users.</p>
+      <p style="margin-top:6px; font-size:0.85rem; color:var(--text-muted);">Upload a PDF sample report for <strong>{{ selected_test }}</strong>. Visible to all users.</p>
     </div>
-    <div class="modal-body">
-      <div class="upload-zone" id="modalUploadZone"
-           onclick="document.getElementById('modalReportFile').click()"
-           ondragover="onDragOver(event)" ondragleave="onDragLeave(event)"
-           ondrop="onModalDrop(event)">
+    <div class="modal-body" style="margin-top:14px;">
+      <div class="upload-zone" id="modalUploadZone" onclick="document.getElementById('modalReportFile').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onModalDrop(event)">
         <i class="fas fa-cloud-upload-alt"></i>
         <p><strong>Click to browse</strong> or drag &amp; drop</p>
         <span>PDF only · Max 20MB</span>
       </div>
-      <input type="file" id="modalReportFile" accept=".pdf" style="display:none;"
-             onchange="uploadReport(this, true)">
+      <input type="file" id="modalReportFile" accept=".pdf" style="display:none;" onchange="uploadReport(this, true)">
       <div id="modalUploadProgress" style="display:none; margin-top:12px;">
         <div style="height:4px; background:var(--border); border-radius:4px; overflow:hidden;">
           <div id="modalUploadBar" style="height:100%; background:var(--teal); width:0%;"></div>
@@ -859,7 +806,7 @@
         <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;" id="modalUploadStatus">Uploading...</div>
       </div>
     </div>
-    <div class="modal-foot">
+    <div class="modal-foot" style="display:flex; justify-content:flex-end; margin-top:16px;">
       <button class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
     </div>
   </div>
@@ -872,13 +819,13 @@
 <script>
 const selectedTest = {{ selected_test | tojson }};
 
-/* ── Collapse ── */
+/* ── Collapse Accordions ── */
 function toggleCollapse(id) {
   const item = document.getElementById(id);
   item.classList.toggle('open');
 }
 
-/* ── Edit Mode ── */
+/* ── UI Mode Switchers ── */
 function enterEditMode() {
   document.getElementById('viewMode').style.display = 'none';
   document.getElementById('editMode').style.display = 'block';
@@ -890,11 +837,14 @@ function cancelEdit() {
   document.getElementById('editToolbar').style.display = 'none';
 }
 
+/* ── Async Data Saving Pipeline ── */
 async function saveDetails() {
   const data = { test_name: selectedTest };
   document.querySelectorAll('.edit-input').forEach(el => {
-    data[el.dataset.field] = el.value;
+    data[el.getAttribute('name') || el.dataset.field] = el.value;
   });
+  
+  // Submit via core internal API route
   const res = await apiPost('/test_details/save', data);
   if (res.success) {
     showToast('Test details saved successfully!');
@@ -904,18 +854,35 @@ async function saveDetails() {
   }
 }
 
-/* ── Upload Modal ── */
-function openUploadModal() {
-  document.getElementById('uploadModal').classList.add('open');
-}
-function closeUploadModal() {
-  document.getElementById('uploadModal').classList.remove('open');
-}
+/* ── Resource Hub Modal Actions ── */
+function openDocModal() { document.getElementById('docUploadModal').classList.add('open'); }
+function closeDocModal() { document.getElementById('docUploadModal').classList.remove('open'); }
+
+/* ── Primary Framework Report Modal Actions ── */
+function openUploadModal() { document.getElementById('uploadModal').classList.add('open'); }
+function closeUploadModal() { document.getElementById('uploadModal').classList.remove('open'); }
+
+// Close backdrop hooks
 document.getElementById('uploadModal').addEventListener('click', function(e) {
   if (e.target === this) closeUploadModal();
 });
+document.getElementById('docUploadModal').addEventListener('click', function(e) {
+  if (e.target === this) closeDocModal();
+});
 
-/* ── Drag & Drop ── */
+/* ── Resource Module Deletion API ── */
+async function deleteDoc(id) {
+  if(!confirm("Are you sure you want to drop this file reference from this database module?")) return;
+  const res = await fetch(`/delete_test_doc/${id}`, { method: 'POST' });
+  const data = await res.json();
+  if(data.success) { 
+    location.reload(); 
+  } else { 
+    alert("Failed to clear element framework."); 
+  }
+}
+
+/* ── Drag & Drop File Strategies ── */
 function onDragOver(e) {
   e.preventDefault();
   e.currentTarget.classList.add('dragover');
@@ -936,7 +903,7 @@ function onModalDrop(e) {
   if (file) doUpload(file, true);
 }
 
-/* ── Upload ── */
+/* ── File Engine Async Processing ── */
 function uploadReport(input, isModal = false) {
   const file = input.files[0];
   if (file) doUpload(file, isModal);
@@ -994,7 +961,7 @@ function doUpload(file, isModal) {
 }
 
 async function deleteReport() {
-  if (!confirm('Remove the sample report for this test?')) return;
+  if (!confirm('Remove the sample report framework for this test?')) return;
   const res = await apiPost('/test_details/delete_report', { test_name: selectedTest });
   if (res.success) {
     showToast('Report removed.');

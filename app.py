@@ -4,15 +4,23 @@ import sqlite3
 import os
 from flask import send_from_directory
 from urllib.parse import unquote
-
 from werkzeug.utils import secure_filename
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads', 'reports')
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-app = Flask(__name__)
-app.secret_key = 'onecell_dos_secret_2026'
+from werkzeug.utils import secure_filename
+import json
 
 DB_PATH = os.path.join(os.path.dirname(__file__), 'dos.db')
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads', 'reports')
+DOCS_UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads', 'test_docs')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(DOCS_UPLOAD_FOLDER, exist_ok=True)
+
+
+app = Flask(__name__)
+app.config['DOCS_UPLOAD_FOLDER'] = DOCS_UPLOAD_FOLDER
+app.secret_key = '134fggmnj876#@%$^kjlkh'
+app.config['MAX_CONTENT_LENGTH'] = 250 * 1024 * 1024
+
+
 
 # ─────────────────────────────────────────────────────────────
 #  PRODUCT LIST
@@ -28,6 +36,24 @@ TESTS = [
     'OncoRisk',
     'OncoTarget',
     'OncoIndx 360 EC',
+]
+
+TESTS_DOS = [
+    {'Test Name': 'OncoIndx Basic', 'Test Description': 'NGS test', 'Test Type': 'CGP', 'Gene Size': '1080', 'Specimen': 'Blood', 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'OncoIndx Premium', 'Test Description': 'NGS test', 'Test Type': None, 'Gene Size': None, 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'OncoIndx Prime+', 'Test Description': 'Multi specimen NGS test', 'Test Type': 'CGP', 'Gene Size': '1080', 'Specimen': 'Tissue', 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'OncoHRD', 'Test Description': None, 'Test Type': None, 'Gene Size': '100', 'Specimen': None, 'Indication': 'Ovarian, Breast, Pancreatic, Prostate', 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'OncoIndx 360 EC', 'Test Description': 'NGS test + IHC', 'Test Type': 'Targeted ', 'Gene Size': None, 'Specimen': None, 'Indication': 'Endometrium Cancer- All stages', 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'OncoTarget', 'Test Description': 'NGS test', 'Test Type': 'Targeted ', 'Gene Size': '100', 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'OncoCTC', 'Test Description': None, 'Test Type': None, 'Gene Size': None, 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'OncoMonitor MRD', 'Test Description': 'NGS test with Methylation', 'Test Type': None, 'Gene Size': '100', 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'OncoMonitor TRM', 'Test Description': 'NGS test', 'Test Type': None, 'Gene Size': '100', 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'OncoRisk + MLPA', 'Test Description': 'Germline test', 'Test Type': None, 'Gene Size': '74 gene, 28 MLPA', 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'Add-on', 'Test Description': None, 'Test Type': None, 'Gene Size': None, 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'RNA', 'Test Description': None, 'Test Type': None, 'Gene Size': None, 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'PD-L1 by IHC', 'Test Description': None, 'Test Type': None, 'Gene Size': None, 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'ER/PR/HER2 by IHC', 'Test Description': None, 'Test Type': None, 'Gene Size': None, 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}, 
+    {'Test Name': 'MMR', 'Test Description': None, 'Test Type': None, 'Gene Size': None, 'Specimen': None, 'Indication': None, 'TAT': None, 'MRP': None}
 ]
 
 
@@ -307,6 +333,17 @@ def init_db():
         report_filename         TEXT
     )''')
 
+    c.execute('''
+    CREATE TABLE IF NOT EXISTS test_documents (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        test_name TEXT NOT NULL,
+        doc_type TEXT NOT NULL,       -- 'brochure', 'sample_report', or 'case_study'
+        display_name TEXT NOT NULL,   -- e.g., 'Lung Core Sample Report v2'
+        filename TEXT NOT NULL,       -- The unique system storage filename
+        file_size TEXT NOT NULL       -- e.g., '2.4 MB'
+    )
+''')
+
     # ── Comparison matrix ──────────────────────────────────────
     c.execute('''CREATE TABLE IF NOT EXISTS comparison_matrix (
         id       INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -324,6 +361,18 @@ def init_db():
         notes      TEXT,
         sort_order INTEGER DEFAULT 0
     )''')
+
+    c.execute('''CREATE TABLE IF NOT EXISTS test_requisitions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        trf_id TEXT NOT NULL UNIQUE,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        patient_name TEXT,
+        cancer_type TEXT,
+        physician_name TEXT,
+        total_mrp REAL,
+        cart_data TEXT
+    )''')
+
     conn = sqlite3.connect("dos.db")   
     cur = conn.cursor()
 
@@ -498,7 +547,6 @@ def test_details():
         SELECT clinical_scenario FROM clinical_positioning WHERE test_name=? LIMIT 1
     ''', (selected_test,)).fetchone()
 
-    
     ordering = conn.execute(
         'SELECT * FROM ordering WHERE test_name=? LIMIT 1', (selected_test,)
     ).fetchone()
@@ -514,7 +562,30 @@ def test_details():
     ).fetchone()
     performance = dict(performance) if performance else {}
 
+    # 🚨 FIX: Query all documents tied to this specific test from your test_documents table
+    raw_docs = conn.execute(
+        'SELECT id, doc_type, display_name, filename, file_size FROM test_documents WHERE test_name=?',
+        (selected_test,)
+    ).fetchall()
+
     conn.close()
+
+    # 🚨 FIX: Categorize the files into structural buckets for your UI columns loops
+    grouped_docs = {
+        'brochure': [],
+        'sample_report': [],
+        'case_study': []
+    }
+
+    for row in raw_docs:
+        d_type = row['doc_type']
+        if d_type in grouped_docs:
+            grouped_docs[d_type].append({
+                'id': row['id'],
+                'display_name': row['display_name'],
+                'filename': row['filename'],
+                'file_size': row['file_size']
+            })
 
     all_fields = [
         'description', 'use_case', 'category', 'sub_category',
@@ -546,8 +617,8 @@ def test_details():
         ordering=ordering,
         pricing=pricing,
         performance=performance,
+        docs=grouped_docs 
     )
-
 
 @app.route('/test_details/save', methods=['POST'])
 def save_test_details():
@@ -576,6 +647,80 @@ def save_test_details():
     conn.commit()
     conn.close()
     return jsonify({'success': True})
+
+@app.route('/view_doc/<filename>')
+def view_doc(filename):
+    return send_from_directory(app.config['DOCS_UPLOAD_FOLDER'], filename)
+
+@app.route('/upload_test_doc', methods=['POST'])
+def upload_test_doc():
+    if not is_admin():
+        return jsonify({'success': False, 'message': 'Unauthorized Access'}), 403
+    
+    test_name = request.form.get('test_name')
+    doc_type = request.form.get('doc_type')
+    display_name = request.form.get('display_name')
+    file = request.files.get('file')
+
+    if file and test_name and doc_type and display_name:
+        filename = secure_filename(f"{test_name}_{doc_type}_{file.filename}")
+        file_path = os.path.join(app.config['DOCS_UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+
+        # Calculate human-readable size for display
+        size_bytes = os.path.getsize(file_path)
+        size_mb = f"{size_bytes / (1024 * 1024):.2f} MB"
+
+        conn = get_db()
+        conn.execute('INSERT INTO test_documents (test_name, doc_type, display_name, filename, file_size) VALUES (?, ?, ?, ?, ?)',
+                     (test_name, doc_type, display_name, filename, size_mb))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('test_details', test=test_name))
+        
+    return jsonify({'success': False, 'message': 'Missing Parameters'}), 400
+
+@app.route('/delete_test_doc/<int:doc_id>', methods=['POST'])
+def delete_test_doc(doc_id):
+    if not is_admin(): return jsonify({'success': False}), 403
+    conn = get_db()
+    doc = conn.execute('SELECT * FROM test_documents WHERE id=?', (doc_id,)).fetchone()
+    if doc:
+        try:
+            os.remove(os.path.join(app.config['DOCS_UPLOAD_FOLDER'], doc['filename']))
+        except FileNotFoundError:
+            pass
+        conn.execute('DELETE FROM test_documents WHERE id=?', (doc_id,))
+        conn.commit()
+    conn.close()
+    return jsonify({'success': True})
+
+@app.route('/update_test_details', methods=['POST'])
+def update_test_details():
+    if not is_admin(): return redirect(url_for('welcome'))
+    test_name = request.form.get('test_name')
+    fields = [
+        'description', 'use_case', 'category', 'sub_category', 'technology_stack',
+        'accreditation', 'indications', 'patient_profile', 'clinical_questions',
+        'genes_biomarkers', 'variant_types', 'competitor_benchmarking', 'value_proposition'
+    ]
+    
+    conn = get_db()
+    exists = conn.execute('SELECT 1 FROM test_details WHERE test_name=?', (test_name,)).fetchone()
+    
+    if exists:
+        query = ", ".join([f"{f}=?" for f in fields])
+        params = [request.form.get(f, '') for f in fields] + [test_name]
+        conn.execute(f"UPDATE test_details SET {query} WHERE test_name=?", params)
+    else:
+        query_fields = ", ".join(['test_name'] + fields)
+        placeholders = ", ".join(['?'] * (len(fields) + 1))
+        params = [test_name] + [request.form.get(f, '') for f in fields]
+        conn.execute(f"INSERT INTO test_details ({query_fields}) VALUES ({placeholders})", params)
+        
+    conn.commit()
+    conn.close()
+    return redirect(url_for('test_details', test=test_name))
 
 
 # ─────────────────────────────────────────────────────────────
@@ -885,6 +1030,59 @@ for sec, tbl, flds, tmpl in SECTIONS:
     app.add_url_rule(f'/{sec}',        sec,           make_section_route(sec, tbl, flds, tmpl))
     app.add_url_rule(f'/{sec}/save',   f'save_{sec}', make_section_save(sec, tbl, flds),   methods=['POST'])
     app.add_url_rule(f'/{sec}/delete', f'delete_{sec}',make_section_delete(sec, tbl),       methods=['POST'])
+
+@app.route('/api/save_trf', methods=['POST'])
+def save_trf():
+    if not session.get('user_type'):
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+        
+    data = request.json
+    conn = get_db()
+    
+    try:
+        conn.execute('''
+            INSERT INTO test_requisitions 
+            (trf_id, patient_name, cancer_type, physician_name, total_mrp, cart_data) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (
+            data['id'], 
+            data['patient'], 
+            data['cancer'], 
+            data['physician'], 
+            data['total'], 
+            json.dumps(data['cartData'])
+        ))
+        conn.commit()
+    except Exception as e:
+        conn.close()
+        return jsonify({'success': False, 'error': str(e)}), 500
+        
+    conn.close()
+    return jsonify({'success': True})
+
+
+@app.route('/api/get_trfs', methods=['GET'])
+def get_trfs():
+    if not session.get('user_type'):
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+        
+    conn = get_db()
+    rows = conn.execute('SELECT * FROM test_requisitions ORDER BY id ASC').fetchall()
+    conn.close()
+    
+    records = []
+    for r in rows:
+        records.append({
+            'id': r['trf_id'],
+            'date': r['created_at'].split(' ')[0],
+            'patient': r['patient_name'],
+            'cancer': r['cancer_type'],
+            'physician': r['physician_name'],
+            'total': r['total_mrp'],
+            'cartData': json.loads(r['cart_data'])
+        })
+        
+    return jsonify(records)  
 
 
 # ─────────────────────────────────────────────────────────────

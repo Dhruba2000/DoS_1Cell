@@ -43,3 +43,149 @@ body{margin:0;font-family:Segoe UI,sans-serif;background:var(--bg-light);color:v
     margin-left:auto;
     font-size:12px;
 }
+.resource-library{
+    margin-top:40px;
+    background:#fff;
+    border-radius:22px;
+    padding:28px;
+    border:1px solid #e5e7eb;
+    box-shadow:0 10px 35px rgba(0,0,0,0.05);
+}
+
+.resource-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+    gap:20px;
+}
+
+.resource-header h2{
+    font-size:24px;
+    margin-bottom:6px;
+    color:#111827;
+}
+
+.resource-header p{
+    color:#6b7280;
+    font-size:14px;
+}
+
+.upload-resource-btn{
+    background:#1d4ed8;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:12px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.upload-resource-btn:hover{
+    transform:translateY(-2px);
+}
+
+.resource-section{
+    margin-bottom:35px;
+}
+
+.resource-section-title{
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#111827;
+}
+
+.resource-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:18px;
+}
+
+.resource-card{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    text-decoration:none;
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    padding:18px;
+    transition:0.25s;
+    position:relative;
+}
+
+.resource-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 28px rgba(0,0,0,0.08);
+}
+
+.resource-icon{
+    width:58px;
+    height:58px;
+    border-radius:16px;
+    background:#eff6ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    color:#2563eb;
+    flex-shrink:0;
+}
+
+.resource-content{
+    flex:1;
+}
+
+.resource-name{
+    font-size:15px;
+    font-weight:700;
+    color:#111827;
+    margin-bottom:5px;
+}
+
+.resource-meta{
+    font-size:13px;
+    color:#6b7280;
+}
+
+.resource-action{
+    color:#9ca3af;
+    font-size:18px;
+}
+
+.reports-highlight{
+    border:2px dashed #2563eb;
+    padding:20px;
+    border-radius:20px;
+    background:#f8fbff;
+}
+
+.report-card{
+    border-left:5px solid #2563eb;
+}
+
+.case-study{
+    border-left:5px solid #10b981;
+}
+
+.brochure-card{
+    border-left:5px solid #f59e0b;
+}
+
+@media(max-width:768px){
+
+    .resource-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .resource-grid{
+        grid-template-columns:1fr;
+    }
+
+}

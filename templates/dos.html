@@ -1,298 +1,934 @@
 {% extends "base.html" %}
 {% block content %}
-
-<div class="page-header">
-  <div class="page-header-left">
-    <div class="page-title">Directory of <span class="hi">Service</span></div>
-    <div class="page-desc">
-      Complete service portfolio including categories, specimen types, analytes, indications, TAT and pricing.
-    </div>
-  </div>
-
-  <div class="page-header-actions">
-    <input type="text" id="dosSearch" class="search-box" placeholder="Search tests...">
-  </div>
-</div>
-
-<div class="card dos-card">
-
-  <div class="table-wrap">
-    <table class="dos-table" id="dosTable">
-      <thead>
-        <tr>
-          <th>Test ID</th>
-          <th>Test Name</th>
-          <th>Description</th>
-          <th>Category</th>
-          <th>Type</th>
-          <th>Gene Size</th>
-          <th>Specimen</th>
-          <th>Cell Biology</th>
-          <th>Analyte</th>
-          <th>Addons</th>
-          <th>Indication</th>
-          <th>TAT</th>
-          <th>MRP</th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        <tr>
-          <td>DOS001</td>
-          <td>OncoIndx Basic</td>
-          <td>NGS test</td>
-          <td>Service Test</td>
-          <td>CGP</td>
-          <td>1080</td>
-          <td>Tissue / Blood</td>
-          <td>Tissue DNA / ctDNA</td>
-          <td>DNA</td>
-          <td>RNA</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-
-        <tr>
-          <td>DOS002</td>
-          <td>OncoIndx Premium</td>
-          <td>NGS test</td>
-          <td>Service Test</td>
-          <td>CGP</td>
-          <td>1080</td>
-          <td>CSF / Pleural Fluid / Ascitic Fluid</td>
-          <td>ctDNA</td>
-          <td>DNA</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-
-        <tr>
-          <td>DOS003</td>
-          <td>OncoIndx Prime+</td>
-          <td>Multi specimen NGS test</td>
-          <td>Service Test</td>
-          <td>CGP</td>
-          <td>1080</td>
-          <td>Tissue-Tissue / Tissue-Blood / Blood-CSF</td>
-          <td>Mixed</td>
-          <td>DNA, RNA</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-
-        <tr>
-          <td>DOS004</td>
-          <td>OncoHRD</td>
-          <td>HRD profiling</td>
-          <td>Service Test</td>
-          <td>-</td>
-          <td>100</td>
-          <td>Tissue / Blood</td>
-          <td>Tissue DNA / ctDNA</td>
-          <td>DNA</td>
-          <td>-</td>
-          <td>Ovarian, Breast, Pancreatic, Prostate</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-
-        <tr>
-          <td>DOS005</td>
-          <td>OncoIndx 360 EC</td>
-          <td>NGS test + IHC</td>
-          <td>Service Test</td>
-          <td>Targeted</td>
-          <td>-</td>
-          <td>Tissue</td>
-          <td>Tissue DNA, Protein</td>
-          <td>DNA, Protein</td>
-          <td>-</td>
-          <td>Endometrium Cancer - All stages</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-
-        <tr>
-          <td>DOS006</td>
-          <td>OncoTarget</td>
-          <td>NGS test</td>
-          <td>Service Test</td>
-          <td>Targeted</td>
-          <td>100</td>
-          <td>Tissue / Blood</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-
-        <tr>
-          <td>DOS007</td>
-          <td>OncoCTC</td>
-          <td>CTC test</td>
-          <td>Service Test</td>
-          <td>-</td>
-          <td>N/A</td>
-          <td>Blood</td>
-          <td>CTC</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-
-        <tr>
-          <td>DOS008</td>
-          <td>OncoMonitor MRD</td>
-          <td>NGS test with Methylation</td>
-          <td>Service Test</td>
-          <td>-</td>
-          <td>100</td>
-          <td>Blood</td>
-          <td>CTC, ctDNA</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-
-        <tr>
-          <td>DOS009</td>
-          <td>OncoMonitor TRM</td>
-          <td>NGS test</td>
-          <td>Service Test</td>
-          <td>-</td>
-          <td>100</td>
-          <td>Blood</td>
-          <td>CTC, ctDNA</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-
-        <tr>
-          <td>DOS010</td>
-          <td>OncoRisk + MLPA</td>
-          <td>Germline test</td>
-          <td>Service Test</td>
-          <td>-</td>
-          <td>74 Gene + 28 MLPA</td>
-          <td>Blood</td>
-          <td>DNA</td>
-          <td>DNA</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="card mt-20">
-  <h3 class="sub-title">Available Add-ons</h3>
-  <div class="addon-wrap">
-    <span class="addon-chip">RNA</span>
-    <span class="addon-chip">PD-L1 by IHC</span>
-    <span class="addon-chip">ER/PR/HER2 by IHC</span>
-    <span class="addon-chip">MMR</span>
-  </div>
-</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-.search-box{
-  padding:10px 14px;
-  border:1px solid #d8dee8;
-  border-radius:10px;
-  min-width:250px;
+/* ═══════════════════════════════════════════════
+   GLOBAL & LAYOUT STYLES
+═══════════════════════════════════════════════ */
+:root {
+    --maroon: #9e1f45;
+    --maroon-light: #fcf1f4;
+    --navy: #0f172a;
+    --border: #e2e8f0;
+    --bg-surface: #f8fafc;
+    --teal: #0f766e;
+    --teal-light: #f0fdfa;
 }
 
-.dos-card{
-  padding:0;
-  overflow:hidden;
+.dos-header-tabs { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 2px solid var(--border); padding-bottom: 0; }
+.dos-tab {
+    padding: 12px 24px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    background: transparent; color: #64748b; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; margin-bottom: -2px;
 }
+.dos-tab:hover { color: var(--navy); }
+.dos-tab.active { border-bottom-color: var(--maroon); color: var(--maroon); }
 
-.table-wrap{
-  overflow:auto;
-}
+.view-section { display: none; animation: fadeIn 0.3s ease; }
+.view-section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-.dos-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:1700px;
-}
+/* ═══════════════════════════════════════════════
+   CATALOGUE TABLE STYLES
+═══════════════════════════════════════════════ */
+.dos-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+.search-box { width: 320px; max-width: 100%; border: 1px solid #dbe2ea; border-radius: 8px; padding: 10px 14px; font-size: 13px; background: #fff; outline: none; }
+.search-box:focus { border-color: var(--teal); }
+.toolbar-right { display: flex; gap: 10px; }
+.filter-btn { border: none; background: #eef2f7; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; color: #475569; }
+.filter-btn.active { background: var(--navy); color: #fff; }
 
-.dos-table th{
-  background:#0f172a;
-  color:#fff;
-  padding:12px;
-  font-size:13px;
-  text-align:left;
-  position:sticky;
-  top:0;
-}
+.table-card { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+.table-wrap { overflow: auto; }
+.dos-table { width: 100%; border-collapse: collapse; min-width: 1300px; }
+.dos-table th { background: var(--navy); color: #fff; padding: 14px 16px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; text-align: left; }
+.dos-table td { padding: 14px 16px; border-bottom: 1px solid #eef2f7; font-size: 13px; vertical-align: middle; color: #334155; }
+.dos-table tr:hover { background: #f8fafc; }
 
-.dos-table td{
-  padding:12px;
-  border-bottom:1px solid #edf0f5;
-  font-size:13px;
-  vertical-align:top;
-}
+.test-title { font-weight: 800; color: var(--navy); font-size: 14px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.info-btn { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal); border-radius: 50%; width: 22px; height: 22px; display: inline-flex; justify-content: center; align-items: center; font-size: 10px; cursor: pointer; transition: 0.2s; }
+.info-btn:hover { background: var(--teal); color: #fff; }
 
-.dos-table tr:hover{
-  background:#f8fafc;
-}
+.type-chip { padding: 4px 10px; border-radius: 30px; font-size: 11px; font-weight: 700; }
+.type-chip.service { background: #dcfce7; color: #166534; }
+.type-chip.ruo { background: #fee2e2; color: #991b1b; }
 
-.sub-title{
-  margin-bottom:14px;
-}
+.form-select { padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.85rem; font-weight: 600; cursor: pointer; background: #fff; outline: none; width: 100%; min-width: 140px; }
+.form-select:disabled { background: #f1f5f9; cursor: not-allowed; color: #475569; }
 
-.addon-wrap{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-}
+.price-text { font-weight: 800; color: var(--teal); font-size: 1rem; }
+.genes-text { font-size: 0.8rem; font-weight: 600; color: #475569; line-height: 1.4; display: block; max-width: 180px; }
+.acc-text { font-size: 0.75rem; font-weight: 700; color: var(--navy); }
+.tat-text { font-size: 0.75rem; font-weight: 600; color: #64748b; }
 
-.addon-chip{
-  background:#eef4ff;
-  color:#1d4ed8;
-  padding:8px 14px;
-  border-radius:30px;
-  font-size:13px;
-  font-weight:600;
-}
+.btn-action { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal); padding: 8px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; white-space: nowrap; width: 100%; }
+.btn-action:hover { background: var(--teal); color: #fff; }
 
-.mt-20{
-  margin-top:20px;
-}
+/* ═══════════════════════════════════════════════
+   MODAL STYLES (INFO & ADD-ON POPUPS)
+═══════════════════════════════════════════════ */
+.modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.2s; }
+.modal-backdrop.open { display: flex; opacity: 1; }
+.modal-box { background: #fff; width: 90%; max-width: 500px; border-radius: 12px; box-shadow: var(--shadow-lg); overflow: hidden; transform: translateY(20px); transition: transform 0.2s; display: flex; flex-direction: column; max-height: 90vh; }
+.modal-backdrop.open .modal-box { transform: translateY(0); }
+.modal-head { background: var(--navy); color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+.modal-head h2 { margin: 0; font-size: 1.1rem; }
+.btn-close { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; opacity: 0.7; }
+.btn-close:hover { opacity: 1; }
+.modal-body { padding: 24px 20px; overflow-y: auto; background: var(--bg-surface); }
+.modal-foot { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #fff; }
+
+/* Add-on Controls inside Modal */
+.addon-group { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+.addon-group-title { font-size: 0.85rem; font-weight: 800; color: var(--navy); margin-bottom: 10px; display: flex; justify-content: space-between; }
+.addon-group-title span.price { color: var(--maroon); font-weight: 700; }
+
+.pill-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.ihc-pill { padding: 6px 12px; border-radius: 20px; border: 1px solid var(--teal); color: var(--teal); font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #fff; user-select: none; }
+.ihc-pill.active { background: var(--teal); color: #fff; }
+.custom-checkbox { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--navy); cursor: pointer; margin-bottom: 8px; }
+.custom-checkbox input { width: 16px; height: 16px; accent-color: var(--teal); cursor: pointer; }
+
+/* Info Modal Text */
+.info-section { margin-bottom: 16px; }
+.info-section h4 { margin: 0 0 6px 0; font-size: 0.8rem; color: var(--teal); text-transform: uppercase; letter-spacing: 0.05em; }
+.info-section p { margin: 0; font-size: 0.9rem; color: #334155; line-height: 1.5; }
+.info-section ul { margin: 0; padding-left: 20px; font-size: 0.9rem; color: #334155; line-height: 1.5; }
+
+/* ═══════════════════════════════════════════════
+   LGF FORM STYLES
+═══════════════════════════════════════════════ */
+.lgf-container { background: #fff; max-width: 1000px; margin: 0 auto; border: 1px solid var(--border); padding: 40px; box-shadow: var(--shadow-lg); position: relative; }
+.lgf-header { border-bottom: 3px solid var(--navy); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
+.lgf-header h1 { margin: 0; color: var(--navy); font-size: 2.2rem; letter-spacing: 0.05em; line-height: 1; text-transform: uppercase; }
+.lgf-header p { margin: 0; color: var(--maroon); font-weight: 800; font-size: 1.2rem; }
+
+.lgf-section { border: 2px solid var(--maroon); margin-bottom: 24px; border-radius: 4px; overflow: hidden; }
+.lgf-section-title { background: var(--maroon); color: #fff; font-weight: 700; font-size: 1.05rem; padding: 8px 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+.lgf-grid { display: flex; flex-direction: column; background: #fff; }
+.lgf-row { display: flex; border-bottom: 1px solid var(--maroon); }
+.lgf-row:last-child { border-bottom: none; }
+.lgf-field { flex: 1; border-right: 1px solid var(--maroon); padding: 8px 12px; display: flex; flex-direction: column; gap: 4px; }
+.lgf-field:last-child { border-right: none; }
+.lgf-label { font-size: 0.65rem; font-weight: 800; color: var(--maroon); text-transform: uppercase; }
+.lgf-input { border: none; outline: none; font-size: 0.9rem; font-weight: 600; color: var(--navy); width: 100%; background: transparent; padding: 2px 0; }
+.lgf-input:read-only { color: #475569; }
+
+.lgf-checkbox-group { display: flex; gap: 16px; align-items: center; font-size: 0.8rem; font-weight: 600; color: var(--navy); flex-wrap: wrap; margin-top: 4px; }
+.lgf-checkbox-group label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.lgf-watermark { position: absolute; top: 20px; right: 40px; font-size: 1.2rem; font-weight: 800; color: var(--teal); opacity: 0.8; }
+
+/* ═══════════════════════════════════════════════
+   RECORDS LIST STYLES
+═══════════════════════════════════════════════ */
+.records-table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: var(--shadow-sm); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.records-table th { background: var(--bg-surface); color: var(--navy); padding: 14px 16px; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; border-bottom: 2px solid var(--border); }
+.records-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 0.9rem; color: #475569; }
+.records-table tr:hover { background: var(--bg-surface); }
+.clickable-lgf { color: var(--teal); font-weight: 800; cursor: pointer; text-decoration: underline; }
 </style>
 
+<div class="page-header" style="margin-bottom: 30px;">
+    <div>
+        <h1 class="page-title">Directory of <span class="hi">Services</span></h1>
+        <p class="page-desc">Dynamic Test Catalogue, Lead Generator, and Database.</p>
+    </div>
+</div>
+
+<div class="dos-header-tabs">
+    <button class="dos-tab active" onclick="switchTab('catalog')"><i class="fas fa-microscope"></i> Test Catalogue</button>
+    <button class="dos-tab" id="tab-lgf" style="display:none;" onclick="switchTab('lgf')"><i class="fas fa-file-signature"></i> Lead Generation Form</button>
+    <button class="dos-tab" onclick="switchTab('list')"><i class="fas fa-database"></i> Lead Database</button>
+</div>
+
+<div id="view-catalog" class="view-section active">
+    <div class="dos-toolbar">
+        <div class="toolbar-left">
+            <input type="text" id="globalSearch" class="search-box" placeholder="Search tests, genes, description..." onkeyup="filterTable()">
+        </div>
+        <div class="toolbar-right">
+            <button class="filter-btn active" onclick="filterType('All', this)">All</button>
+            <button class="filter-btn" onclick="filterType('Service', this)">Service</button>
+            <button class="filter-btn" onclick="filterType('RUO', this)">RUO</button>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-wrap">
+            <table class="dos-table" id="dosTable">
+                <thead>
+                    <tr>
+                        <th style="min-width: 240px;">Test Name & Description</th>
+                        <th style="min-width: 170px;">Variant</th>
+                        <th>Type</th>
+                        <th>Analyte</th>
+                        <th style="min-width: 170px;">Genes</th>
+                        <th style="min-width: 110px;">MRP</th>
+                        <th style="min-width: 110px;">Accreditation</th>
+                        <th>TAT</th>
+                        <th style="min-width: 120px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="catalog-tbody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="view-lgf" class="view-section">
+    <button class="btn btn-secondary mb-16" onclick="switchTab('catalog')" id="lgf-back-btn"><i class="fas fa-arrow-left"></i> Cancel & Modify Selection</button>
+    
+    <div class="lgf-container" id="lgf-document">
+        <div class="lgf-watermark" id="lgf-watermark-id"></div>
+        
+        <div class="lgf-header">
+            <div>
+                <p>1Cell.Ai™</p>
+                <div style="font-size:0.8rem; color:#64748b; font-weight:600;">AI-Powered Precision Oncology</div>
+            </div>
+            <h1>LEAD GENERATION FORM</h1>
+        </div>
+
+        <div class="lgf-section" style="border-color: var(--teal);">
+            <div class="lgf-section-title" style="background: var(--teal);">INTERNAL TRACKING</div>
+            <div class="lgf-grid">
+                <div class="lgf-row">
+                    <div class="lgf-field">
+                        <span class="lgf-label" style="color:var(--teal);">Sales Person Name</span>
+                        <input type="text" class="lgf-input lgf-data" id="lgf-sales" placeholder="Enter your full name...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lgf-section">
+            <div class="lgf-section-title">PATIENT INFORMATION</div>
+            <div class="lgf-grid">
+                <div class="lgf-row">
+                    <div class="lgf-field"><span class="lgf-label">First Name</span><input type="text" class="lgf-input lgf-data" id="lgf-fname"></div>
+                    <div class="lgf-field"><span class="lgf-label">Last Name</span><input type="text" class="lgf-input lgf-data" id="lgf-lname"></div>
+                </div>
+                <div class="lgf-row">
+                    <div class="lgf-field" style="flex: 0.5;"><span class="lgf-label">DOB</span><input type="date" class="lgf-input lgf-data" id="lgf-dob"></div>
+                    <div class="lgf-field" style="flex: 0.3;"><span class="lgf-label">Age</span><input type="number" class="lgf-input lgf-data" id="lgf-age"></div>
+                    <div class="lgf-field">
+                        <span class="lgf-label">Gender</span>
+                        <div class="lgf-checkbox-group">
+                            <label><input type="radio" name="gender" value="Male" class="lgf-data"> Male</label>
+                            <label><input type="radio" name="gender" value="Female" class="lgf-data"> Female</label>
+                            <label><input type="radio" name="gender" value="Other" class="lgf-data"> Other</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="lgf-row">
+                    <div class="lgf-field"><span class="lgf-label">Email (for report)</span><input type="email" class="lgf-input lgf-data" id="lgf-email"></div>
+                    <div class="lgf-field"><span class="lgf-label">Phone</span><input type="text" class="lgf-input lgf-data" id="lgf-phone"></div>
+                </div>
+                <div class="lgf-row">
+                    <div class="lgf-field"><span class="lgf-label">Address (Residential)</span><input type="text" class="lgf-input lgf-data" id="lgf-address"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lgf-section">
+            <div class="lgf-section-title">PATIENT HISTORY</div>
+            <div class="lgf-grid">
+                <div class="lgf-row"><div class="lgf-field"><span class="lgf-label">Diagnosis/Cancer type</span><input type="text" class="lgf-input lgf-data" id="lgf-diagnosis"></div></div>
+                <div class="lgf-row"><div class="lgf-field"><span class="lgf-label">Prior/Current Therapies</span><input type="text" class="lgf-input lgf-data" id="lgf-therapies"></div></div>
+                <div class="lgf-row">
+                    <div class="lgf-field"><span class="lgf-label">Disease Status</span>
+                        <div class="lgf-checkbox-group">
+                            <label><input type="radio" name="d_status" value="Metastasis" class="lgf-data"> Metastasis</label>
+                            <label><input type="radio" name="d_status" value="Recurrent" class="lgf-data"> Recurrent</label>
+                            <label><input type="radio" name="d_status" value="Relapsed" class="lgf-data"> Relapsed</label>
+                            <label><input type="radio" name="d_status" value="Refractory" class="lgf-data"> Refractory</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lgf-section">
+            <div class="lgf-section-title">PHYSICIAN INFORMATION</div>
+            <div class="lgf-grid">
+                <div class="lgf-row">
+                    <div class="lgf-field" style="flex:2;"><span class="lgf-label">Physician Name</span><input type="text" class="lgf-input lgf-data" id="lgf-doc-name"></div>
+                    <div class="lgf-field"><span class="lgf-label">Phone</span><input type="text" class="lgf-input lgf-data" id="lgf-doc-phone"></div>
+                </div>
+                <div class="lgf-row"><div class="lgf-field"><span class="lgf-label">Facility/Hospital Name & Address</span><input type="text" class="lgf-input lgf-data" id="lgf-doc-hosp"></div></div>
+            </div>
+        </div>
+
+        <div class="lgf-section">
+            <div class="lgf-section-title" style="background:var(--navy); border-color:var(--navy);">LEAD DETAILS & PRICING</div>
+            <div class="lgf-grid" id="lgf-tests-summary" style="padding: 20px; font-size: 0.95rem; line-height: 1.6; color: var(--navy);">
+                </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; display:flex; justify-content:center; gap:16px;">
+        <button class="btn btn-primary" onclick="submitAndDownloadPDF()" id="save-btn" style="font-size: 1.1rem; padding: 14px 32px;"><i class="fas fa-save"></i> Save Lead & Download PDF</button>
+        <button class="btn btn-secondary" onclick="justDownloadPDF()" id="download-only-btn" style="display:none; font-size: 1.1rem; padding: 14px 32px;"><i class="fas fa-download"></i> Re-Download PDF</button>
+    </div>
+</div>
+
+<div id="view-list" class="view-section">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2 style="margin:0; color:var(--navy);">Lead Database</h2>
+    </div>
+    <table class="records-table">
+        <thead>
+            <tr>
+                <th>LGF ID</th>
+                <th>Date</th>
+                <th>Patient Name</th>
+                <th>Cancer Type</th>
+                <th>Physician</th>
+                <th>Sales Person</th>
+                <th>Total MRP</th>
+            </tr>
+        </thead>
+        <tbody id="records-tbody">
+            <tr><td colspan="7" style="text-align:center;">Loading Database...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal-backdrop" id="info-modal">
+    <div class="modal-box" style="max-width: 600px;">
+        <div class="modal-head">
+            <h2 id="info-modal-title">Test Details</h2>
+            <button class="btn-close" onclick="closeInfoModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="info-modal-body" style="background:#fff;">
+            </div>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="config-modal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h2 id="modal-title">Configure Tissue Add-ons</h2>
+            <button class="btn-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            
+            <div class="addon-group">
+                <div class="addon-group-title">PD-L1 Evaluation <span class="price">+₹15,000</span></div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <label class="custom-checkbox"><input type="radio" name="pdl1" value="DAKO 22 C3" onchange="calcModalPrice()"> DAKO 22 C3</label>
+                    <label class="custom-checkbox"><input type="radio" name="pdl1" value="Ventana SP263" onchange="calcModalPrice()"> Ventana SP263</label>
+                    <label class="custom-checkbox"><input type="radio" name="pdl1" value="None" checked onchange="calcModalPrice()"> No PD-L1 Required</label>
+                </div>
+            </div>
+
+            <div class="addon-group">
+                <div class="addon-group-title">Diagnostic IHC Panel <span class="price">Variable</span></div>
+                <div style="font-size:0.75rem; color:#64748b; margin-bottom:8px;">1 Marker = ₹10k | 2 Markers = ₹15k | 3+ Markers = ₹20k</div>
+                <div class="pill-grid" id="modal-ihc-grid">
+                    </div>
+            </div>
+
+            <div class="addon-group">
+                <div class="addon-group-title">Additional Pathology Services <span class="price">Custom</span></div>
+                <label class="custom-checkbox"><input type="checkbox" id="modal-mmr"> MMR Panel (MLH-1, PMS-2, MSH-2, MSH-6)</label>
+                
+                <div style="margin-top:12px; font-size:0.8rem; font-weight:700; color:var(--navy); margin-bottom:6px;">Histopath Requirement</div>
+                <select class="form-select" id="modal-histopath">
+                    <option value="None">Not Required</option>
+                    <option value="Small">Small</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Large">Large</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="modal-foot">
+            <div style="display:flex; flex-direction:column;">
+                <span style="font-size:0.7rem; color:#64748b; text-transform:uppercase; font-weight:700;">Total MRP</span>
+                <span style="font-size:1.3rem; font-weight:800; color:var(--teal);" id="modal-total-price">₹0</span>
+            </div>
+            <button class="btn btn-primary" onclick="confirmModalSelection()">Generate Lead <i class="fas fa-arrow-right" style="margin-left:6px;"></i></button>
+        </div>
+    </div>
+</div>
+
 <script>
-document.getElementById("dosSearch").addEventListener("keyup", function() {
-    let value = this.value.toLowerCase();
-    let rows = document.querySelectorAll("#dosTable tbody tr");
+/* ─────────────────────────────────────────────────────────────
+   CATALOGUE DATA STRUCTURE (Mapped strictly from DOCX)
+───────────────────────────────────────────────────────────── */
+const catalog = [
+    { 
+        id: "T1", name: "OncoIndx® Advanced", analyte: "DNA, RNA", desc: "Comprehensive Genomic Profiling", type: "Service", genes: "1080 Genes", 
+        fullDetails: `
+            <ul>
+                <li><strong>Coverage:</strong> 1080 cancer-related genes.</li>
+                <li><strong>Detection:</strong> SNVs, Indels, CNVs, and 50 fusions (138 fusion partners).</li>
+                <li><strong>Additional Biomarkers:</strong> Analyses > 50 HRR genes, 350 therapy resistance genes.</li>
+                <li><strong>Signatures:</strong> Genome-wide LOH (16,000 markers), MSI evaluation (2000 hotspots & MMR genes), TMB estimation, HRD score.</li>
+                <li><strong>PGx:</strong> 36 pharmacogenomic markers for chemotherapy response.</li>
+            </ul>
+        `,
+        variants: [
+            {name: "OncoIndx TBx", specimen: "Tissue", mrp: 135000, acc: "CAP", tat: "12 Days"},
+            {name: "OncoIndx LBx", specimen: "Blood", mrp: 135000, acc: "NABL and CAP", tat: "12 Days"},
+            {name: "OncoIndx OBx", specimen: "CSF, Ascetic, Pleural", mrp: 165000, acc: "CAP", tat: "12 Days"}
+        ] 
+    },
+    { 
+        id: "T2", name: "OncoIndx® Prime +", analyte: "DNA, RNA, Protein", desc: "Comprehensive Multi-omics", type: "Service", genes: "1080 Genes", 
+        fullDetails: `
+            <p>A 360° Molecular Profiling Test combining Tissue-Liquid-Normal Match DNA testing, along with RNA and IHC based Protein markers.</p>
+            <ul>
+                <li><strong>5 Layered Multi-omics:</strong> Genomics (Tissue), Transcriptomics (Tissue), Proteomics (Tissue IHC), Genomics (Liquid), and Genomic DNA normal match.</li>
+                <li><strong>True Somatic Detection:</strong> Normal match guarantees separation of true somatic and true germline variants.</li>
+                <li><strong>Longitudinal Monitoring:</strong> Baseline thresholding using ctDNA. Includes CTC test.</li>
+            </ul>
+        `,
+        variants: [{name: "Multi-omics Match", specimen: "Tissue + Blood", mrp: 290000, acc: "CAP", tat: "12 Days"}] 
+    },
+    { 
+        id: "T3", name: "OncoHRD", analyte: "DNA", desc: "Advanced HRD scoring test", type: "Service", genes: "50+ HRR Genes", 
+        fullDetails: `
+            <p>Analyses 50+ HRR genes detecting SNVs, Indels, CNVs and large structural variations.</p>
+            <ul>
+                <li><strong>HRD Scoring:</strong> Based upon LOH (Loss of Heterozygosity), LST (Large-Scale transitions), and TAI (Telomeric Allelic Imbalance).</li>
+                <li><strong>Utility:</strong> Supports PARP inhibitors and platinum-based therapies recommendation.</li>
+                <li><strong>Sequencing Depth:</strong> 2000X (Tissue), 10,000X (Liquid).</li>
+            </ul>
+        `,
+        variants: [{name: "Tissue", specimen: "Tissue", mrp: 80000, acc: "CAP", tat: "12 Days"}, {name: "Blood/Liquid", specimen: "Blood", mrp: 80000, acc: "CAP", tat: "12 Days"}] 
+    },
+    { 
+        id: "T4", name: "OncoIndx®360 Endometrium", analyte: "DNA, Protein", desc: "Integrated WHO-aligned molecular test", type: "Service", genes: "Endometrial Core", 
+        fullDetails: `
+            <p>Integrated NGS and IHC results with WHO-aligned biomarker coverage.</p>
+            <ul>
+                <li><strong>Core Targets:</strong> POLE, TP53, MMR/MSI, ER, HER2.</li>
+                <li><strong>Utility:</strong> Provides clear prognosis and therapy guidance including immunotherapy, targeted, and hormone therapy options.</li>
+                <li><strong>Sequencing Depth:</strong> 2000X.</li>
+            </ul>
+        `,
+        variants: [{name: "Tissue", specimen: "Tissue", mrp: 60000, acc: "CAP", tat: "12 Days"}] 
+    },
+    { 
+        id: "T5", name: "OncoTarget® TBx", analyte: "DNA", desc: "Targeted NGS panel", type: "Service", genes: "100+ Genes", 
+        fullDetails: `
+            <p>Complete gene sequencing on tissue biopsy for SNVs, Indels, CNVs and specific Fusions.</p>
+            <ul>
+                <li><strong>Features:</strong> MSI on NGS, Pharmacogenomics of DPYD gene (for drug response, adverse events and toxicity).</li>
+                <li><strong>Coverage:</strong> Resistance genes for targeted therapies.</li>
+                <li><strong>Indications:</strong> Bladder, Breast, Colon, Endometruim, GI, Head & Neck, Lung, Melanoma, Pancreas, Prostate, Ovary, Rectum, Thyroid.</li>
+            </ul>
+        `,
+        variants: [
+            {name: "TBx Organ", specimen: "Tissue", mrp: 30000, acc: "NABL and CAP", tat: "12 Days"},
+            {name: "TBx Complete", specimen: "Tissue", mrp: 30000, acc: "NABL and CAP", tat: "12 Days"}
+        ] 
+    },
+    { 
+        id: "T6", name: "OncoTarget® LBx", analyte: "ctDNA", desc: "Targeted NGS panel", type: "Service", genes: "100+ Genes", 
+        fullDetails: `
+            <p>Complete gene sequencing on liquid biopsy for SNVs, Indels, CNVs and specific Fusions.</p>
+            <ul>
+                <li><strong>Features:</strong> MSI on NGS, Pharmacogenomics of DPYD gene.</li>
+                <li><strong>Indications:</strong> Bladder, Breast, Colon, Endometruim, GI, Lung, Melanoma, Pancreas, Prostate, Ovary, Rectum, Thyroid.</li>
+                <li><strong>Sequencing Depth:</strong> 10000X.</li>
+            </ul>
+        `,
+        variants: [{name: "Blood", specimen: "Blood", mrp: 40000, acc: "CAP", tat: "12 Days"}] 
+    },
+    { 
+        id: "T7", name: "OncoMonitor®", analyte: "ctDNA, CTC", desc: "ctDNA + CTC based monitoring assay", type: "Service", genes: "90+ Genes", 
+        fullDetails: `
+            <p>NGS panel optimized for longitudinal cancer monitoring & MRD.</p>
+            <ul>
+                <li><strong>Targets:</strong> 12 HRR genes, SNVs, Indels, CNVs, 30 gene fusions (40 fusion partners), MSI.</li>
+                <li><strong>MRD (Post surgery):</strong> Includes ctDNA load and CTC estimation.</li>
+                <li><strong>TRM (Post treatment):</strong> Includes ctDNA load, CTC estimation, Genomics.</li>
+            </ul>
+        `,
+        variants: [{name: "MRD (Post Surgery)", specimen: "Blood", mrp: 50000, acc: "CAP", tat: "12 Days"}, {name: "TRM (Post Treatment)", specimen: "Blood", mrp: 50000, acc: "CAP", tat: "12 Days"}] 
+    },
+    { 
+        id: "T8", name: "OncoCTC", analyte: "CTC", desc: "CTC based monitoring assay", type: "Service", genes: "CTC Enumeration", 
+        fullDetails: `
+            <p>Longitudinal cancer monitoring test that analyzes CTCs to provide real-time insights into disease progression, treatment response, and relapse risk.</p>
+            <ul>
+                <li><strong>Targets:</strong> single CTCs, CTC doublets, and CTC clusters.</li>
+            </ul>
+        `,
+        variants: [{name: "Blood", specimen: "Blood", mrp: 35000, acc: "Not in Scope", tat: "7 Days"}] 
+    },
+    { 
+        id: "T9", name: "OncoRisk® + MLPA", analyte: "DNA", desc: "Hereditary Cancer Screening", type: "Service", genes: "74 Genes + 27 MLPA", 
+        fullDetails: `
+            <p>Comprehensive germline NGS Panel of NCCN recommended 74 Genes to uncover more than 11 distinct Hereditary Cancer Risk + 27 MLPA probes.</p>
+            <ul>
+                <li><strong>Coverage:</strong> SNVs and CNVs in the 74 genes on genomic DNA.</li>
+                <li><strong>Utility:</strong> Reports cancer risk based upon germline variant findings. Helps identify potential risks early, enabling timely interventions.</li>
+            </ul>
+        `,
+        variants: [
+            {name: "OncoRisk + MLPA", specimen: "Blood", mrp: 35000, acc: "CAP", tat: "12 Days"},
+            {name: "OncoRisk + Reflex MLPA", specimen: "Blood", mrp: 35000, acc: "CAP", tat: "12 Days"},
+            {name: "MLPA Only", specimen: "Blood", mrp: 35000, acc: "CAP", tat: "12 Days"}
+        ] 
+    }
+];
 
-    rows.forEach(row => {
-        row.style.display =
-            row.innerText.toLowerCase().includes(value)
-            ? ""
-            : "none";
-    });
+const ADDON_PRICING = {
+    pdl1: 15000,
+    ihc: function(count) {
+        if (count === 0) return 0;
+        if (count <= 2) return 15000;
+        return 20000;
+    }
+};
+
+const IHC_LIST = ["ER", "PR", "HER2", "HER2 Low", "Ki67", "Claudin 18.2", "Alk", "ROS1", "CMET"];
+
+let currentModalTest = null;
+let modalIhcSelection = new Set();
+let cart = {}; 
+let dbRecordCount = 0; 
+let storedDbRecords = [];
+
+/* ─────────────────────────────────────────────────────────────
+   INITIALIZATION
+───────────────────────────────────────────────────────────── */
+document.addEventListener("DOMContentLoaded", () => {
+    renderTable();
+    fetchRecordsList();
 });
-</script>
 
+function formatCurrency(amount) {
+    return "₹" + amount.toLocaleString('en-IN');
+}
+
+function renderTable() {
+    const tbody = document.getElementById("catalog-tbody");
+    tbody.innerHTML = "";
+    
+    catalog.forEach(test => {
+        const typeCls = test.type === "Service" ? "service" : "ruo";
+        
+        let varOptions = test.variants.map((v, i) => 
+            `<option value="${i}">${v.name} (${v.specimen})</option>`
+        ).join('');
+        
+        const isSingle = test.variants.length === 1;
+        const initialVariant = test.variants[0];
+        const initialGenes = initialVariant.genes || test.genes;
+        
+        let addonBtn = "";
+        if (initialVariant.specimen.includes("Tissue")) {
+            addonBtn = `<button class="btn-action" onclick="openModal('${test.id}')"><i class="fas fa-cog"></i> Configure</button>`;
+        } else {
+            addonBtn = `<button class="btn-action" style="background:var(--navy); color:#fff;" onclick="directOrder('${test.id}')"><i class="fas fa-plus"></i> Order Test</button>`;
+        }
+
+        tbody.innerHTML += `
+            <tr data-type="${test.type}">
+                <td>
+                    <div class="test-title">${test.name} <button class="info-btn" onclick="openInfoModal('${test.id}')" title="View details"><i class="fas fa-info"></i></button></div>
+                    <div style="font-size:11px; color:#64748b;">${test.desc}</div>
+                </td>
+                <td>
+                    <select class="form-select" id="var-select-${test.id}" onchange="changeTableVariant('${test.id}', this)" ${isSingle ? 'disabled' : ''}>
+                        ${varOptions}
+                    </select>
+                </td>
+                <td><span class="type-chip ${typeCls}">${test.type}</span></td>
+                <td>${test.analyte}</td>
+                <td><span class="genes-text" id="genes-${test.id}">${initialGenes}</span></td>
+                <td><span class="price-text" id="mrp-${test.id}">${formatCurrency(initialVariant.mrp)}</span></td>
+                <td><span class="acc-text" id="acc-${test.id}">${initialVariant.acc}</span></td>
+                <td><span class="tat-text" id="tat-${test.id}">${initialVariant.tat}</span></td>
+                <td id="addon-${test.id}">${addonBtn}</td>
+            </tr>
+        `;
+    });
+}
+
+function filterTable() {
+    let value = document.getElementById("globalSearch").value.toLowerCase();
+    document.querySelectorAll("#catalog-tbody tr").forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+    });
+}
+
+function filterType(type, btn) {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll("#catalog-tbody tr").forEach(row => {
+        if(type === "All") { row.style.display = ""; }
+        else { row.style.display = row.dataset.type === type ? "" : "none"; }
+    });
+}
+
+function changeTableVariant(testId, selectEl) {
+    const test = catalog.find(t => t.id === testId);
+    const variant = test.variants[selectEl.value];
+
+    document.getElementById(`mrp-${testId}`).innerText = formatCurrency(variant.mrp);
+    document.getElementById(`genes-${testId}`).innerText = variant.genes || test.genes;
+    document.getElementById(`acc-${testId}`).innerText = variant.acc;
+    document.getElementById(`tat-${testId}`).innerText = variant.tat;
+
+    const addonCell = document.getElementById(`addon-${testId}`);
+    if (variant.specimen.includes('Tissue')) {
+        addonCell.innerHTML = `<button class="btn-action" onclick="openModal('${testId}')"><i class="fas fa-cog"></i> Configure</button>`;
+    } else {
+        addonCell.innerHTML = `<button class="btn-action" style="background:var(--navy); color:#fff;" onclick="directOrder('${testId}')"><i class="fas fa-plus"></i> Order Test</button>`;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   INFO MODAL LOGIC
+───────────────────────────────────────────────────────────── */
+function openInfoModal(testId) {
+    const test = catalog.find(t => t.id === testId);
+    document.getElementById("info-modal-title").innerText = test.name + " Information";
+    
+    document.getElementById("info-modal-body").innerHTML = `
+        <div class="info-section">
+            <h4>Description & Methodology</h4>
+            ${test.fullDetails}
+        </div>
+        <div class="info-section">
+            <h4>Test Specifications</h4>
+            <ul>
+                <li><strong>Analyte:</strong> ${test.analyte}</li>
+                <li><strong>Reported Genes:</strong> ${test.genes}</li>
+                <li><strong>Type:</strong> ${test.type}</li>
+            </ul>
+        </div>
+    `;
+    document.getElementById("info-modal").classList.add("open");
+}
+function closeInfoModal() {
+    document.getElementById("info-modal").classList.remove("open");
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ORDERING & ADD-ON MODAL LOGIC
+───────────────────────────────────────────────────────────── */
+function directOrder(testId) {
+    const test = catalog.find(t => t.id === testId);
+    const select = document.getElementById(`var-select-${testId}`);
+    const variant = test.variants[select.value];
+
+    cart = {}; 
+    cart[testId] = {
+        name: test.name, variantName: variant.name, specimen: variant.specimen,
+        baseMrp: variant.mrp, addons: { pdl1: "None", ihc: [], mmr: false, histopath: "None" }, addonTotal: 0, total: variant.mrp
+    };
+    setupLGFForm();
+}
+
+function openModal(testId) {
+    currentModalTest = catalog.find(t => t.id === testId);
+    modalIhcSelection.clear();
+    
+    // Reset Form
+    document.querySelector('input[name="pdl1"][value="None"]').checked = true;
+    document.getElementById('modal-mmr').checked = false;
+    document.getElementById('modal-histopath').value = "None";
+    
+    const select = document.getElementById(`var-select-${testId}`);
+    const variant = currentModalTest.variants[select.value];
+
+    document.getElementById("modal-title").innerText = `Configure: ${currentModalTest.name}`;
+    
+    document.getElementById("modal-ihc-grid").innerHTML = IHC_LIST.map(marker => 
+        `<div class="ihc-pill" id="pill-${marker.replace(/ /g,'')}" onclick="toggleIhcPill('${marker}')">${marker}</div>`
+    ).join("");
+
+    calcModalPrice();
+    document.getElementById("config-modal").classList.add("open");
+}
+
+function closeModal() {
+    document.getElementById("config-modal").classList.remove("open");
+}
+
+function toggleIhcPill(marker) {
+    const pill = document.getElementById(`pill-${marker.replace(/ /g,'')}`);
+    if (modalIhcSelection.has(marker)) {
+        modalIhcSelection.delete(marker);
+        pill.classList.remove("active");
+    } else {
+        modalIhcSelection.add(marker);
+        pill.classList.add("active");
+    }
+    calcModalPrice();
+}
+
+function calcModalPrice() {
+    const select = document.getElementById(`var-select-${currentModalTest.id}`);
+    const baseMrp = currentModalTest.variants[select.value].mrp;
+    
+    let addonTotal = 0;
+    const pdl1Val = document.querySelector('input[name="pdl1"]:checked').value;
+    if (pdl1Val !== "None") addonTotal += ADDON_PRICING.pdl1;
+    addonTotal += ADDON_PRICING.ihc(modalIhcSelection.size);
+
+    // Note: Histopath & MMR prices are omitted from MRP calculation per missing spec, but retained as line items.
+
+    document.getElementById("modal-total-price").innerText = formatCurrency(baseMrp + addonTotal);
+}
+
+function confirmModalSelection() {
+    const select = document.getElementById(`var-select-${currentModalTest.id}`);
+    const variant = currentModalTest.variants[select.value];
+    
+    let addonTotal = 0;
+    const pdl1Val = document.querySelector('input[name="pdl1"]:checked').value;
+    if (pdl1Val !== "None") addonTotal += ADDON_PRICING.pdl1;
+    addonTotal += ADDON_PRICING.ihc(modalIhcSelection.size);
+
+    const histopathVal = document.getElementById("modal-histopath").value;
+    const mmrVal = document.getElementById("modal-mmr").checked;
+
+    cart = {}; 
+    cart[currentModalTest.id] = {
+        name: currentModalTest.name, variantName: variant.name, specimen: variant.specimen,
+        baseMrp: variant.mrp, 
+        addons: { 
+            pdl1: pdl1Val, 
+            ihc: Array.from(modalIhcSelection),
+            mmr: mmrVal,
+            histopath: histopathVal
+        },
+        addonTotal: addonTotal, total: variant.mrp + addonTotal
+    };
+
+    closeModal();
+    setupLGFForm();
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LGF FORM GENERATION & DB LOGIC
+───────────────────────────────────────────────────────────── */
+function setupLGFForm() {
+    clearLGFInputs();
+    document.getElementById('lgf-watermark-id').innerText = "DRAFT";
+    
+    const summaryDiv = document.getElementById("lgf-tests-summary");
+    let html = `<table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                    <th style="padding:8px;">Test Ordered</th><th style="padding:8px;">Specimen</th><th style="padding:8px;">Add-ons</th><th style="padding:8px; text-align:right;">Total MRP</th>
+                </tr>`;
+    let grandTotal = 0;
+    
+    Object.values(cart).forEach(item => {
+        grandTotal += item.total;
+        let a = [];
+        if(item.addons.pdl1 && item.addons.pdl1 !== "None") a.push(`PD-L1 (${item.addons.pdl1})`);
+        if(item.addons.ihc && item.addons.ihc.length > 0) a.push(`IHC (${item.addons.ihc.join(', ')})`);
+        if(item.addons.mmr) a.push(`MMR Panel`);
+        if(item.addons.histopath && item.addons.histopath !== "None") a.push(`Histopath: ${item.addons.histopath}`);
+        
+        let addonStr = a.length > 0 ? a.join('<br>') : '-';
+
+        html += `<tr style="border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:12px 8px;"><strong>${item.name}</strong><br><span style="font-size:0.8rem; color:#64748b;">${item.variantName}</span></td>
+                    <td style="padding:12px 8px;">${item.specimen}</td>
+                    <td style="padding:12px 8px; font-size:0.8rem; color:var(--maroon);">${addonStr}</td>
+                    <td style="padding:12px 8px; text-align:right; font-weight:700;">${formatCurrency(item.total)}</td>
+                 </tr>`;
+    });
+    html += `</table><div style="text-align:right; font-size:1.4rem; font-weight:800; color:var(--navy); margin-top:10px;">GRAND TOTAL: ${formatCurrency(grandTotal)}</div>`;
+    summaryDiv.innerHTML = html;
+
+    document.getElementById("save-btn").style.display = "inline-block";
+    document.getElementById("download-only-btn").style.display = "none";
+    document.getElementById("lgf-back-btn").style.display = "inline-block";
+    
+    switchTab('lgf');
+}
+
+function clearLGFInputs() {
+    document.querySelectorAll('.lgf-data').forEach(input => {
+        if (input.type === 'radio' || input.type === 'checkbox') input.checked = false;
+        else input.value = '';
+        input.readOnly = false;
+    });
+}
+
+function gatherFormData() {
+    let data = {};
+    document.querySelectorAll('.lgf-data').forEach(input => {
+        if (input.type === 'radio') {
+            if (input.checked) data[input.name] = input.value;
+        } else {
+            data[input.id] = input.value;
+        }
+    });
+    return data;
+}
+
+function populateFormData(data) {
+    document.querySelectorAll('.lgf-data').forEach(input => {
+        if (input.type === 'radio') {
+            if (data[input.name] === input.value) input.checked = true;
+        } else {
+            if (data[input.id]) input.value = data[input.id];
+        }
+    });
+}
+
+async function submitAndDownloadPDF() {
+    const btn = document.getElementById("save-btn");
+    btn.disabled = true;
+    btn.innerHTML = "Processing...";
+
+    const formData = gatherFormData();
+    const pName = (formData['lgf-fname'] || '') + " " + (formData['lgf-lname'] || '');
+    const pCancer = formData['lgf-diagnosis'] || "N/A";
+    const docName = formData['lgf-doc-name'] || "N/A";
+    let grandTotal = Object.values(cart).reduce((sum, item) => sum + item.total, 0);
+    
+    const lgfId = "LGF" + String(dbRecordCount + 1).padStart(3, '0');
+    document.getElementById('lgf-watermark-id').innerText = lgfId;
+
+    const payload = {
+        id: lgfId,
+        patient: pName.trim() === "" ? "Unknown Patient" : pName.trim(),
+        cancer: pCancer,
+        physician: docName,
+        total: grandTotal,
+        cartData: { cart: cart, formData: formData }
+    };
+
+    try {
+        const res = await fetch('/api/save_trf', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        
+        if(result.success) {
+            justDownloadPDF(`${lgfId}_${pName.trim().replace(/\s+/g, '_')}.pdf`, true);
+        } else {
+            alert("Database Error: " + result.error);
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-save"></i> Save Lead & Download PDF`;
+        }
+    } catch (e) {
+        alert("Connection Error. Generating local PDF fallback.");
+        justDownloadPDF(`${lgfId}_${pName.trim().replace(/\s+/g, '_')}.pdf`, false);
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-save"></i> Save Lead & Download PDF`;
+    }
+}
+
+function justDownloadPDF(filename = "Lead_Generation_Form.pdf", redirect = false) {
+    const element = document.getElementById('lgf-document');
+    const opt = {
+        margin:       0.4,
+        filename:     filename,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, scrollY: 0 },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+        if(redirect) {
+            document.getElementById("save-btn").disabled = false;
+            document.getElementById("save-btn").innerHTML = `<i class="fas fa-save"></i> Save Lead & Download PDF`;
+            switchTab('list');
+        }
+    });
+}
+
+function switchTab(viewId) {
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.dos-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById(`view-${viewId}`).classList.add('active');
+    
+    const tabs = document.querySelectorAll('.dos-tab');
+    if(viewId === 'catalog') tabs[0].classList.add('active');
+    if(viewId === 'lgf') tabs[1].classList.add('active');
+    if(viewId === 'list') {
+        tabs[2].classList.add('active');
+        fetchRecordsList();
+    }
+}
+
+async function fetchRecordsList() {
+    const tbody = document.getElementById("records-tbody");
+    try {
+        const res = await fetch('/api/get_trfs');
+        const records = await res.json();
+        storedDbRecords = records;
+        dbRecordCount = records.length;
+        
+        if (records.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#94a3b8; font-style:italic;">No leads in the database. LGF IDs will begin at LGF001.</td></tr>`;
+            return;
+        }
+        tbody.innerHTML = "";
+        records.forEach(rec => {
+            const salesPerson = rec.cartData?.formData?.['lgf-sales'] || "-";
+            tbody.innerHTML += `
+                <tr>
+                    <td><span class="clickable-lgf" onclick="viewPastLGF('${rec.id}')">${rec.id}</span></td>
+                    <td>${rec.date}</td>
+                    <td><strong>${rec.patient}</strong></td>
+                    <td>${rec.cancer}</td>
+                    <td>${rec.physician}</td>
+                    <td><span style="background:var(--bg-surface); padding:2px 8px; border-radius:4px; font-size:0.8rem; font-weight:700;">${salesPerson}</span></td>
+                    <td style="color:var(--teal); font-weight:800;">${formatCurrency(rec.total)}</td>
+                </tr>
+            `;
+        });
+    } catch(e) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Failed to load records. Ensure app.py backend is running.</td></tr>`;
+    }
+}
+
+function viewPastLGF(lgfId) {
+    const record = storedDbRecords.find(r => r.id === lgfId);
+    if(!record) return;
+
+    cart = record.cartData.cart;
+    document.getElementById('lgf-watermark-id').innerText = lgfId;
+
+    const summaryDiv = document.getElementById("lgf-tests-summary");
+    let html = `<table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                    <th style="padding:8px;">Test Ordered</th><th style="padding:8px;">Specimen</th><th style="padding:8px;">Add-ons</th><th style="padding:8px; text-align:right;">Total MRP</th>
+                </tr>`;
+    
+    Object.values(cart).forEach(item => {
+        let a = [];
+        if(item.addons.pdl1 && item.addons.pdl1 !== "None") a.push(`PD-L1 (${item.addons.pdl1})`);
+        if(item.addons.ihc && item.addons.ihc.length > 0) a.push(`IHC (${item.addons.ihc.join(', ')})`);
+        if(item.addons.mmr) a.push(`MMR Panel`);
+        if(item.addons.histopath && item.addons.histopath !== "None") a.push(`Histopath: ${item.addons.histopath}`);
+        let addonStr = a.length > 0 ? a.join('<br>') : '-';
+
+        html += `<tr style="border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:12px 8px;"><strong>${item.name}</strong><br><span style="font-size:0.8rem; color:#64748b;">${item.variantName}</span></td>
+                    <td style="padding:12px 8px;">${item.specimen}</td>
+                    <td style="padding:12px 8px; font-size:0.8rem; color:var(--maroon);">${addonStr}</td>
+                    <td style="padding:12px 8px; text-align:right; font-weight:700;">${formatCurrency(item.total)}</td>
+                 </tr>`;
+    });
+    html += `</table><div style="text-align:right; font-size:1.4rem; font-weight:800; color:var(--navy); margin-top:10px;">GRAND TOTAL: ${formatCurrency(record.total)}</div>`;
+    summaryDiv.innerHTML = html;
+
+    populateFormData(record.cartData.formData);
+    
+    document.getElementById("save-btn").style.display = "none";
+    document.getElementById("download-only-btn").style.display = "inline-block";
+    document.getElementById("lgf-back-btn").style.display = "none";
+    
+    switchTab('lgf');
+}
+</script>
 {% endblock %}
