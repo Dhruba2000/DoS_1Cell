@@ -1742,9 +1742,9 @@ const catalog = [
         ],
         startingMrp: 135000,
         variants: [
+            {id: "NGS-IND-01-M01", name: "OncoIndx Multimodal", specimen: "Tissue", mrp: 210000, acc: "NABL and CAP", tat: "12 Days", included: []},
             {id: "NGS-IND-01-T01", name: "OncoIndx DNA", specimen: "Tissue", mrp: 135000, acc: "NABL and CAP", tat: "12 Days", included: ["PD-L1 (Ventana SP263) expression analysis by IHC"]},
-            {id: "NGS-IND-01-B01", name: "OncoIndx RNA", specimen: "Tissue", mrp: 150000, acc: "NABL and CAP", tat: "12 Days", included: ["Baseline thresholding of ctDNA"]},
-            {id: "NGS-IND-01-M01", name: "OncoIndx Multimodal", specimen: "Tissue", mrp: 210000, acc: "NABL and CAP", tat: "12 Days", included: []}
+            {id: "NGS-IND-01-B01", name: "OncoIndx RNA", specimen: "Tissue", mrp: 150000, acc: "NABL and CAP", tat: "12 Days", included: ["Baseline thresholding of ctDNA"]}
         ]
     },
     {
@@ -1785,7 +1785,7 @@ const catalog = [
     },
     {
         parentId: "NGS-360-01", name: "OncoIndx®360", type: "Service", analyte: "DNA, Protein",
-        desc: "Integrated WHO-aligned molecular test",
+        desc: "Integrated WHO-aligned molecular test for Endometrium Cancer",
         fullDetails: [
             "<strong>Core Targets:</strong> POLE, TP53, MMR/MSI, ER, HER2.",
             "<strong>Utility:</strong> Provides clear prognosis and therapy guidance including immunotherapy, targeted, and hormone therapy options.",
@@ -1844,7 +1844,7 @@ const catalog = [
     },
     {
         parentId: "NGS-ALB-01", name: "OncoAlibrex® TRM", type: "RUO", analyte: "cfDNA",
-        desc: "Fragmentomics based monitoring (Early Access Program)",
+        desc: "Fragmentomics based monitoring",
         fullDetails: [
             "Determines treatment response by tracking blood-based cfDNA fragmentation patterns."
         ],
@@ -1958,9 +1958,9 @@ function renderTable() {
             // Generate a brief description summary based on parent test name
             let mainDescription = parent.desc;
             if (parent.name === "OncoIndx®") {
-                mainDescription = "Comprehensive Genomic Profiling (1080 Genes) • SNVs, Indels, CNVs, and 50 Fusions";
+                mainDescription = "Exome backbone  + whole transcriptomics + protein by IHC";
             } else if (parent.name === "OncoIndx® Prime +") {
-                mainDescription = "5-Layered Multi-omics Match (Exome Backbone + Transcriptomics + Proteomics by IHC)";
+                mainDescription = "5-Layered Multi-omics test with Normal Matched Molecular Profiling";
             } else if (parent.name === "OncoTarget®") {
                 mainDescription = "Targeted NGS Panel (100+ Genes) available across 14 organ-specific indications";
             } else if (parent.name === "OncoMonitor® MRD") {
