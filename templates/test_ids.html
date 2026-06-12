@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header" style="margin-bottom: 24px;">
+  <div>
+    <h1 class="page-title"><i class="fas fa-barcode" style="color:var(--teal); margin-right:10px;"></i> Test IDs Registry</h1>
+    <p class="page-desc">Complete master reference list of all diagnostic tests, variants, and their precise ordering IDs.</p>
+  </div>
+</div>
+
+<div class="card" style="padding:0; overflow:hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); border-radius: 12px;">
+  <table style="width:100%; border-collapse:collapse; text-align:left;">
+    <thead style="background:var(--navy); color:#fff; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em;">
+      <tr>
+        <th style="padding:16px 20px;">Parent Test Name</th>
+        <th style="padding:16px 20px;">Parent ID</th>
+        <th style="padding:16px 20px; background:var(--teal);">Variant ID (Order Code)</th>
+        <th style="padding:16px 20px;">Variant / Organ</th>
+        <th style="padding:16px 20px;">Specimen</th>
+        <th style="padding:16px 20px;">List MRP</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr style="border-bottom:1px solid var(--border); transition:background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+        <td style="padding:14px 20px; font-weight:800; color:var(--navy); font-size: 14px;">{{ row.parent_name }}</td>
+        <td style="padding:14px 20px; color:#64748b; font-weight:600; font-size: 13px;">{{ row.parent_id }}</td>
+        <td style="padding:14px 20px; font-weight:800; color:var(--teal); font-size: 14px;">{{ row.variant_id }}</td>
+        <td style="padding:14px 20px; font-size: 14px;">{{ row.variant_name }}</td>
+        <td style="padding:14px 20px; font-size: 13px;">{{ row.specimen }}</td>
+        <td style="padding:14px 20px; font-weight:800; color:var(--navy); font-size: 14px;">
+          {% if row.mrp == "Upon Enquiry" %}
+            Upon Enquiry
+          {% else %}
+            ₹{{ row.mrp }}
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

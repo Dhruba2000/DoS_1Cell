@@ -6,38 +6,46 @@
    TEST DETAILS & DOCUMENTATION HUB — STYLES
 ═══════════════════════════════════════════════ */
 
-/* Selector bar */
-.td-selector-bar {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  background: var(--bg-surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 14px 20px;
-  margin-bottom: 20px; box-shadow: var(--shadow-sm);
+.td-selector-bar{
+    display:flex;
+    align-items:flex-start;
+    gap:24px;
+    padding:14px 0;
+    margin-bottom:20px;
 }
-.td-selector-bar label {
-  font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;
+
+.td-selector-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
 }
-.td-selector-bar select { max-width: 280px; flex: 1; min-width: 180px; }
-.td-selector-bar .sep  { height: 24px; width: 1px; background: var(--border); }
+
+.td-selector-action{
+    margin-left:auto;
+}
+
+.td-selector-group select{
+    width: 500px;
+    max-width: 500px;
+}
 
 /* Hero card */
 .hero-card {
-  background: linear-gradient(135deg, #0d1b2e 0%, #1a3255 60%, #0a4a5a 100%);
-  border: 1px solid rgba(0,196,180,0.2);
-  border-radius: 16px; padding: 28px 32px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 28px 32px;
   margin-bottom: 20px; position: relative; overflow: hidden;
 }
+
 .hero-card::before {
   content: '';
   position: absolute; top: -60px; right: -60px;
   width: 200px; height: 200px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,196,180,0.15) 0%, transparent 70%);
 }
 .hero-card::after {
   content: '';
   position: absolute; bottom: -40px; right: 80px;
   width: 140px; height: 140px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,137,123,0.12) 0%, transparent 70%);
 }
 
 .hero-badge {
@@ -59,22 +67,33 @@
 }
 
 .hero-title {
-  font-size: 1.8rem; font-weight: 800; color: #fff;
+  font-size: 1.8rem; font-weight: 800; color: #2e2e2e;
   letter-spacing: -0.035em; line-height: 1.15; margin-bottom: 10px;
 }
-.hero-title .name-teal { color: #4db6ac; }
+
+.hero-title .name-blue { color: #1a365d; }
+
 .hero-desc {
-  font-size: 0.88rem; color: rgba(255,255,255,0.65);
-  line-height: 1.65; max-width: 640px; margin-bottom: 22px;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  line-height: 1.65;
+  width: 100%;
+  max-width: none;
+  margin-bottom: 50px;
 }
 
-.hero-meta { display: flex; gap: 32px; flex-wrap: wrap; }
-.hero-meta-label {
-  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; color: rgba(255,255,255,0.35);
-  margin-bottom: 4px;
+.hero-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    width: 100%;
 }
-.hero-meta-value { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.9); }
+
+.hero-meta-label {
+font-size:0.7rem; color:#daa520; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;font-weight:700;
+}
+
+.hero-meta-value { font-size:15px;color:var(--text-dim);font-weight:100}
 
 /* Report upload action box inside hero */
 .hero-report-btn {
@@ -118,31 +137,30 @@
   background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px;
 }
 .doc-column-title {
-  font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  font-size: 0.85rem; font-weight: 600;
   color: var(--navy-mid); border-bottom: 2px solid var(--bg-base); padding-bottom: 8px; margin-bottom: 12px;
   display: flex; align-items: center; gap: 8px;
 }
 .file-row {
   display: flex; align-items: center; justify-content: space-between; padding: 10px 12px;
-  background: var(--bg-subtle); border-radius: var(--radius-sm); margin-bottom: 8px; border: 1px solid transparent; transition: all 0.2s;
+  margin-bottom: 8px; border: 1px solid transparent; transition: all 0.2s;border:1px solid var(--border); border-radius: var(--radius-sm);
 }
-.file-row:hover { border-color: var(--teal-bright); background: #fff; transform: translateY(-1px); }
+.file-row:hover {background: #fff; transform: translateY(-1px); }
 .file-info { display: flex; align-items: center; gap: 10px; max-width: 70%; }
-.file-icon { font-size: 1.1rem; color: var(--rose); }
+.file-icon { font-size: 10px; color: var(--rose); }
 .file-name { font-size: 0.78rem; font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.file-meta { font-size: 0.65rem; color: var(--text-muted); display: block; }
+.file-meta { font-size: 0.65rem; color: #000000; display: block; }
 .action-pill-box { display: flex; gap: 6px; }
 .action-pill {
-  padding: 4px 10px; font-size: 0.68rem; font-weight: 700; border-radius: 100px; cursor: pointer;
-  display: inline-flex; align-items: center; gap: 4px; transition: background 0.2s; text-decoration: none;
+  padding: 2px 8px; font-size: 14px; font-weight: 400; 
+  display: inline-flex; align-items: center; gap: 2px; transition: background 0.2s; text-decoration: none;
 }
-.pill-view { background: var(--teal-light); color: var(--teal); border: none; }
-.pill-view:hover { background: var(--teal); color: #fff; }
-.pill-del { background: var(--rose-light); color: var(--rose); border: none; }
-.pill-del:hover { background: var(--rose); color: #fff; }
+.pill-view { color: #494949; border: none; }
+.pill-view:hover { background: #f8faff;border-radius: 5px; }
+.pill-del { background: none; color: var(--rose); border: none; }
 .highlight-badge {
   background: var(--gold-light); color: #9a6e00; border: 1px solid rgba(230,168,23,0.3);
-  font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;
+  font-size: 0.65rem; font-weight: 800; padding: 4px 8px; margin-left: 8px; border-radius: 100px; 
 }
 
 /* Collapsible views */
@@ -154,12 +172,12 @@
 .collapse-item:hover { box-shadow: var(--shadow-md); }
 .collapse-item.open  { border-color: rgba(0,137,123,0.25); }
 .collapse-trigger { display: flex; align-items: center; gap: 16px; padding: 18px 22px; cursor: pointer; user-select: none; transition: background 0.15s; }
-.collapse-trigger:hover { background: var(--bg-subtle); }
-.collapse-icon-wrap { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+.collapse-trigger:hover { background: #fafbfd; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);transition: all 0.3s ease; }
+.collapse-icon-wrap { width: 44px; height: 46px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0;background: #e9efff; color: #5c7ac6; border-radius: 5px; }
 .collapse-text { flex: 1; }
-.collapse-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
-.collapse-sub { font-size: 0.78rem; color: var(--text-muted); }
-.collapse-chevron { color: var(--text-muted); font-size: 0.85rem; flex-shrink: 0; transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
+.collapse-title { font-size: 0.95rem; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
+.collapse-sub { font-size: 0.78rem; color: var(--text-secondary); }
+.collapse-chevron { color: #000000; font-size: 0.85rem; flex-shrink: 0; transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
 .collapse-item.open .collapse-chevron { transform: rotate(180deg); }
 .collapse-body { display: none; padding: 0 22px 22px; border-top: 1px solid var(--border); }
 .collapse-item.open .collapse-body { display: block; }
@@ -174,58 +192,71 @@
 
 /* Blocks and chips */
 .field-block { margin-top: 18px; }
-.field-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin-bottom: 6px; }
+.field-label { font-size: 15px; font-weight: 700;color: #000000 ;margin-bottom: 6px; }
 .field-value { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; white-space: pre-wrap; }
-.field-value.empty { color: var(--text-muted); font-style: italic; }
-.field-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 18px; }
-.field-chip { background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 16px; }
-.field-chip .fc-label { font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 5px; }
-.field-chip .fc-value { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
+.field-value.empty { color: #a2a2a2; font-weight: 300px;}
+.field-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin-top: 18px; }
+.field-chip { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 16px; }
+.field-chip:hover { border-color: rgb(196, 196, 196) }
+.field-chip .fc-label { font-size: 15px; font-weight: 600;color: #1a365d; margin-bottom: 5px; }
+.field-chip .fc-value { font-size: 15px; font-weight: 300; color: rgb(133, 133, 133); }
 .ql-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 
 /* Administration Panels & Form Zones */
 .edit-section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
-.upload-zone { border: 2px dashed var(--border); border-radius: var(--radius-md); padding: 24px; text-align: center; cursor: pointer; transition: all 0.18s; background: var(--bg-subtle); }
-.upload-zone:hover, .upload-zone.dragover { border-color: var(--teal); background: var(--teal-light); }
-.upload-zone i { font-size: 1.8rem; color: var(--text-muted); margin-bottom: 8px; display: block; }
-.upload-zone p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 4px; }
+.upload-zone { border: 2px dashed var(--border); border-radius: var(--radius-md); padding: 24px; text-align: center; cursor: pointer; transition: all 0.18s; background:#fafdff; margin-top: 12px; }
+.upload-zone:hover, .upload-zone.dragover { border-color: #e4f0f9;}
+.upload-zone i { font-size: 1.8rem; color: #a4a4a4; margin-bottom: 8px; display: block;margin-top: 10px;}
+.upload-zone p { font-size: 0.82rem; color: #a4a4a4; margin-bottom: 4px; }
 .upload-zone span { font-size: 0.72rem; color: var(--text-muted); }
 
 .bench-note { padding: 14px 16px; border-radius: var(--radius-md); background: var(--rose-light); border: 1px solid rgba(217,79,92,0.15); font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; display: flex; align-items: flex-start; gap: 10px; margin-top: 18px; }
 .bench-note i { color: var(--rose); margin-top: 2px; flex-shrink: 0; }
-.vp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 18px; }
-.vp-pill { padding: 14px 16px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--teal-light), #f5fffe); border: 1px solid rgba(0,137,123,0.15); }
-.vp-pill i { color: var(--teal); margin-bottom: 8px; display: block; font-size: 1.1rem; }
-.vp-pill strong { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); display: block; margin-bottom: 3px; }
-.vp-pill span { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+.vp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 18px; }
+.vp-pill { padding: 14px 16px; border-radius: var(--radius-md); background: #ffffff; border: 1px solid #e7e7e7; transition: all 0.15s; }
+.vp-pill:hover { border-color: var(--teal); }
+.vp-pill i {  margin-bottom: 8px; display: block; font-size: 1.1rem; }
+.vp-pill strong { font-size: 15px; font-weight: 600;color: #1a365d; margin-bottom: 3px; display: block; }
+.vp-pill span {
+    display: block;
+    font-size: 0.75rem;
+    color: #3d3d3d;
+    line-height: 1.45;
+    font-weight: 100px;
+}
 </style>
 
 <div class="td-selector-bar">
-  <label><i class="fas fa-flask" style="color:var(--teal); margin-right:6px;"></i> Select Test</label>
-  <select class="form-control" onchange="window.location.href='?test='+this.value">
-    {% for t in tests %}
-    <option value="{{ t }}" {% if t == selected_test %}selected{% endif %}>{{ t }}</option>
-    {% endfor %}
-  </select>
-  <div class="sep"></div>
-  {% if session.get('is_admin') %}
-    <button class="btn btn-gold btn-sm" onclick="enterEditMode()">
-      <i class="fas fa-edit"></i> Edit Details
-    </button>
-  {% else %}
-    <span style="font-size:0.76rem; color:var(--text-muted); display:flex; align-items:center; gap:5px;">
-      <i class="fas fa-lock"></i> Admin login to edit
-    </span>
-  {% endif %}
+
+    <div class="td-selector-group">
+
+        <select class="form-control" placeholder="Select Test" onchange="window.location.href='?test='+this.value">
+            {% for t in tests %}
+            <option value="{{ t }}" {% if t == selected_test %}selected{% endif %}>
+                {{ t }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="td-selector-action">
+        {% if session.get('is_admin') %}
+        <button class="btn btn-gold btn-sm" onclick="enterEditMode()">
+            <i data-lucide="edit"></i> Edit Details
+        </button>
+        {% else %}
+        {% endif %}
+    </div>
+
 </div>
 
 {% if session.get('is_admin') %}
 <div class="edit-toolbar" id="editToolbar" style="display:none;">
-  <div class="edit-toolbar-ico"><i class="fas fa-pencil-alt"></i></div>
+  <div class="edit-toolbar-ico"><i data-lucide="pencil"></i></div>
   <div class="edit-toolbar-msg">Edit mode active — fill in all sections then click Save</div>
   <div class="edit-toolbar-acts">
-    <button class="btn btn-primary btn-sm" onclick="saveDetails()"><i class="fas fa-save"></i> Save All Specifications</button>
-    <button class="btn btn-secondary btn-sm" onclick="cancelEdit()"><i class="fas fa-times"></i> Cancel</button>
+    <button class="btn btn-primary btn-sm" onclick="saveDetails()"><i data-lucide="save"></i> Save All Specifications</button>
+    <button class="btn btn-secondary btn-sm" onclick="cancelEdit()"><i data-lucide="x"></i> Cancel</button>
   </div>
 </div>
 {% endif %}
@@ -233,26 +264,9 @@
 <div id="viewMode">
 
   <div class="hero-card">
-    <div class="hero-report-btn">
-      {% if details and details.get('report_filename') %}
-        <a href="/test_details/report/{{ selected_test | urlencode }}" target="_blank" class="btn-view-report">
-          <i class="fas fa-file-pdf"></i> View Sample Report
-        </a>
-      {% else %}
-        <span style="font-size:0.72rem; color:rgba(255,255,255,0.25); padding:8px 0;">No sample report uploaded</span>
-      {% endif %}
-      {% if session.get('is_admin') %}
-        <button class="btn-upload-report" onclick="openUploadModal()">
-          <i class="fas fa-upload"></i>
-          {% if details and details.get('report_filename') %}Replace Report Framework{% else %}Upload Report{% endif %}
-        </button>
-      {% endif %}
-    </div>
-
-    <div class="hero-badge">Internal Reference — All Teams</div>
-    <div class="hero-title">
-      {{ selected_test.split(' ')[0] }}
-      <span class="name-teal">{{ selected_test.split(' ')[1:] | join(' ') }}</span>
+    <div class="hero-title" style="color: #1a365d;">
+      <span>{{ selected_test.split(' ')[0] }}{{ selected_test.split(' ')[1:] | join(' ') }}</span>
+      
     </div>
     <div class="hero-desc">
       {{ details.get('description') if details and details.get('description') else 'No description added yet. Admin can click Edit Details to add a description for this test.' }}
@@ -276,114 +290,146 @@
         <div class="hero-meta-value">{{ details.get('sub_category') or '—' }}</div>
       </div>
     </div>
-  </div>
+</div>
 
   <div class="collapse-item open" id="ci-dochub" style="margin-bottom: 20px;">
-    <div class="collapse-trigger" onclick="toggleCollapse('ci-dochub')" style="background: linear-gradient(135deg, #ffffff 0%, #f4faf9 100%); border-bottom: 1px solid var(--border);">
-      <div class="collapse-icon-wrap" style="background: var(--teal); color: #fff; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-        <i class="fa-solid fa-cloud-arrow-down"></i>
+      <div class="collapse-trigger" onclick="toggleCollapse('ci-dochub')"
+        style="background: linear-gradient(135deg, #ffffff 0%, #f4faf9 100%);
+                border-bottom: 1px solid var(--border);">
+
+      <div class="collapse-icon-wrap"
+          style="background: #e9efff; color: #5c7ac6; width: 44px; height: 46px;
+                  border-radius: 5px; display: flex; align-items: center; justify-content: center;">
+        <i data-lucide="scroll-text"></i>
       </div>
-      <div class="collapse-text">
-        <div class="collapse-title" style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-weight: 800; color: var(--text-primary);">Clinical Documentation & Reporting Hub</span>
-          <span class="highlight-badge"><i class="fa-solid fa-star"></i> Primary Resources</span>
+
+      <div class="collapse-text" style="flex:1;">
+
+        <!-- Heading Row -->
+        <div class="collapse-title"
+            style="display:flex; align-items:center; gap:8px;">
+          <span style="font-weight:600; color:var(--text-primary);">
+            Clinical Documentation & Reporting Hub
+          </span>
+
+          <span class="highlight-badge">
+            Primary Resources
+          </span>
+
+          {% if session.get('is_admin') %}
+          <div style="margin-left:auto;">
+            <button type="button"
+                    class="btn btn-primary btn-sm"
+                    onclick="event.stopPropagation(); openDocModal();">
+              <i data-lucide="plus"></i>
+              Upload Resource
+            </button>
+          </div>
+          {% endif %}
+
         </div>
-        <div class="collapse-sub">Access verified assay metrics, structural maps, validations, and brochures</div>
+
+        <!-- Sub Heading -->
+        <div class="collapse-sub">
+          Access verified assay metrics, structural maps, validations, and brochures
+        </div>
+
       </div>
+
       <i class="fas fa-chevron-down collapse-chevron"></i>
+
     </div>
     
-    <div class="collapse-body" style="padding: 22px; background: #fafdfc;">
-      {% if session.get('is_admin') %}
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
-          <button type="button" class="btn btn-primary btn-sm" onclick="openDocModal()">
-            <i class="fa-solid fa-plus"></i> Upload Resource (Max 200MB)
-          </button>
-        </div>
-      {% endif %}
-
+    <div class="collapse-body" style=" background: #fafdfc;">
       <div class="doc-grid">
         <div class="doc-column">
           <div class="doc-column-title">
-            <i class="fa-solid fa-file-pdf" style="color: var(--teal);"></i>
-            <span>Official Brochure (Limit 1)</span>
+            <i data-lucide="file-text" style="color: var(--text-secondary);"></i>
+            <span>Official Brochure</span>
           </div>
           {% if docs and docs['brochure'] %}
             {% for d in docs['brochure'] %}
               <div class="file-row">
                 <div class="file-info">
-                  <i class="fa-solid fa-file-lines file-icon" style="color: var(--teal);"></i>
                   <div style="overflow:hidden;">
                     <div class="file-name" title="{{ d.display_name }}">{{ d.display_name }}</div>
                     <span class="file-meta">Size: {{ d.file_size }}</span>
                   </div>
                 </div>
                 <div class="action-pill-box">
-                  <a href="/view_doc/{{ d.filename }}" target="_blank" class="action-pill pill-view"><i class="fa-solid fa-eye"></i> Open</a>
+                  <a href="/view_doc/{{ d.filename }}" target="_blank" class="action-pill pill-view"><i data-lucide="eye"></i></a>
                   {% if session.get('is_admin') %}
-                    <button type="button" onclick="deleteDoc({{ d.id }})" class="action-pill pill-del"><i class="fa-solid fa-trash"></i></button>
+                    <button type="button" onclick="deleteDoc('{{ d.id }}')"class="action-pill pill-del"><i data-lucide="trash"></i>
+                    </button>
                   {% endif %}
                 </div>
               </div>
             {% endfor %}
           {% else %}
-            <div class="text-xs text-muted" style="text-align:center; padding: 15px 0; font-size:0.75rem;">No product brochures attached.</div>
-          {% endif %}
-        </div>
-
-        <div class="doc-column" style="border: 1.5px dashed var(--teal-bright); background: #fafffe;">
-          <div class="doc-column-title" style="color: var(--teal); font-weight: 800;">
-            <i class="fa-solid fa-clipboard-check" style="color: var(--teal-bright);"></i>
-            <span>Sample Reports (2-3 Variants)</span>
-          </div>
-          {% if docs and docs['sample_report'] %}
-            {% for d in docs['sample_report'] %}
-              <div class="file-row" style="background: #edf9f7;">
-                <div class="file-info">
-                  <i class="fa-solid fa-file-pdf file-icon" style="color: var(--rose);"></i>
-                  <div style="overflow:hidden;">
-                    <div class="file-name" style="color: var(--teal); font-weight:700;" title="{{ d.display_name }}">{{ d.display_name }}</div>
-                    <span class="file-meta">Size: {{ d.file_size }}</span>
-                  </div>
-                </div>
-                <div class="action-pill-box">
-                  <a href="/view_doc/{{ d.filename }}" target="_blank" class="action-pill pill-view" style="background: var(--teal); color: #fff;"><i class="fa-solid fa-folder-open"></i> View Report</a>
-                  {% if session.get('is_admin') %}
-                    <button type="button" onclick="deleteDoc({{ d.id }})" class="action-pill pill-del"><i class="fa-solid fa-trash"></i></button>
-                  {% endif %}
-                </div>
-              </div>
-            {% endfor %}
-          {% else %}
-            <div class="text-xs text-muted" style="text-align:center; padding: 15px 0; font-size:0.75rem;">No active sample reports available.</div>
+            <div class="text-xs" style="text-align:center; padding: 15px 0;  color: #a2a2a2; font-weight: 300px;">No product brochures attached.</div>
           {% endif %}
         </div>
 
         <div class="doc-column">
           <div class="doc-column-title">
-            <i class="fa-solid fa-graduation-cap" style="color: var(--violet);"></i>
-            <span>Case Studies (4-5 Cases)</span>
+            <i data-lucide="book-check" style="color: var(--text-secondary);"></i>
+            <span>Sample Reports </span>
+          </div>
+          {% if docs and docs['sample_report'] %}
+            {% for d in docs['sample_report'] %}
+              <div class="file-row">
+                <div class="file-info">
+                  <i data-lucide="file-pdf" style="color: var(--rose);"></i>
+                  <div style="overflow:hidden;">
+                    <div class="file-name" style="font-weight:700;" title="{{ d.display_name }}">{{ d.display_name }}</div>
+                    <span class="file-meta">Size: {{ d.file_size }}</span>
+                  </div>
+                </div>
+                <div class="action-pill-box">
+                  <a href="/view_doc/{{ d.filename }}" target="_blank" class="action-pill pill-view"><i data-lucide="eye"></i></a>
+                  {% if session.get('is_admin') %}
+                  <button type="button"
+                        onclick="deleteDoc('{{ d.id }}')"
+                        class="action-pill pill-del">
+                    <i data-lucide="trash"></i>
+                </button>
+                {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="text-xs" style="text-align:center; padding: 15px 0; color: #a2a2a2; font-weight: 300px;">No active sample reports available.</div>
+          {% endif %}
+        </div>
+
+        <div class="doc-column">
+          <div class="doc-column-title">
+            <i data-lucide="graduation-cap" style="color: var(--text-secondary);"></i>
+            <span>Case Studies</span>
           </div>
           {% if docs and docs['case_study'] %}
             {% for d in docs['case_study'] %}
               <div class="file-row">
                 <div class="file-info">
-                  <i class="fa-solid fa-book-medical file-icon" style="color: var(--violet);"></i>
                   <div style="overflow:hidden;">
                     <div class="file-name" title="{{ d.display_name }}">{{ d.display_name }}</div>
                     <span class="file-meta">Size: {{ d.file_size }}</span>
                   </div>
                 </div>
                 <div class="action-pill-box">
-                  <a href="/view_doc/{{ d.filename }}" target="_blank" class="action-pill pill-view"><i class="fa-solid fa-eye"></i> Read Case</a>
+                  <a href="/view_doc/{{ d.filename }}" target="_blank" class="action-pill pill-view"><i data-lucide="eye"></i></a>
                   {% if session.get('is_admin') %}
-                    <button type="button" onclick="deleteDoc({{ d.id }})" class="action-pill pill-del"><i class="fa-solid fa-trash"></i></button>
-                  {% endif %}
+                  <button type="button"
+                        onclick="deleteDoc('{{ d.id }}')"
+                        class="action-pill pill-del">
+                    <i data-lucide="trash"></i>
+                </button>
+                {% endif %}
                 </div>
               </div>
             {% endfor %}
           {% else %}
-            <div class="text-xs text-muted" style="text-align:center; padding: 15px 0; font-size:0.75rem;">No case validation matches recorded.</div>
+            <div class="text-xs" style="text-align:center; padding: 15px 0;color: #a2a2a2;font-weight: 300px;">No case validation matches recorded.</div>
           {% endif %}
         </div>
       </div>
@@ -392,9 +438,9 @@
 
   <div class="collapse-list">
 
-    <div class="collapse-item open" id="ci-included">
+    <div class="collapse-item" id="ci-included">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-included')">
-        <div class="collapse-icon-wrap ci-teal"><i class="fas fa-dna"></i></div>
+        <div class="collapse-icon-wrap"><i data-lucide="cpu"></i></div>
         <div class="collapse-text">
           <div class="collapse-title">What's Included &amp; Core Parameters</div>
           <div class="collapse-sub">Covered genes, core biomarkers &amp; variant profiling scope</div>
@@ -422,10 +468,10 @@
         </div>
         <div class="ql-row" style="margin-top:16px;">
           {% if 'biomarker_coverage' in acl %}
-          <a href="{{ url_for('biomarker_coverage') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-dna"></i> Full Biomarker Coverage</a>
+          <a href="{{ url_for('biomarker_coverage') }}?test={{ selected_test }}" class="btn btn-primary btn-sm"></i> Full Biomarker Coverage</a>
           {% endif %}
           {% if 'master_test_directory' in acl %}
-          <a href="{{ url_for('master_test_directory') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-list"></i> Master Directory</a>
+          <a href="{{ url_for('master_test_directory') }}?test={{ selected_test }}" class="btn btn-primary btn-sm"><i class="fas fa-list"></i> Master Directory</a>
           {% endif %}
         </div>
       </div>
@@ -433,7 +479,7 @@
 
     <div class="collapse-item" id="ci-when">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-when')">
-        <div class="collapse-icon-wrap ci-blue"><i class="fas fa-stethoscope"></i></div>
+        <div class="collapse-icon-wrap"><i data-lucide="stethoscope"></i></div>
         <div class="collapse-text">
           <div class="collapse-title">Target Patient Selection &amp; Indications</div>
           <div class="collapse-sub">Clinical positioning, user indications &amp; profile data</div>
@@ -453,12 +499,12 @@
           <div class="field-label">Key Clinical Questions Solved</div>
           <div class="field-value {% if not details.get('clinical_questions') %}empty{% endif %}">{{ details.get('clinical_questions') or 'Not specified.' }}</div>
         </div>
-        <div class="ql-row">
+        <div class="u" style="margin-top:20px;">
           {% if 'clinical_positioning' in acl %}
-          <a href="{{ url_for('clinical_positioning') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-stethoscope"></i> Full Clinical Positioning</a>
+          <a href="{{ url_for('clinical_positioning') }}?test={{ selected_test }}" class="btn btn-primary btn-sm" style=" margin-right:10px;"></i> Full Clinical Positioning</a>
           {% endif %}
           {% if 'journey_mapping' in acl %}
-          <a href="{{ url_for('journey_mapping') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-route"></i> Journey Mapping</a>
+          <a href="{{ url_for('journey_mapping') }}?test={{ selected_test }}" class="btn btn-primary btn-sm"></i> Journey Mapping</a>
           {% endif %}
         </div>
       </div>
@@ -466,7 +512,7 @@
 
     <div class="collapse-item" id="ci-ordering">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-ordering')">
-        <div class="collapse-icon-wrap ci-amber"><i class="fas fa-box-open"></i></div>
+        <div class="collapse-icon-wrap"><i data-lucide="package-search"></i></div>
         <div class="collapse-text">
           <div class="collapse-title">Ordering Details</div>
           <div class="collapse-sub">Sample requirements, logistics &amp; pricing structure</div>
@@ -483,7 +529,7 @@
           <div class="field-chip"><div class="fc-label">Report Delivery</div><div class="fc-value">{{ ordering.get('report_delivery_mode') or '—' }}</div></div>
           <div class="field-chip"><div class="fc-label">Required Forms</div><div class="fc-value">{{ ordering.get('required_forms') or '—' }}</div></div>
           {% else %}
-          <div style="grid-column:1/-1; color:var(--text-muted); font-size:0.82rem; font-style:italic; padding:8px 0;">No ordering details added yet.</div>
+          <div style="grid-column:1/-1; color: #a2a2a2; font-weight: 300px;padding:8px 0;font-size: 0.85rem;">No ordering details added yet.</div>
           {% endif %}
         </div>
         {% if pricing %}
@@ -509,45 +555,125 @@
       </div>
     </div>
 
-    <div class="collapse-item" id="ci-perf">
-      <div class="collapse-trigger" onclick="toggleCollapse('ci-perf')">
-        <div class="collapse-icon-wrap ci-green"><i class="fas fa-chart-line"></i></div>
-        <div class="collapse-text">
-          <div class="collapse-title">Performance Details</div>
-          <div class="collapse-sub">Sensitivity, specificity &amp; validation analytics</div>
-        </div>
-        <i class="fas fa-chevron-down collapse-chevron"></i>
-      </div>
-      <div class="collapse-body">
-        <div class="field-grid">
-          {% if performance %}
-          <div class="field-chip"><div class="fc-label">Sensitivity</div><div class="fc-value">{{ performance.get('sensitivity') or '—' }}</div></div>
-          <div class="field-chip"><div class="fc-label">Specificity</div><div class="fc-value">{{ performance.get('specificity') or '—' }}</div></div>
-          <div class="field-chip"><div class="fc-label">Concordance</div><div class="fc-value">{{ performance.get('concordance') or '—' }}</div></div>
-          <div class="field-chip"><div class="fc-label">LOD (VAF %)</div><div class="fc-value">{{ performance.get('lod') or '—' }}</div></div>
-          <div class="field-chip"><div class="fc-label">Validation Cohort</div><div class="fc-value">{{ performance.get('validation_cohort_size') or '—' }}</div></div>
-          <div class="field-chip"><div class="fc-label">Cancer Types</div><div class="fc-value">{{ performance.get('cancer_types') or '—' }}</div></div>
-          {% else %}
-          <div style="grid-column:1/-1; color:var(--text-muted); font-size:0.82rem; font-style:italic; padding:8px 0;">No performance data added yet.</div>
-          {% endif %}
-        </div>
-        {% if performance and performance.get('publications') %}
-        <div class="field-block">
-          <div class="field-label">Publications</div>
-          <div class="field-value">{{ performance.get('publications') }}</div>
-        </div>
-        {% endif %}
-        <div class="ql-row">
-          {% if 'performance' in acl %}
-          <a href="{{ url_for('performance') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-chart-line"></i> Full Performance Data</a>
-          {% endif %}
-        </div>
+  <div class="collapse-item" id="ci-perf">
+  <div class="collapse-trigger" onclick="toggleCollapse('ci-perf')">
+    <div class="collapse-icon-wrap">
+      <i data-lucide="chart-line"></i>
+    </div>
+    <div class="collapse-text">
+      <div class="collapse-title">Performance Details</div>
+      <div class="collapse-sub">
+        Sensitivity, specificity &amp; validation analytics
       </div>
     </div>
+    <i class="fas fa-chevron-down collapse-chevron"></i>
+  </div>
 
+  <div class="collapse-body">
+
+    <div class="table-wrap"
+         style="border:1px solid rgba(0,196,180,0.08);
+                border-radius:8px;
+                overflow:hidden;
+                margin-top:12px;">
+
+      {% if performance %}
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Sensitivity</td>
+            <td>{{ performance.get('sensitivity') or '—' }}</td>
+          </tr>
+
+          <tr>
+            <td>Specificity</td>
+            <td>{{ performance.get('specificity') or '—' }}</td>
+          </tr>
+
+          <tr>
+            <td>Concordance</td>
+            <td>{{ performance.get('concordance') or '—' }}</td>
+          </tr>
+
+          <tr>
+            <td>LOD (VAF %)</td>
+            <td>{{ performance.get('lod') or '—' }}</td>
+          </tr>
+
+          <tr>
+            <td>Validation Cohort</td>
+            <td>{{ performance.get('validation_cohort_size') or '—' }}</td>
+          </tr>
+
+          <tr>
+            <td>Cancer Types</td>
+            <td>{{ performance.get('cancer_types') or '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      {% else %}
+      <table style="width:100%;">
+        <tbody>
+          <tr>
+            <td colspan="2"
+                style="text-align:center;
+                       padding:24px;
+                       color:#94a3b8;">
+              No performance data added yet.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      {% endif %}
+
+    </div>
+    
+    <div style="margin-top: 15px;font-size: 18px; color: #000000">
+        {% if performance.get('publications') %}
+          <tr>
+            <td>Publications</td>
+            <td>{{ performance.get('publications') }}</td>
+          </tr>
+          {% endif %}
+    </div>
+
+    <div class="ql-row" style="margin-top:16px;">
+      {% if 'performance' in acl %}
+      <a href="{{ url_for('performance') }}?test={{ selected_test }}"
+         class="btn btn-secondary btn-sm">
+        <i data-lucide="chart-line"></i>
+        Full Performance Data
+      </a>
+      {% endif %}
+    </div>
+
+  
+
+  <div class="ql-row" style="margin-top:16px;">
+    {% if 'performance' in acl %}
+    <a href="{{ url_for('performance') }}?test={{ selected_test }}"
+       class="btn btn-secondary btn-sm">
+      <i data-lucide="chart-line"></i>
+      Full Performance Data
+    </a>
+    {% endif %}
+  </div>
+
+    </div>
+    </div>
+
+    {% if session.get('is_admin') %}
     <div class="collapse-item" id="ci-comp">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-comp')">
-        <div class="collapse-icon-wrap ci-rose"><i class="fas fa-scale-balanced"></i></div>
+        <div class="collapse-icon-wrap"><i data-lucide="scale"></i></div>
         <div class="collapse-text">
           <div class="collapse-title">Competitor Market Benchmarking</div>
           <div class="collapse-sub">Head-to-head feature matrix, performance &amp; market alignment</div>
@@ -565,15 +691,16 @@
         {% endif %}
         <div class="ql-row">
           {% if 'comparison' in acl %}
-          <a href="{{ url_for('comparison') }}" class="btn btn-secondary btn-sm"><i class="fas fa-table-columns"></i> Open Comparison Matrix</a>
+          <a href="{{ url_for('comparison') }}" class="btn btn-primary btn-sm"></i> Open Comparison Matrix</a>
           {% endif %}
         </div>
       </div>
     </div>
+    {% endif %}
 
     <div class="collapse-item" id="ci-vp">
       <div class="collapse-trigger" onclick="toggleCollapse('ci-vp')">
-        <div class="collapse-icon-wrap ci-violet"><i class="fas fa-gem"></i></div>
+        <div class="collapse-icon-wrap"><i data-lucide="gem"></i></div>
         <div class="collapse-text">
           <div class="collapse-title">Value Proposition</div>
           <div class="collapse-sub">Core pillars, strategic messaging &amp; analytical proof points</div>
@@ -586,27 +713,27 @@
         {% else %}
         <div class="vp-grid">
           <div class="vp-pill">
-            <i class="fas fa-shield-halved"></i>
+            <i data-lucide="shield-check"></i>
             <strong>Accuracy</strong><span>100% PPV / NPV on SNVs, CAP-accredited laboratory</span>
           </div>
           <div class="vp-pill">
-            <i class="fas fa-layer-group"></i>
+            <i data-lucide="layers-3"></i>
             <strong>Comprehensive</strong><span>1000+ gene panel covering all major variant classes</span>
           </div>
           <div class="vp-pill">
-            <i class="fas fa-vials"></i>
+            <i data-lucide="flask-conical"></i>
             <strong>Tissue-Liquid-Normal</strong><span>Matched trio sequencing for true somatic variant calling</span>
           </div>
           <div class="vp-pill">
-            <i class="fas fa-headset"></i>
+            <i data-lucide="headset"></i>
             <strong>Clinical Support</strong><span>Molecular Tumour Board, post-report consult, dedicated RM</span>
           </div>
         </div>
-        <div style="margin-top:14px; font-size:0.78rem; color:var(--text-muted); font-style:italic;">Admin can add custom value proposition notes in Edit mode.</div>
+      <div style="margin-top:1px; font-size:0.78rem; color:var(--text-muted); font-style:italic;">Admin can add custom value proposition notes in Edit mode.</div>
         {% endif %}
         <div class="ql-row">
           {% if 'support_services' in acl %}
-          <a href="{{ url_for('support_services') }}?test={{ selected_test }}" class="btn btn-secondary btn-sm"><i class="fas fa-headset"></i> Support Services Portal</a>
+          <a href="{{ url_for('support_services') }}?test={{ selected_test }}" class="btn btn-primary btn-sm"></i> Support Services Portal</a>
           {% endif %}
         </div>
       </div>
@@ -619,7 +746,7 @@
 
     <div class="card">
       <div class="card-head">
-        <div class="card-title"><div class="card-icon"><i class="fas fa-align-left"></i></div>Test Core Description</div>
+        <div class="card-title"><div class="collapse-icon-wrap"><i data-lucide="align-left"></i></div>Test Core Description</div>
       </div>
       <div class="form-group">
         <label class="form-label">Shown in the hero card summary framework for all users</label>
@@ -629,7 +756,7 @@
 
     <div class="card">
       <div class="card-head">
-        <div class="card-title"><div class="card-icon"><i class="fas fa-info-circle"></i></div>Clinical Context &amp; Core Parameters</div>
+        <div class="card-title"><div class="collapse-icon-wrap"><i data-lucide="info"></i></div>Clinical Context &amp; Core Parameters</div>
       </div>
       <div class="form-grid">
         <div class="form-group">
@@ -657,7 +784,7 @@
 
     <div class="card">
       <div class="card-head">
-        <div class="card-title"><div class="card-icon" style="background:#e0f2f0; color:#00695c;"><i class="fas fa-dna"></i></div>Assay Scope &amp; Variant Profiling</div>
+        <div class="card-title"><div class="collapse-icon-wrap"><i data-lucide="dna"></i></div>Assay Scope &amp; Variant Profiling</div>
       </div>
       <div class="form-grid">
         <div class="form-group" style="grid-column:1/-1;">
@@ -673,7 +800,7 @@
 
     <div class="card">
       <div class="card-head">
-        <div class="card-title"><div class="card-icon" style="background:#e3f2fd; color:#1565c0;"><i class="fas fa-stethoscope"></i></div>Target Patient Selection &amp; Indications</div>
+        <div class="card-title"><div class="collapse-icon-wrap"><i data-lucide="stethoscope"></i></div>Target Patient Selection &amp; Indications</div>
       </div>
       <div class="form-grid">
         <div class="form-group" style="grid-column:1/-1;">
@@ -693,7 +820,7 @@
 
     <div class="card">
       <div class="card-head">
-        <div class="card-title"><div class="card-icon" style="background:#fce4ec; color:#880e4f;"><i class="fas fa-scale-balanced"></i></div>Competitor Market Benchmarking</div>
+        <div class="card-title"><div class="collapse-icon-wrap"><i data-lucide="scale"></i></div>Competitor Market Benchmarking</div>
       </div>
       <div class="form-group">
         <label class="form-label">Test-specific parameters or alternative competitive products</label>
@@ -703,7 +830,7 @@
 
     <div class="card">
       <div class="card-head">
-        <div class="card-title"><div class="card-icon" style="background:#f3e5f5; color:#4a148c;"><i class="fas fa-gem"></i></div>Value Proposition Matrix</div>
+        <div class="card-title"><div class="collapse-icon-wrap"><i data-lucide="gem"></i></div>Value Proposition Matrix</div>
       </div>
       <div class="form-group">
         <label class="form-label">Core targets, clinical alignment arguments, or data proofs</label>
@@ -713,7 +840,7 @@
 
     <div class="card">
       <div class="card-head">
-        <div class="card-title"><div class="card-icon" style="background:#fff8e1; color:#e65100;"><i class="fas fa-file-pdf"></i></div>Attach Diagnostic Report Framework PDF</div>
+        <div class="card-title"><div class="collapse-icon-wrap"><i data-lucide="file-text"></i></div>Attach Diagnostic Report Framework PDF</div>
       </div>
       
       {% if details and details.get('report_filename') %}
@@ -786,7 +913,7 @@
     <div class="modal-head">
       <div class="modal-head-row" style="display:flex; align-items:center; gap:10px;">
         <div class="modal-head-ico" style="background:#fff8e1; color:#e65100; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:6px;">
-          <i class="fas fa-file-pdf"></i>
+          <i data-lucide="upload"></i>
         </div>
         <h2>Upload Sample Report</h2>
       </div>
@@ -817,7 +944,7 @@
 
 {% block scripts %}
 <script>
-const selectedTest = {{ selected_test | tojson }};
+const selectedTest = "{{ selected_test }}";
 
 /* ── Collapse Accordions ── */
 function toggleCollapse(id) {

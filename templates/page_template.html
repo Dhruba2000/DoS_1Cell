@@ -1,0 +1,2392 @@
+{% extends "base.html" %}
+{% block topbar_title %}
+Directory of Services
+{% endblock %}
+
+{% block topbar_subtitle %}
+Dynamic Test Catalogue, Lead Generator, and Database.
+{% endblock %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════
+   GLOBAL & LAYOUT STYLES
+═══════════════════════════════════════════════ */
+
+.section-title {
+    font-size: clamp(18px, 1.5vw, 24px);
+    font-weight: 600;
+    color: #1a365d;
+}
+
+p {
+    font-size: clamp(14px, 1vw, 16px);
+    font-weight: 400;
+    line-height: 1.6;
+    color: #475569;
+}
+
+:root {
+    --maroon: #9e1f45;
+    --maroon-light: #fcf1f4;
+    --navy: #0f172a;
+    --border: #cbd5e1;
+    --bg-surface: #f8fafc;
+    --teal: #0f766e;
+    --teal-light: #f0fdfa;
+}
+
+*{
+    font-family: 'Outfit', sans-serif;
+}
+
+body{
+    font-family: 'Outfit', sans-serif;
+}
+
+.dos-header-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid rgb(227, 227, 227); padding-bottom: 0; }
+.dos-tab {
+    padding: 12px 24px; font-weight: 400; cursor: pointer; transition: all 0.2s;
+    background: transparent; color: #64748b; border: none; border-bottom: 2px solid transparent; font-size: 1rem; margin-bottom: -2px;
+}
+.dos-tab:hover { color: var(--navy); }
+.dos-tab.active { border-bottom-color: #daa520; color: #daa520; font-weight: 400; }
+.guide-subtab:hover { color: var(--navy); }
+.guide-subtab.active { border-bottom-color: var(--maroon) !important; color: var(--maroon) !important; }
+.guide-panel { display: none; animation: fadeIn 0.25s ease; }
+.guide-panel.active { display: block; }
+.ss-section { background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px; overflow: hidden; }
+
+
+.view-section { display: none; animation: fadeIn 0.3s ease; }
+.view-section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══════════════════════════════════════════════
+   CATALOGUE TABLE STYLES
+═══════════════════════════════════════════════ */
+.dos-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 20px;  flex-wrap: wrap; border-radius: 8px; margin-bottom: 10px; padding-top: 20px; }
+.search-box { width: 400px; max-width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 16px; font-size: 14px; background: #fff; outline: none; transition: border 0.2s; font-weight: 300; }
+
+/* Search icon */
+.search-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #8d96a1;
+    pointer-events: none;
+}
+
+.search-wrapper .search-box {
+    padding-left: 42px;
+} 
+
+.search-box:focus { border-color: var(--teal); }
+
+.toolbar-right { display: flex; gap: 10px; }
+.filter-btn { border: 1px solid var(--border); background: #f8fafc; padding: 4px 10px; border-radius: 5px; font-weight: 700; font-size: 14px; cursor: pointer; color: #475569; transition: all 0.2s; }
+.filter-btn:hover { background: #e2e8f0; }
+.filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+.btn-guideline {
+    background: var(--maroon-light); color: var(--maroon); border: 1px solid rgba(158,31,69,0.3);
+    padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+}
+.btn-guideline:hover { background: var(--maroon); color: #fff; border-color: var(--maroon); }
+
+.table-card { background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.table-wrap { overflow: auto; }
+.dos-table { width: 100%; border-collapse: collapse; min-width: 1300px; }
+.dos-table th { background: #1a365d; color: #fff; padding: 16px 20px; font-size: 15px;letter-spacing: 0.05em; text-align: left; }
+.dos-table td { border-bottom: 1px solid #e2e8f0; font-size: 15px; vertical-align: center; color: var(--text-dim); }
+
+.parent-row, .single-row { background: #fff; transition: background 0.2s;padding:0; }
+.parent-row:hover, .single-row:hover { background: #f8fafc; }
+.parent-row { cursor: pointer; border-bottom: 1px solid var(--border) !important; }
+.parent-row.open { background: #ffffff; border-bottom: 1px solid rgb(221, 221, 221) !important; }
+
+.test-cell-content { display: flex; flex-direction: column; justify-content: center; }
+.logo-box{
+    
+    height: 40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+
+    flex-shrink:0;
+}
+.logo-box img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+/* changes in the above code are being made by Simon */
+.parent-row.open .expand-icon { transform: rotate(180deg); }
+.parent-title {
+    display: flex;
+    align-items: center;
+}
+
+.parent-image {
+    object-fit: contain;
+    display: block;
+}
+
+.expand-icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform 0.25s ease;
+}
+
+.expand-icon svg{
+    width:18px;
+    height:18px;
+}
+
+.info-btn { background: #e2e8f0; color: #475569; border: none; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; justify-content: center; align-items: center; font-size: 12px; cursor: pointer; transition: 0.2s; margin-left: 6px; }
+.info-btn:hover { background: var(--navy); color: #fff; }
+
+.child-row { background: #ffffff; display: none; }
+.child-row.visible { display: table-row; animation: fadeIn 0.2s ease; }
+.child-row td { padding-top: 14px; padding-bottom: 14px; border-bottom: 1px solid #e4e4e4; }
+.child-row td:first-child { padding-left: 60px; border-left: 1px solid var(--text-dim); color: var(--text-dim); font-weight: 400; font-size: 15px; }
+
+.type-chip { padding: 4px 8px; border-radius: 100px; font-size: 12px; font-weight: 400; }
+.type-chip.service { background: #e5fced; color: #166534; border: 1px solid #bbf7d0; }
+.type-chip.ruo { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+.price-text { font-weight: 800; color: #daa520; font-size: 15px; }
+.genes-text { font-size: 14px; color: var(--text-dim); line-height: 1.5; font-weight: 400; display: block; max-width: 250px; }
+.form-select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer; background: #fff; outline: none; width: 100%; min-width: 150px; }
+.form-select:focus { border-color: var(--teal); }
+
+/* ═══════════════════════════════════════════════
+   SAMPLE GUIDE SIDE SHEET — REDESIGNED
+═══════════════════════════════════════════════ */
+.sidesheet-backdrop {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(5px);
+    display: flex; justify-content: flex-end; z-index: 1100;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sidesheet-backdrop.open { opacity: 1; pointer-events: all; }
+
+.sidesheet-box {
+    background: #fff; width: 100%; max-width: 820px; height: 100%;
+    box-shadow: -8px 0 40px rgba(0,0,0,0.18); display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sidesheet-backdrop.open .sidesheet-box { transform: translateX(0); }
+
+/* Header */
+.ss-header {
+    padding: 0;
+    background: linear-gradient(135deg, var(--navy) 0%, #1a2e4a 100%);
+    color: #fff;
+    flex-shrink: 0;
+}
+.ss-header-top {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 28px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.ss-header-top h2 {
+    margin: 0; font-size: 1.2rem; font-weight: 800;
+    display: flex; align-items: center; gap: 12px; letter-spacing: 0.01em;
+}
+.ss-header-icon {
+    width: 38px; height: 38px; background: rgba(255,255,255,0.15);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.btn-ss-close {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; width: 36px; height: 36px; border-radius: 8px; font-size: 1.1rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
+}
+.btn-ss-close:hover { background: #ef4444; border-color: #ef4444; }
+
+/* Tab nav inside side sheet */
+.ss-tabs {
+    display: flex; gap: 0; padding: 0 28px;
+}
+.ss-tab {
+    padding: 12px 20px; font-size: 13px; font-weight: 700; cursor: pointer;
+    border: none; background: transparent; color: rgba(255,255,255,0.55);
+    border-bottom: 3px solid transparent; transition: all 0.2s; letter-spacing: 0.03em;
+}
+.ss-tab:hover { color: rgba(255,255,255,0.85); }
+.ss-tab.active { color: #fff; border-bottom-color: #38bdf8; }
+
+/* Body */
+.ss-body {
+    flex: 1; overflow-y: auto; background: #f1f5f9; padding: 24px 28px 32px;
+}
+
+/* Section cards */
+.ss-section {
+    background: #fff; border-radius: 14px; border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px; overflow: hidden;
+    display: none;
+}
+.ss-section.active { display: block; animation: fadeIn 0.25s ease; }
+
+.ss-section-title {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px; border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+.ss-section-icon {
+    width: 36px; height: 36px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0;
+}
+.ss-section-title h3 { margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--navy); }
+.ss-section-title p { margin: 2px 0 0; font-size: 0.78rem; color: #64748b; font-weight: 500; }
+
+/* Master table */
+.ss-master-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.ss-master-table thead tr { background: #f8fafc; }
+.ss-master-table th {
+    padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.07em; color: #475569;
+    border-bottom: 2px solid #e2e8f0;
+}
+.ss-master-table td {
+    padding: 13px 16px; border-bottom: 1px solid #f1f5f9;
+    vertical-align: top; color: #334155; line-height: 1.55; font-weight: 500;
+}
+.ss-master-table tr:last-child td { border-bottom: none; }
+.ss-master-table tr:hover td { background: #f8fafc; }
+
+/* Specimen label cell */
+.specimen-cell {
+    display: flex; align-items: center; gap: 10px;
+}
+.specimen-icon {
+    width: 34px; height: 34px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+    flex-shrink: 0;
+}
+.spec-blood    { background: #fef3c7; color: #b45309; }
+.spec-tissue   { background: #ede9fe; color: #6d28d9; }
+.spec-csf      { background: #e0f2fe; color: #0369a1; }
+.spec-urine    { background: #fef9c3; color: #a16207; }
+.spec-fluid    { background: #dcfce7; color: #15803d; }
+.spec-frozen   { background: #e0f2fe; color: #0e7490; }
+.spec-slide    { background: #fce7f3; color: #be185d; }
+.spec-digital  { background: #f3e8ff; color: #7e22ce; }
+
+.specimen-label { font-weight: 600; color: #1a365d; font-size: 15px; }
+.specimen-sub   { font-size: 13px; color: #64748b; margin-top: 2px; }
+
+/* Badge chips */
+.analyte-chip {
+    display: inline-block; padding: 3px 9px; border-radius: 20px;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
+}
+.chip-ccdfdna { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+.chip-gdna    { background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; }
+.chip-ctc     { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+.chip-wsi     { background: #fce7f3; color: #be185d; border: 1px solid #fbcfe8; }
+.chip-ccrna   { background: #fef9c3; color: #a16207; border: 1px solid #fde68a; }
+.chip-rtrl    { background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+
+/* Temperature badge */
+.temp-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #f1f5f9; border: 1px solid #e2e8f0;
+    padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #475569;
+}
+.temp-cold  { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+.temp-amb   { background: #fef3c7; color: #b45309; border-color: #fde68a; }
+.temp-dry   { background: #e0f2fe; color: #0e7490; border-color: #a5f3fc; }
+
+/* Stability */
+.stability-text { font-size: 12px; color: #475569; font-weight: 600; }
+
+/* Important note */
+.note-block {
+    margin: 0; padding: 14px 18px; background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    font-size: 12px; color: #92400e; font-weight: 500; line-height: 1.6;
+}
+.note-block ol { margin: 6px 0 0; padding-left: 18px; }
+.note-block li { margin-bottom: 4px; }
+
+/* Tests mapping table */
+.test-map-table { border-collapse: collapse; font-size: 13px; }
+.test-map-table th {
+    padding: 12px 16px; background: #f8fafc; text-align: left;
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.07em; color: #475569; border-bottom: 2px solid #e2e8f0;
+}
+.test-map-table td {
+    padding: 12px 16px; border-bottom: 1px solid #f1f5f9;
+    vertical-align: top; color: #334155; font-weight: 500; font-size: 13px;
+}
+.test-map-table tr:last-child td { border-bottom: none; }
+.test-map-table tr:hover td { background: #f8fafc; }
+.test-name-cell { font-weight: 800; color: var(--navy); font-size: 13px; }
+.specimens-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.spec-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 600;
+    background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0;
+}
+
+/* Glossary */
+.guide-panel {
+    display: none !important;
+}
+.guide-panel.active {
+    display: block !important;
+}
+.glossary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 20px; }
+.gloss-card {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;
+    display: flex; flex-direction: column; gap: 4px;
+}
+.gloss-abbr { font-size: 16px; font-weight: 900; color: var(--navy); }
+.gloss-full { font-size: 12px; color: #64748b; font-weight: 500; line-height: 1.4; }
+
+/* Group header rows */
+.group-header-row td {
+    font-weight: 800 !important; color: var(--text-dim) !important;
+    font-size: 14px !important;
+    letter-spacing: 0.06em; padding: 10px 16px !important;
+    border-bottom: 1px solid rgb(202, 202, 202) !important;
+}
+
+/* ═══════════════════════════════════════════════
+   MODAL BACKDROP & BOX
+═══════════════════════════════════════════════ */
+:root {
+
+    /* SPACING */
+    --space-xxs: clamp(2px, 0.2vw, 4px);
+    --space-xs:  clamp(4px, 0.4vw, 8px);
+    --space-sm:  clamp(8px, 0.8vw, 12px);
+    --space-md:  clamp(12px, 1.2vw, 16px);
+    --space-lg:  clamp(16px, 1.8vw, 24px);
+    --space-xl:  clamp(24px, 2.5vw, 32px);
+    --space-2xl: clamp(32px, 3vw, 48px);
+
+    /* FONT SIZES */
+    --text-xs: clamp(11px, 0.7vw, 13px);
+    --text-sm: clamp(12px, 0.8vw, 14px);
+    --text-md: clamp(14px, 1vw, 16px);
+    --text-lg: clamp(16px, 1.2vw, 20px);
+    --text-xl: clamp(20px, 1.8vw, 28px);
+    --text-2xl: clamp(24px, 2.5vw, 36px);
+
+    /* BORDER RADIUS */
+    --radius-sm: clamp(4px, 0.4vw, 6px);
+    --radius-md: clamp(8px, 0.8vw, 12px);
+    --radius-lg: clamp(12px, 1vw, 16px);
+
+}
+
+.modal-backdrop {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1200; opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.modal-backdrop.open { opacity: 1; pointer-events: all; }
+
+.modal-box {
+    width: min(95vw, 700px);
+    max-height: 80vh;
+
+    padding: var(--space-lg);
+
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+     display: flex;
+    flex-direction: column;
+}
+
+.modal-backdrop.open .modal-box { transform: scale(1) translateY(0); }
+
+.modal-header {
+    padding: 15px 15px;
+    border-bottom: 1px solid #e5e7eb;
+    z-index: 10;
+    position:-webkit-sticky
+}
+
+.modal-title {
+    font-size: clamp(20px, 2vw,28px);
+    font-weight: 700;
+}
+
+.modal-subtitle {
+    font-size: clamp(16px, 1.5vw, 18px);
+}
+
+.modal-desc {
+    font-size: clamp(16px, 1.5vw, 16px);
+}
+
+.modal-body {
+    font-size: clamp(14px, 1vw, 18px);
+}
+
+.modal-small {
+    font-size: clamp(12px, 0.8vw, 14px);
+}
+
+.btn-var {
+    padding:
+        var(--space-sm)
+        var(--space-lg);
+
+    font-size: var(--text-md);
+    border-radius: var(--radius-md);
+}
+
+input,
+select,
+textarea {
+    padding: var(--space-sm);
+    font-size: var(--text-md);
+    border-radius: var(--radius-sm);
+}
+
+.modal-body { overflow-y: auto; flex: 1;}
+
+.btn-close {
+    position: absolute;
+    top: clamp(8px, 1vw, 12px);
+    right: clamp(8px, 1vw, 12px);
+
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #000000;
+
+    width: clamp(28px, 2vw, 34px);
+    height: clamp(28px, 2vw, 34px);
+
+    border-radius: clamp(2px, 0.3vw, 3px);
+
+    font-size: clamp(24px, 2vw, 35px);
+    font-weight: 300;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: right;
+
+    transition: all 0.2s;
+    z-index: 10;
+
+    padding: 0;
+    line-height: 1;
+}
+
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: all 0.2s; }
+.btn-primary { background: var(--teal); color: #fff; }
+.btn-primary:hover { background: #0d6460; box-shadow: 0 4px 12px rgba(15,118,110,0.35); }
+.btn-secondary { background: #f1f5f9; color: var(--navy); border: 1px solid var(--border); }
+.btn-secondary:hover { background: #e2e8f0; }
+.btn-action { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1px solid var(--teal); background: var(--teal-light); color: var(--teal); }
+.btn-action:hover { background: var(--teal); color: #fff; }
+.pill-grid { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+.acc-text { font-size: 14px; font-weight: 400; color: var(--text-dim); }
+.tat-text { font-size: 14px; font-weight: 400; color: var(--text-dim); }
+.mb-16 { margin-bottom: 16px; }
+
+/* ═══════════════════════════════════════════════
+   MODAL STYLES (INFO & CONFIGURATION)
+═══════════════════════════════════════════════ */
+.info-header-box { color: #1a365d; padding: 5px; text-align: center; }
+.info-header-box h3 {  font-size: 1.4rem; font-weight: 700;padding-left: 20px; }
+.info-header-box p { margin: 0; color: #94a3b8; font-size: 0.9rem; }
+.info-content-box { padding: 24px; background: #fff; }
+.info-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--teal-light); color: var(--teal); padding: 6px 12px; border-radius: 100px; font-weight: 400; font-size: 12px; margin-bottom: 16px; margin-left: 18px; }
+.info-list { padding: 30px;padding-top:0px; list-style: none; margin: 5px; }
+.info-list li { margin-bottom: 12px; font-size: 15px; color: var(--text-dim);display: flex; gap: 10px; }
+.info-list li i { color: var(--teal); margin-top: 4px; }
+
+.addon-group { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.addon-group-head { display: flex; justify-content: space-between; font-weight: 600; color: var(--navy);margin-bottom: 8px; border-bottom: 1px solid rgb(237, 237, 237); padding-bottom: 10px; }
+.addon-group-head span.price { color: var(--maroon); font-size: 0.9rem; }
+.addon-desc { font-size: 0.85rem; color: #64748b; margin-bottom: 14px; font-weight: 500; }
+
+.select-pill { padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border); color: #475569; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #f8fafc; user-select: none; display: inline-block; margin: 4px; }
+.select-pill:hover { border-color: var(--teal); color: var(--teal); }
+.select-pill.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+.radio-group { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+.radio-group label { display: flex; align-items: center; gap: 10px;color: #1e293b; cursor: pointer; }
+.radio-group input { accent-color: #1a365d; width: 18px; height: 18px; cursor: pointer; }
+
+/* ═══════════════════════════════════════════════
+   LGF FORM & DATABASE STYLES
+═══════════════════════════════════════════════ */
+.lgf-container { background: #fff; max-width: 1000px; margin: 0 auto; border: 1px solid var(--border); padding: 40px; box-shadow: var(--shadow-lg); position: relative; }
+.lgf-header { border-bottom: 3px solid var(--navy); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
+.lgf-header h1 { margin: 0; color: var(--navy); font-size: 2.2rem; letter-spacing: 0.05em; font-weight: 800; text-transform: uppercase; }
+.lgf-section { border: 2px solid var(--maroon); margin-bottom: 24px; border-radius: 4px; overflow: hidden; }
+.lgf-section-title { background: var(--maroon); color: #fff; font-weight: 700; font-size: 1.05rem; padding: 8px 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+.lgf-grid { display: flex; flex-direction: column; background: #fff; }
+.lgf-row { display: flex; border-bottom: 1px solid var(--maroon); }
+.lgf-row:last-child { border-bottom: none; }
+.lgf-field { flex: 1; border-right: 1px solid var(--maroon); padding: 10px 14px; display: flex; flex-direction: column; gap: 4px; }
+.lgf-field:last-child { border-right: none; }
+.lgf-label { font-size: 0.7rem; font-weight: 800; color: var(--maroon); text-transform: uppercase; }
+.lgf-input { border: none; outline: none; font-size: 1rem; font-weight: 600; color: var(--navy); width: 100%; background: transparent; padding: 4px 0; font-family: 'Outfit'}
+.lgf-input::placeholder { color: #cbd5e1; font-weight: 500; }
+.lgf-input:disabled { color: #475569; background: transparent; opacity: 1; }
+
+.lgf-watermark { position: absolute; top: 20px; right: 40px; font-size: 1.2rem; font-weight: 800; color: var(--teal); opacity: 0.6; }
+.preview-badge { background: #ef4444; color: #fff; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; display: inline-block; margin-bottom: 10px; }
+
+.records-table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: var(--shadow-sm); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+.records-table th { background: #1a365d; color: #fff; padding: 16px 20px; text-align: left; font-size: 14px; letter-spacing: 0.05em; font-weight: 500; }
+.records-table td { padding: 14px; border-bottom: 1px solid var(--border); font-size: 14px; color:var(--text-dim);font-weight: 300; }
+.records-table tr:hover { background: var(--bg-surface); }
+.clickable-lgf { color: #3d9aff; font-weight: 600; cursor: pointer; text-decoration: underline; }
+</style>
+
+<div class="dos-header-tabs">
+    <button class="dos-tab active" id="tab-catalog" onclick="switchTab('catalog')">Test Catalogue</button>
+    <button class="dos-tab" id="tab-lgf" style="display:none;" onclick="switchTab('lgf')">Lead Generation Form</button>
+    <button class="dos-tab" id="tab-list" onclick="switchTab('list')">Lead Database</button>
+    <button class="dos-tab" id="tab-guide" onclick="switchTab('guide')"> Sample Guide</button>
+</div>
+<!-- changes in the above div of dos-header-tabs are done by simon -->
+<div id="view-catalog" class="view-section active">
+    <div class="dos-toolbar">
+<div class="toolbar-left">
+    <div class="search-wrapper">
+        <i data-lucide="search" class="search-icon"></i>
+
+        <input type="text"
+               id="globalSearch"
+               class="search-box"
+               placeholder="Search tests, variants, genes..."
+               onkeyup="filterTable()">
+    </div>
+</div>
+        <div class="toolbar-right">
+            <button class="filter-btn active" onclick="filterType('All', this)">All</button>
+            <button class="filter-btn" onclick="filterType('Service', this)">Service</button>
+            <button class="filter-btn" onclick="filterType('RUO', this)">RUO</button>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-wrap">
+            <table class="dos-table" id="dosTable">
+                <thead>
+                    <tr>
+                        <th style="min-width: 280px;">Test Name & Description</th>
+                        <th style="min-width: 180px;">Variant</th>
+                        <th>Type</th>
+                        <th>Analyte</th>
+                        <th style="min-width: 200px;">Genes</th>
+                        <th style="min-width: 130px;">MRP</th>
+                        <th style="min-width: 130px;">Accreditation</th>
+                        <th style="min-width: 100px;">TAT</th>
+                        <th style="min-width: 130px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="catalog-tbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="view-lgf" class="view-section">
+    <button class="btn btn-secondary mb-16" onclick="showCatalogTabs()" id="lgf-back-btn" style="font-weight:700;"><i class="fas fa-arrow-left"></i> Cancel & Modify</button>
+    <!-- in the above onclick = "switchTab('catalog') is being changed to onclick="showCatalogTabs()" -->
+    <div class="lgf-container" id="lgf-document">
+        <div class="lgf-watermark" id="lgf-watermark-id"></div>
+        <div class="lgf-header">
+            <div><p style="margin:0; font-weight:800; color:var(--maroon); font-size:1.4rem;">1Cell.Ai™</p><div style="font-size:0.85rem; color:#64748b; font-weight:700;">AI-Powered Precision Oncology</div></div>
+            <h1>LEAD GENERATION FORM</h1>
+        </div>
+
+        <div class="lgf-section" style="border-color: var(--teal);">
+            <div class="lgf-section-title" style="background: var(--teal);">INTERNAL TRACKING</div>
+            <div class="lgf-grid">
+                <div class="lgf-row">
+                    <div class="lgf-field"><span class="lgf-label" style="color:var(--teal);">Sales Person Name</span><input type="text" class="lgf-input lgf-data" id="lgf-sales" placeholder="Enter your full name..."></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lgf-section">
+            <div class="lgf-section-title">PATIENT INFORMATION</div>
+            <div class="lgf-grid">
+                <div class="lgf-row">
+                    <div class="lgf-field"><span class="lgf-label">First Name</span><input type="text" class="lgf-input lgf-data" id="lgf-fname" placeholder="Patient First Name"></div>
+                    <div class="lgf-field"><span class="lgf-label">Last Name</span><input type="text" class="lgf-input lgf-data" id="lgf-lname" placeholder="Patient Last Name"></div>
+                </div>
+                <div class="lgf-row">
+                    <div class="lgf-field" style="flex: 0.5;"><span class="lgf-label">DOB</span><input type="date" class="lgf-input lgf-data" id="lgf-dob"></div>
+                    <div class="lgf-field" style="flex: 0.3;"><span class="lgf-label">Age</span><input type="number" class="lgf-input lgf-data" id="lgf-age" placeholder="Years"></div>
+                </div>
+                <div class="lgf-row">
+                    <div class="lgf-field"><span class="lgf-label">Phone</span><input type="text" class="lgf-input lgf-data" id="lgf-phone" placeholder="Contact Number"></div>
+                    <div class="lgf-field"><span class="lgf-label">Email</span><input type="email" class="lgf-input lgf-data" id="lgf-email" placeholder="Email for Reports"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lgf-section">
+            <div class="lgf-section-title">PHYSICIAN INFORMATION</div>
+            <div class="lgf-grid">
+                <div class="lgf-row"><div class="lgf-field"><span class="lgf-label">Physician Name</span><input type="text" class="lgf-input lgf-data" id="lgf-doc-name" placeholder="Referring Doctor"></div></div>
+                <div class="lgf-row"><div class="lgf-field"><span class="lgf-label">Hospital/Clinic</span><input type="text" class="lgf-input lgf-data" id="lgf-doc-hosp" placeholder="Facility Name"></div></div>
+            </div>
+        </div>
+
+        <div class="lgf-section">
+            <div class="lgf-section-title" style="background:var(--navy); border-color:var(--navy);">LEAD DETAILS & PRICING</div>
+            <div class="lgf-grid" id="lgf-tests-summary" style="padding: 24px; font-size: 1rem; line-height: 1.6; color: var(--navy);">
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; display:flex; justify-content:center; gap:16px;">
+        <button class="btn btn-primary" onclick="submitAndDownloadPDF()" id="save-btn" style="font-size: 1.1rem; padding: 14px 32px; font-weight:800;"><i class="fas fa-save"></i> Save Lead & Download PDF</button>
+        <button class="btn btn-secondary" onclick="justDownloadPDF()" id="download-only-btn" style="display:none; font-size: 1.1rem; padding: 14px 32px; font-weight:800;"><i class="fas fa-download"></i> Re-Download PDF</button>
+    </div>
+</div>
+
+<div id="view-list" class="view-section">
+    <table class="records-table">
+        <thead>
+            <tr>
+                <th>LGF ID</th>
+                <th>Date</th>
+                <th>Patient Name</th>
+                <th>Physician</th>
+                <th>Sales Person</th>
+                <th>Total MRP</th>
+            </tr>
+        </thead>
+        <tbody id="records-tbody"><tr><td colspan="6" style="text-align:center;">Loading Database...</td></tr></tbody>
+    </table>
+</div>
+
+<!-- INFO MODAL -->
+<div class="modal-backdrop" id="info-modal">
+    <div class="modal-box" style="max-width: 700px; padding:0;">
+        <div class="info-header-box">
+            <div style="display:flex; justify-content:flex-end; margin-top: 10px;margin-right: 5px;"><button class="btn-close" onclick="closeInfoModal()" style="color:#000000">&times;</button></div>
+            <h3 id="info-modal-title">Test Details</h3>
+            <p id="info-modal-desc">Description</p>
+        </div>
+        <div class="info-content-box" id="info-modal-body">
+        </div>
+    </div>
+</div>
+
+<!-- CONFIG MODAL -->
+<div class="modal-backdrop" id="config-modal">
+    <div class="modal-box card" style="padding: var(--space-xxs); background-color: #ffffff;">
+        <div class="modal-body">
+            <div class="modal-header">
+            <div class="modal-title" id="modal-title"><span>Configure Test</span></div>
+            <button class="btn-close btn-var" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modal-foc-section" class="addon-group" style="display:none; background:#f0fdf4; border-color:#86efac;">
+                <div class="modal-small" style="color:#166534; border-bottom-color:#bbf7d0;">Included Automatically (FOC)</div>
+                <div class="modal-small" id="foc-content" style="color:#166534; padding-left:12px;"></div>
+            </div>
+
+            <div id="modal-tissue-addons" style="display:none;">
+                <div class = "modal-subtitle" style="padding: 14px 16px 2 16px;font-weight: 700; color: #1a365d;border-bottom: 1px solid var(--border); margin: 0 14px;">IHC & Histopathology Services</div>
+                
+                <div class="addon-group">
+                    <div class="modal-subtitle addon-group-head">A1. PD-L1 by IHC</div>
+                    <div class="radio-group">
+                        <label class="modal-desc"><input type="radio" name="a1_pdl1" value="None" checked onchange="calcModalPrice()"> Not Required</label>
+                        <label class="modal-desc"><input type="radio" name="a1_pdl1" value="DAKO 22 C3" onchange="calcModalPrice()"> DAKO 22 C3 <span style="color:var(--maroon); font-weight:700;">+₹17,000</span></label>
+                        <label class="modal-desc"><input type="radio" name="a1_pdl1" value="Ventana SP263" onchange="calcModalPrice()"> Ventana SP263 <span style="color:var(--maroon); font-weight:700;">+₹7,500</span></label>
+                    </div>
+                </div>
+
+                <div class="addon-group">
+                    <div class=" modal-subtitle addon-group-head">Histopath & Panel Sub-selections</div>
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-size:0.85rem; font-weight:700; color:var(--navy); margin-bottom:8px;">A2. Histopathology <span style="color:var(--maroon)">Variable</span></div>
+                        <select id="a2_histopath" class="form-select" onchange="calcModalPrice()">
+                            <option value="None">Not Required</option>
+                            <option value="Small">Small (S) - ₹3,000</option>
+                            <option value="Medium">Medium (M) - ₹4,000</option>
+                            <option value="Large">Large (L) - ₹5,500</option>
+                        </select>
+                    </div>
+                    <div class="radio-group">
+                        <label style="font-weight:500; font-size:15px;margin-top: 12px;"><input type="checkbox" id="a4_breast" value="6500" onchange="calcModalPrice()"> A4. Breast Panel (ER/PR/HER2/Ki67) <span style="color:var(--maroon); font-weight:700;">+₹6,500</span></label>
+                    </div>
+                </div>
+
+                <div class="addon-group">
+                    <div class=" modal-subtitle addon-group-head">A5. Diagnostic IHC Panel <span class="price">Flat ₹15,000</span></div>
+                    <div class="modal-desc">Includes required IHC markers for the cancer type from the list of 50+ IHC markers. Dependent on the tissue block volume availability.</div>
+                    <label style="display:flex; align-items:center; gap:8px; font-weight:500; font-size:15px;margin-top: 15px;"><input type="checkbox" id="a5_diag" value="15000" style="width:18px; height:18px; accent-color:var(--teal);" onchange="calcModalPrice()"> Include Diagnostic IHC Panel</label>
+                </div>
+
+                <div class="addon-group">
+                    <div class="modal-subtitle addon-group-head">A6. IHC Markers (Regular) <span class="price">₹2,500 / marker</span></div>
+                    <div class="pill-grid" id="a6-grid"></div>
+                </div>
+
+                <div class="addon-group">
+                    <div class="modal-subtitle addon-group-head">A7. IHC Markers (Advanced) <span class="price">₹8,000 / marker</span></div>
+                    <div class="pill-grid" id="a7-grid"></div>
+                </div>
+
+                <div class="addon-group">
+                    <div class="modal-subtitle addon-group-head">A8. ADC Markers <span class="price">₹12,000 / marker</span></div>
+                    <div class="pill-grid" id="a8-grid"></div>
+                </div>
+
+                <div class = "modal-subtitle" style="padding: 14px 16px 2 16px;font-weight: 700; color: #1a365d;border-bottom: 1px solid var(--border); margin: 0 14px;">PCR & FISH Services</div>
+
+                <div class="addon-group">
+                    <div class="modal-subtitle addon-group-head">Molecular Add-ons (B1 - B5)</div>
+                    <div class="radio-group">
+                        <label style="font-weight:500; font-size:15px;"><input type="checkbox" id="a3_mmr" value="10000" onchange="calcModalPrice()"> A3. MMR Panel <span style="color:var(--maroon); font-weight:700;">+₹10,000</span></label>
+                        <label style="font-weight:500; font-size:15px;"><input type="checkbox" id="b1_mgmt" value="8500" onchange="calcModalPrice()"> B1. MGMT by PCR <span style="color:var(--maroon); font-weight:700;">+₹8,500</span></label>
+                        <label style="font-weight:500; font-size:15px;"><input type="checkbox" id="b2_her2" value="12000" onchange="calcModalPrice()"> B2. Her2 by FISH <span style="color:var(--maroon); font-weight:700;">+₹12,000</span></label>
+                        <label style="font-weight:500; font-size:15px;"><input type="checkbox" id="b3_eber" value="6000" onchange="calcModalPrice()"> B3. EBER ISH <span style="color:var(--maroon); font-weight:700;">+₹6,000</span></label>
+                        <label style="font-weight:500; font-size:15px;"><input type="checkbox" id="b4_alpha" value="13000" onchange="calcModalPrice()"> B4. Alpha Folate receptor IHC <span style="color:var(--maroon); font-weight:700;">+₹13,000</span></label>
+                        <label style="font-weight:500; font-size:15px;"><input type="checkbox" id="b5_mlpa" value="15000" onchange="calcModalPrice()"> B5. MLPA by PCR <span style="color:var(--maroon); font-weight:700;">+₹15,000</span></label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-ctc-addon-container" style="display:none;">
+                <div class="addon-group">
+                    <div class=" modal-subtitle addon-group-head">OncoCTC <span class="price">Upon Request</span></div>
+                    <label style="display:flex; align-items:center; gap:8px; font-weight:500; font-size:15px;"><input type="checkbox" id="add_oncoctc" style="width:18px; height:18px; accent-color:var(--teal);" onchange="calcModalPrice()"> Add OncoCTC</label>
+                </div>
+            </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+
+                    <!-- Total MRP -->
+                    <div style="display:flex; flex-direction:column; align-items:right;">
+                        <span style="font-size:0.75rem; color:#64748b; font-weight:800;">
+                            Total MRP
+                        </span>
+
+                        <span
+                            id="modal-total-price"
+                            style="font-size:1.5rem; font-weight:800; color:var(--teal);">
+                            ₹0
+                        </span>
+                    </div>
+
+                    <!-- Add to Requisition Button -->
+                    <div style="display:flex; align-items:center;">
+                        <button
+                            class="btn-var btn btn-primary"
+                            onclick="confirmModalSelection()"
+                            style="padding:8px 10px; font-size:20px;">
+
+                            Add to Requisition
+                            <i class="fas fa-check" style="margin-left:8px;"></i>
+
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+</div>
+
+
+<div id="view-guide" class="view-section">
+    <!-- Sub-tab nav -->
+    <div style="display:flex; gap:0; margin-bottom:20px; border-bottom:2px solid var(--border);">
+        <button class="guide-subtab active" onclick="switchGuideTab('mapping', this)" style="padding:12px 24px;font-weight:700;cursor:pointer;background:transparent;color:#64748b;border:none;border-bottom:3px solid transparent;font-size:0.95rem;margin-bottom:-2px;transition:all 0.2s;">Sample Mapping</button>
+        <button class="guide-subtab" onclick="switchGuideTab('tests', this)" style="padding:12px 24px;font-weight:700;cursor:pointer;background:transparent;color:#64748b;border:none;border-bottom:3px solid transparent;font-size:0.95rem;margin-bottom:-2px;transition:all 0.2s;">Tests → Samples</button>
+        <button class="guide-subtab" onclick="switchGuideTab('glossary', this)" style="padding:12px 24px;font-weight:700;cursor:pointer;background:transparent;color:#64748b;border:none;border-bottom:3px solid transparent;font-size:0.95rem;margin-bottom:-2px;transition:all 0.2s;">Glossary</button>
+    </div>
+            <!-- ── TAB 1: Sample Mapping ── -->
+            <div class="guide-panel active" id="guide-mapping">
+
+                <!-- BLOOD (ccfDNA) -->
+            <div class="card" style="background-color: #ffffff;">
+                <div>
+                    <div>
+                        <h3 class="section-title">Blood — Liquid Biopsy (ccfDNA)</h3>
+                        <p>Circulating cell-free DNA from blood and body fluids</p>
+                    </div>
+                </div>
+                <div style="border: 1px solid rgb(222, 222, 222);border-radius: 8px;padding: none;margin-bottom: 30px;margin-top: 10px;">
+                <table class="ss-master-table" style="background-color: #ffffff; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="min-width:150px;">Specimen</th>
+                            <th>Sample Container</th>
+                            <th style="min-width:90px;"># Tubes</th>
+                            <th style="min-width:90px;">Volume</th>
+                            <th style="min-width:90px;">Analyte</th>
+                            <th style="min-width:120px;">Shipment</th>
+                            <th style="min-width:110px;">Temperature</th>
+                            <th style="min-width:140px;">Stability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="group-header-row"><td colspan="8">BLOOD (Validated Tubes)</td></tr>
+                        <tr>
+                            <td rowspan="4" style="border-right:1px solid rgb(202, 202, 202);">
+                                <div class="specimen-cell">
+                                    <div>
+                                        <div class="specimen-label">Blood</div>
+                                        <div class="specimen-sub">PAXgene ccfDNA BCT</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>PAXgene ccfDNA BCT <span style="font-size:11px;color:#64748b;">(Internally Validated)</span></td>
+                            <td style="font-weight:700;text-align:center;">2</td>
+                            <td style="font-weight:700;">20 ml</td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                            <td><span class="temp-badge temp-amb">🌡 Cold → Ambient</span></td>
+                            <td><span class="temp-badge temp-amb">2–37 °C</span></td>
+                            <td class="stability-text">≤10 days @ ≤25 °C</td>
+                        </tr>
+                        <tr>
+                            <td>Streck cell-free DNA BCT <span style="font-size:11px;color:#64748b;">(Internally Validated)</span></td>
+                            <td style="font-weight:700;text-align:center;">2</td>
+                            <td style="font-weight:700;">20 ml</td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                            <td><span class="temp-badge temp-amb">🌡 Cold → Ambient</span></td>
+                            <td><span class="temp-badge temp-amb">2–30 °C</span></td>
+                            <td class="stability-text">≤7 days @ 2–30 °C</td>
+                        </tr>
+                        <tr>
+                            <td>Roche Cell-free DNA Collection Tube <span style="font-size:11px;color:#64748b;">(Internally Validated)</span></td>
+                            <td style="font-weight:700;text-align:center;">2</td>
+                            <td style="font-weight:700;">20 ml</td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                            <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                            <td><span class="temp-badge temp-amb">15–30 °C</span></td>
+                            <td class="stability-text">≤7 days @ 15–25 °C</td>
+                        </tr>
+                        <tr>
+                            <td>Other cell-free DNA BCT</td>
+                            <td style="font-weight:700;text-align:center;">2</td>
+                            <td style="font-weight:700;">20 ml</td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                            <td><span class="temp-badge" style="background:#fee2e2;color:#991b1b;border-color:#fecaca;">⚠ Check Vendor</span></td>
+                            <td><span class="temp-badge" style="background:#fee2e2;color:#991b1b;border-color:#fecaca;">Vendor Specs</span></td>
+                            <td class="stability-text" style="color:#991b1b;font-style:italic;">Not Lab Validated — accept under deviation</td>
+                        </tr>
+
+                        <tr class="group-header-row"><td colspan="8">Body Fluids</td></tr>
+                        <tr>
+                            <td>
+                                <div class="specimen-cell">
+                                    <div>
+                                        <div class="specimen-label">Pleural Fluid</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>PAXgene ccfDNA BCT / Norgen cf-DNA/cf-RNA Preservative Tube</td>
+                            <td style="font-weight:700;text-align:center;">2</td>
+                            <td style="font-weight:700;">20 ml</td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                            <td><span class="temp-badge temp-amb">🌡 Cold → Ambient</span></td>
+                            <td><span class="temp-badge temp-amb">2–37 °C</span></td>
+                            <td class="stability-text">≤7 days @ ≤30 °C</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="specimen-cell">
+                                    <div>
+                                        <div class="specimen-label">Ascitic Fluid</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>PAXgene ccfDNA BCT / Norgen cf-DNA/cf-RNA Preservative Tube</td>
+                            <td style="font-weight:700;text-align:center;">2</td>
+                            <td style="font-weight:700;">20 ml</td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                            <td><span class="temp-badge temp-amb">🌡 Cold → Ambient</span></td>
+                            <td><span class="temp-badge temp-amb">2–37 °C</span></td>
+                            <td class="stability-text">≤3 days @ ≤37 °C</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="specimen-cell">
+                                    <div>
+                                        <div class="specimen-label">Peritoneal Fluid</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Streck cell-free DNA BCT <span style="font-size:11px;color:#64748b;">(Internally Validated)</span></td>
+                            <td style="font-weight:700;text-align:center;">2</td>
+                            <td style="font-weight:700;">20 ml</td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                            <td><span class="temp-badge temp-amb">🌡 Cold → Ambient</span></td>
+                            <td><span class="temp-badge temp-amb">2–30 °C</span></td>
+                            <td class="stability-text">≤7 days @ 2–30 °C</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="specimen-cell">
+                                    <div>
+                                        <div class="specimen-label">Other Fluid</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Roche Cell-free DNA Collection Tube <span style="font-size:11px;color:#64748b;">(Internally Validated)</span></td>
+                            <td style="font-weight:700;text-align:center;">2</td>
+                            <td style="font-weight:700;">20 ml</td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                            <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                            <td><span class="temp-badge temp-amb">15–30 °C</span></td>
+                            <td class="stability-text">≤7 days @ 15–25 °C</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="specimen-cell">
+                                    <div>
+                                        <div class="specimen-label">Bile Fluid</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Norgen cf-DNA/cf-RNA Preservative Tube <span style="font-size:11px;color:#64748b;">(Internally Validated)</span></td>
+                            <td style="font-weight:700;text-align:center;">2</td>
+                            <td style="font-weight:700;">20 ml</td>
+                            <td>
+                                <span class="analyte-chip chip-ccdfdna" style="display:block;margin-bottom:3px;">ccfDNA</span>
+                                <span class="analyte-chip chip-ccrna" style="font-style:italic;font-size:10px;">ccfRNA (validation ongoing)</span>
+                            </td>
+                            <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                            <td><span class="temp-badge temp-amb">15–37 °C</span></td>
+                            <td class="stability-text">≤30 days @ 15–25 °C<br>≤8 days @ 37 °C</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <div class="note-block">
+                    <strong>⚠ Important Guidelines — Blood & Body Fluid:</strong>
+                    <ol>
+                        <li>In case of ongoing CT regimen, collect liquid biopsy samples after <strong>2-week washout period</strong> post CT.</li>
+                        <li>Blood samples must be collected by <strong>direct draw method</strong> to ensure minimal haemolysis.</li>
+                        <li>Post blood transfusion, collect samples after <strong>120 days</strong>.</li>
+                    </ol>
+                </div>
+            </div>
+
+                <!-- CSF -->
+            <div class="card" style="background-color: #ffffff;">
+                <div>
+                    <div>
+                        <h3 class="section-title">CSF — Cerebrospinal Fluid</h3>
+                        <p>Cold chain only — strict stability limits</p>
+                    </div>
+                </div>
+                <div style="border: 1px solid rgb(222, 222, 222);border-radius: 8px;padding: none;margin-bottom: 30px;margin-top: 10px;">
+                <table class="ss-master-table" style="background-color: #ffffff; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Specimen</th>
+                            <th>Sample Container</th>
+                            <th># Tubes</th>
+                            <th>Volume</th>
+                            <th>Analyte</th>
+                            <th>Shipment</th>
+                            <th>Temperature</th>
+                            <th>Stability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2"   style="border-right:1px solid rgb(202, 202, 202);">
+                                <div class="specimen-cell">
+                                    <div>
+                                        <div class="specimen-label">CSF</div>
+                                        <div class="specimen-sub">Cerebrospinal Fluid</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Norgen cf-DNA/cf-RNA Preservative Tube <span style="font-size:11px;color:#64748b;">(Internally Validated)</span></td>
+                            <td style="font-weight:700;text-align:center;">1–2</td>
+                            <td style="font-weight:700;">3–5 ml (10–20 ml total)</td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                            <td><span class="temp-badge temp-cold">❄ Cold Chain Only</span></td>
+                            <td><span class="temp-badge temp-cold">2–8 °C</span></td>
+                            <td class="stability-text">24–36 hrs @ 2–8 °C</td>
+                        </tr>
+                        <tr>
+                            <td>PAXgene ccfDNA BCT <span style="font-size:11px;color:#64748b;">(Internally Validated)</span></td>
+                            <td style="font-weight:700;text-align:center;">1–2</td>
+                            <td style="font-weight:700;">3–5 ml (10–20 ml total)</td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                            <td><span class="temp-badge temp-cold">❄ Cold Chain Only</span></td>
+                            <td><span class="temp-badge temp-cold">2–8 °C</span></td>
+                            <td class="stability-text">24–36 hrs @ 2–8 °C</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <div class="note-block">
+                    <strong>⚠ CSF Note:</strong> If ongoing CT regimen, collect after <strong>2-week washout period</strong>.
+                </div>
+            </div>
+
+                <!-- URINE -->
+                <div class="card" style="background-color: #ffffff;">
+                    <div>
+                        <div>
+                            <h3 class="section-title">Urine — Liquid Biopsy</h3>
+                            <p>Multiple temperature stability windows</p>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid rgb(222, 222, 222);border-radius: 8px;padding: none;margin-bottom: 30px;margin-top: 10px;">
+                    <table class="ss-master-table" style="background-color: #ffffff; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Specimen</th>
+                                <th>Sample Container</th>
+                                <th># Tubes</th>
+                                <th>Volume</th>
+                                <th>Analyte</th>
+                                <th>Shipment</th>
+                                <th>Temperature</th>
+                                <th>Stability</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="2"   style="border-right:1px solid rgb(202, 202, 202);">
+                                    <div class="specimen-cell">
+                                        <div>
+                                            <div class="specimen-label">Urine</div>
+                                            <div class="specimen-sub">Primary Container</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>PAXgene urine liquid biopsy tube <span style="font-size:11px;color:#64748b;">(Internally Validated)</span></td>
+                                <td style="font-weight:700;text-align:center;">1–2</td>
+                                <td style="font-weight:700;">10–20 ml</td>
+                                <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                                <td><span class="temp-badge temp-amb">🌡 Cold → Ambient</span></td>
+                                <td><span class="temp-badge temp-amb">2–37 °C</span></td>
+                                <td class="stability-text">
+                                    ≤10 days @ 2–8 °C<br>
+                                    ≤10 days @ 15–25 °C<br>
+                                    ≤7 days @ ≤30 °C<br>
+                                    ≤3 days @ ≤37 °C
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>PAXgene ccfDNA BCT <span style="font-size:11px;color:#64748b;">(Backup — Internally Validated)</span></td>
+                                <td style="font-weight:700;text-align:center;">2</td>
+                                <td style="font-weight:700;">20 ml</td>
+                                <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                                <td><span class="temp-badge temp-amb">🌡 Cold → Ambient</span></td>
+                                <td><span class="temp-badge temp-amb">2–37 °C</span></td>
+                                <td class="stability-text">
+                                    ≤10 days @ ≤25 °C<br>
+                                    ≤7 days @ ≤30 °C<br>
+                                    ≤3 days @ ≤37 °C
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+
+                <!-- BLOOD (gDNA / CTC) -->
+                <div class="card" style="background-color: #ffffff;">
+                    <div>
+                        <div>
+                            <h3 class="section-title">Blood — gDNA &amp; CTC</h3>
+                            <p>K2 EDTA tube for germline and circulating tumour cells</p>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid rgb(222, 222, 222);border-radius: 8px;padding: none;margin-bottom: 30px;margin-top: 10px;">
+                        <table class="ss-master-table" style="background-color: #ffffff; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Specimen</th>
+                                    <th>Sample Container</th>
+                                    <th># Tubes</th>
+                                    <th>Volume</th>
+                                    <th>Analyte</th>
+                                    <th>Shipment</th>
+                                    <th>Temperature</th>
+                                    <th>Stability</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="2"   style="border-right:1px solid rgb(202, 202, 202);">
+                                        <div class="specimen-cell">
+                                            <div>
+                                                <div class="specimen-label">Blood (EDTA)</div>
+                                                <div class="specimen-sub">K2 EDTA Tube</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>K2 EDTA</td>
+                                    <td style="font-weight:700;text-align:center;">1</td>
+                                    <td style="font-weight:700;">10 ml</td>
+                                    <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                                    <td><span class="temp-badge temp-cold">❄ Cold Chain</span></td>
+                                    <td><span class="temp-badge temp-cold">2–8 °C</span></td>
+                                    <td class="stability-text">≤10 days @ 2–8 °C</td>
+                                </tr>
+                                <tr>
+                                    <td>K2 EDTA</td>
+                                    <td style="font-weight:700;text-align:center;">1</td>
+                                    <td style="font-weight:700;">10 ml</td>
+                                    <td><span class="analyte-chip chip-ctc">CTC</span></td>
+                                    <td><span class="temp-badge temp-cold">❄ Cold Chain</span></td>
+                                    <td><span class="temp-badge temp-cold">2–8 °C</span></td>
+                                    <td class="stability-text">≤3 days @ 2–8 °C</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="note-block">
+                    <strong>⚠ Blood (EDTA) Notes:</strong>
+                    <ol>
+                        <li>Collect by <strong>direct draw method</strong> — minimal haemolysis.</li>
+                        <li>Post blood transfusion: collect after <strong>120 days</strong>.</li>
+                        <li>Post CT regimen: collect after <strong>2-week washout</strong>.</li>
+                    </ol>
+                    </div>
+                </div>
+
+                <!-- TISSUE -->
+                <div class="card" style="background-color: #ffffff;">
+                        <div>
+                            <div>
+                                <h3 class="section-title">Tissue — Solid Biopsy</h3>
+                                <p>Fresh, FFPE, and bone biopsy specimens</p>
+                            </div>
+                        </div>
+                    <div style="border: 1px solid rgb(222, 222, 222);border-radius: 8px;padding: none;margin-bottom: 30px;margin-top: 10px;">
+                        <table class="ss-master-table" style="background-color: #ffffff; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Specimen Type</th>
+                                    <th>Container</th>
+                                    <th># Containers</th>
+                                    <th>Analyte</th>
+                                    <th>Shipment</th>
+                                    <th>Temperature</th>
+                                    <th>Stability / Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div>
+                                                <div class="specimen-label">Fresh Tissue in Formalin</div>
+                                                <div class="specimen-sub">Core Biopsy</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Tissue Container (size dependent on biopsy)</td>
+                                    <td style="font-weight:700;text-align:center;">Dependent</td>
+                                    <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                                    <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                                    <td><span class="temp-badge temp-amb">15–25 °C</span></td>
+                                    <td class="stability-text">Max <strong>12–14 hrs</strong> in 10% neutral buffered formalin</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div>
+                                                <div class="specimen-label">Fresh Tissue in Formalin</div>
+                                                <div class="specimen-sub">Excision Biopsy</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Tissue Container (size dependent on biopsy)</td>
+                                    <td style="font-weight:700;text-align:center;">Dependent</td>
+                                    <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                                    <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                                    <td><span class="temp-badge temp-amb">15–25 °C</span></td>
+                                    <td class="stability-text">Max <strong>16–24 hrs</strong> in 10% neutral buffered formalin</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div>
+                                                <div class="specimen-label">Fresh Tissue in RNALater</div>
+                                                <div class="specimen-sub">Core / Excision Biopsy</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Cryovial</td>
+                                    <td style="font-weight:700;text-align:center;">Dependent</td>
+                                    <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                                    <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                                    <td><span class="temp-badge temp-amb">15–25 °C</span></td>
+                                    <td class="stability-text">Per RNALater protocol</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div>
+                                                <div class="specimen-label">FFPE Block</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>FFPE Cartridge</td>
+                                    <td style="font-weight:700;text-align:center;">Variable</td>
+                                    <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                                    <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                                    <td><span class="temp-badge temp-amb">15–25 °C</span></td>
+                                    <td class="stability-text">Tumor volume: <strong>20–30%</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div>
+                                                <div class="specimen-label">FFPE Curls</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Cryovial</td>
+                                    <td style="font-weight:700;text-align:center;">Dependent</td>
+                                    <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                                    <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                                    <td><span class="temp-badge temp-amb">15–25 °C</span></td>
+                                    <td class="stability-text">Tumor volume: <strong>20–30%</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div>
+                                                <div class="specimen-label">FFPE Slides (Sections)</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Glass Slides</td>
+                                    <td style="font-weight:700;text-align:center;">Variable</td>
+                                    <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                                    <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                                    <td><span class="temp-badge temp-amb">15–25 °C</span></td>
+                                    <td class="stability-text">≤2 weeks @ ambient<br>Tumor volume: <strong>20–30%</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div>
+                                                <div class="specimen-label">Bone Biopsy in EDTA</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>EDTA</td>
+                                    <td style="font-weight:700;text-align:center;">1</td>
+                                    <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                                    <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                                    <td><span class="temp-badge temp-amb">15–25 °C</span></td>
+                                    <td class="stability-text">Max <strong>12–14 hrs</strong> in EDTA</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SLIDES (WSI) -->
+                <div class="card" style="background-color: #ffffff;">
+                    <div>
+                        <div>
+                            <h3 class="section-title">Slides &amp; Digital Pathology</h3>
+                            <p>H&amp;E, IHC, and Whole Slide Imaging (WSI)</p>
+                        </div>
+                    </div>
+                    <div  style="border: 1px solid rgb(222, 222, 222);border-radius: 8px;padding: none;margin-bottom: 30px;margin-top: 10px;">
+                        <table class="ss-master-table" style="background-color: #ffffff; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Specimen</th>
+                                    <th>Container / Format</th>
+                                    <th>Analyte</th>
+                                    <th>Shipment</th>
+                                    <th>Temperature</th>
+                                    <th>Stability</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div><div class="specimen-label">H&amp;E Slide</div></div>
+                                        </div>
+                                    </td>
+                                    <td>Glass Slide/s in Slide Box</td>
+                                    <td><span class="analyte-chip chip-wsi">WSI</span></td>
+                                    <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                                    <td><span class="temp-badge temp-amb">15–25 °C</span></td>
+                                    <td class="stability-text">Indefinite</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div><div class="specimen-label">IHC Slide</div></div>
+                                        </div>
+                                    </td>
+                                    <td>Glass Slide/s in Slide Box</td>
+                                    <td><span class="analyte-chip chip-wsi">WSI</span></td>
+                                    <td><span class="temp-badge temp-amb">🌡 Ambient</span></td>
+                                    <td><span class="temp-badge temp-amb">15–25 °C</span></td>
+                                    <td class="stability-text">Indefinite</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div><div class="specimen-label">WSI (Digital)</div></div>
+                                        </div>
+                                    </td>
+                                    <td>Pyramidal TIFF / SVS / NDPI</td>
+                                    <td><span class="analyte-chip chip-wsi">WSI</span></td>
+                                    <td><span class="temp-badge" style="background:#f3e8ff;color:#7e22ce;border-color:#e9d5ff;">📧 Electronic</span></td>
+                                    <td>—</td>
+                                    <td class="stability-text">Indefinite</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- FROZEN / LONG-TERM -->
+                <div class="card" style="background-color: #ffffff;">
+                    <div>
+                        <div>
+                            <h3 class="section-title">Frozen / Long-term Storage</h3>
+                            <p>Any liquid or tissue source — dry ice shipment</p>
+                        </div>
+                    </div>
+                    <div  style="border: 1px solid rgb(222, 222, 222);border-radius: 8px;padding: none;margin-bottom: 30px;margin-top: 10px;">
+                        <table class="ss-master-table" style="background-color: #ffffff; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Source</th>
+                                    <th>Container</th>
+                                    <th>Analytes</th>
+                                    <th>Shipment</th>
+                                    <th>Temperature</th>
+                                    <th>Stability</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="specimen-cell">
+                                            <div>
+                                                <div class="specimen-label">Any Liquid / Tissue</div>
+                                                <div class="specimen-sub">1 cryovial per unique sample</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Labelled Parafilmed Cryovial</td>
+                                    <td>
+                                        <span class="analyte-chip chip-ccdfdna" style="display:inline-block;margin:2px;">ccfDNA</span>
+                                        <span class="analyte-chip chip-ccrna" style="display:inline-block;margin:2px;">ccfRNA</span>
+                                        <span class="analyte-chip chip-gdna" style="display:inline-block;margin:2px;">gDNA</span>
+                                        <span class="analyte-chip chip-rtrl" style="display:inline-block;margin:2px;">RTRL</span>
+                                    </td>
+                                    <td><span class="temp-badge temp-dry">🧊 Dry Ice</span></td>
+                                    <td><span class="temp-badge temp-dry">−78.5 °C</span></td>
+                                    <td class="stability-text">Long-term storage (&gt;6 months) @ −80 °C</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        </div>
+
+            <!-- ── TAB 2: Tests → Samples ── -->
+            <div class="guide-panel" id="guide-tests">
+                <div>
+                    <div>
+                        <h3 class="section-title">Test → Sample Requirements</h3>
+                        <p>Which specimens are needed per test ordered</p>
+                    </div>
+                </div>
+                <div style="border: 1px solid rgb(222, 222, 222);border-radius: 8px;padding: none;margin-bottom: 30px;margin-top: 10px;">
+                <table class="ss-master-table" style="background-color: #ffffff; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="min-width:180px;">Test Name</th>
+                            <th>Required Sample(s)</th>
+                            <th style="min-width:120px;">Analyte</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="test-name-cell">OncoIndx Prime Plus</td>
+                            <td>
+                                <div class="specimens-list">
+                                    <span class="spec-pill">🩸 Blood</span>
+                                    <span style="font-size:11px;color:#64748b;align-self:center;">and/or</span>
+                                    <span class="spec-pill">🫧 Pleural Fluid</span>
+                                    <span class="spec-pill">🫧 Ascitic Fluid</span>
+                                    <span class="spec-pill">🫧 Peritoneal Fluid</span>
+                                    <span class="spec-pill">🫧 Other Fluid</span>
+                                    <span class="spec-pill">🫧 Bile Fluid</span>
+                                    <span class="spec-pill">🧠 CSF</span>
+                                    <span class="spec-pill">🧫 Urine</span>
+                                    <span class="spec-pill">🔬 Tissue (All)</span>
+                                    <span class="spec-pill">🩸 Blood EDTA (Tumor Match Normal)</span>
+                                </div>
+                            </td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span> <span class="analyte-chip chip-gdna">gDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">OncoIndx LBx</td>
+                            <td>
+                                <div class="specimens-list">
+                                    <span class="spec-pill">🩸 Blood</span>
+                                    <span style="font-size:11px;color:#64748b;align-self:center;">and/or</span>
+                                    <span class="spec-pill">🫧 Pleural Fluid</span>
+                                    <span class="spec-pill">🫧 Ascitic Fluid</span>
+                                    <span class="spec-pill">🫧 Peritoneal Fluid</span>
+                                    <span class="spec-pill">🫧 Other Fluid</span>
+                                    <span class="spec-pill">🫧 Bile Fluid</span>
+                                    <span class="spec-pill">🧠 CSF</span>
+                                    <span class="spec-pill">🧫 Urine</span>
+                                </div>
+                            </td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">OncoIndx TBx</td>
+                            <td>
+                                <div class="specimens-list">
+                                    <span class="spec-pill">🔬 Tissue (All)</span>
+                                    <span class="spec-pill">🩸 Blood (Backup LBx)</span>
+                                </div>
+                            </td>
+                            <td><span class="analyte-chip chip-gdna">gDNA</span> <span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">OncoHRD</td>
+                            <td>
+                                <div class="specimens-list">
+                                    <span class="spec-pill">🩸 Blood</span>
+                                    <span style="font-size:11px;color:#64748b;align-self:center;">or</span>
+                                    <span class="spec-pill">🔬 Tissue (All)</span>
+                                </div>
+                            </td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span> <span class="analyte-chip chip-gdna">gDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">OncoIndx 360</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🔬 Tissue (All)</span></div></td>
+                            <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">OncoTarget TBx</td>
+                            <td>
+                                <div class="specimens-list">
+                                    <span class="spec-pill">🔬 Tissue (All)</span>
+                                    <span class="spec-pill">🩸 Blood (Backup)</span>
+                                </div>
+                            </td>
+                            <td><span class="analyte-chip chip-gdna">gDNA</span> <span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">OncoTarget LBx</td>
+                            <td>
+                                <div class="specimens-list">
+                                    <span class="spec-pill">🩸 Blood</span>
+                                    <span style="font-size:11px;color:#64748b;align-self:center;">and/or</span>
+                                    <span class="spec-pill">🫧 Pleural Fluid</span>
+                                    <span class="spec-pill">🫧 Ascitic Fluid</span>
+                                    <span class="spec-pill">🫧 Peritoneal Fluid</span>
+                                    <span class="spec-pill">🫧 Other Fluid</span>
+                                    <span class="spec-pill">🫧 Bile Fluid</span>
+                                    <span class="spec-pill">🧠 CSF</span>
+                                    <span class="spec-pill">🧫 Urine</span>
+                                </div>
+                            </td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">OncoMonitor (TRM, MRD)</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🩸 Blood</span></div></td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">OncoRisk + MLPA</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🩸 Blood (EDTA)</span></div></td>
+                            <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">OncoCTC</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🩸 Blood (EDTA)</span></div></td>
+                            <td><span class="analyte-chip chip-ctc">CTC</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">PD-L1</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🔬 Tissue (All)</span></div></td>
+                            <td><span class="analyte-chip chip-wsi">PD-L1 IHC</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">IHC Markers</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🔬 Tissue (All)</span></div></td>
+                            <td style="color:#64748b;font-style:italic;font-size:12px;">Biomarker Dependent</td>
+                        </tr>
+                        <tr style="background:#fafafa;">
+                            <td colspan="3" style="padding:10px 16px; font-size:11px; font-weight:800; color:#94a3b8; text-transform:uppercase; letter-spacing:0.06em;">Outsourced Tests</td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">FISH</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🔬 Tissue (All)</span></div></td>
+                            <td style="font-size:12px;color:#475569;">Tissue for HER2</td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">MGMT</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🔬 Tissue (All)</span></div></td>
+                            <td><span class="analyte-chip chip-gdna">gDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">MLPA</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🩸 Blood</span></div></td>
+                            <td><span class="analyte-chip chip-ccdfdna">ccfDNA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">Folate R-alpha</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🔬 Tissue (All)</span></div></td>
+                            <td style="font-size:12px;color:#475569;">Tissue for FRα</td>
+                        </tr>
+                        <tr>
+                            <td class="test-name-cell">Ebr-ISH</td>
+                            <td><div class="specimens-list"><span class="spec-pill">🔬 Tissue (All)</span></div></td>
+                            <td style="font-size:12px;color:#475569;">EBER RNA</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <!-- ── TAB 3: Glossary ── -->
+            <div class="guide-panel" id="guide-glossary">
+                <div>
+                    <h3  class="section-title">Abbreviations Glossary</h3>
+                    <p>Full form of all abbreviated terminology used</p>
+                </div>
+                
+                <div class="tbl-wrap" style="border-radius: 8px;margin-top: 10px;">
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>Abbreviation</th>
+                                <th>Full Form</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>DNA</td><td>Deoxyribonucleic acid</td></tr>
+                            <tr><td>ccfDNA</td><td>Circulating cell-free DNA</td></tr>
+                            <tr><td>gDNA</td><td>Genomic DNA</td></tr>
+                            <tr><td>BCT</td><td>Blood Collection Tube</td></tr>
+                            <tr><td>CSF</td><td>Cerebrospinal Fluid</td></tr>
+                            <tr><td>CTC</td><td>Circulating Tumor Cells</td></tr>
+                            <tr><td>RTRL</td><td>Ready To Run Library</td></tr>
+                            <tr><td>H&amp;E</td><td>Haematoxylin and Eosin</td></tr>
+                            <tr><td>IHC</td><td>Immunohistochemistry</td></tr>
+                            <tr><td>WSI</td><td>Whole Slide Image</td></tr>
+                            <tr><td>FRα</td><td>Folate Receptor Alpha</td></tr>
+                            <tr><td>FFPE</td><td>Formalin Fixed Paraffin Embedded</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+</div>
+
+
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   HIERARCHICAL CATALOGUE DATA 
+───────────────────────────────────────────────────────────── */
+const catalog = [
+    {
+        parentId: "NGS-IND-01", name: "OncoIndx®", type: "Service", analyte: "DNA, RNA", genes: "1080 Genes",
+        desc: "Comprehensive Genomic Profiling",
+        fullDetails: [
+            "<strong>Coverage:</strong> 1080 cancer-related genes.",
+            "<strong>Detection:</strong> SNVs, Indels, CNVs, and 50 fusions (138 fusion partners).",
+            "<strong>Additional Biomarkers:</strong> Analyses > 50 HRR genes, 350 therapy resistance genes.",
+            "<strong>Signatures:</strong> Genome-wide LOH (16,000 markers), MSI evaluation (2000 hotspots & MMR genes), TMB estimation, HRD score.",
+            "<strong>PGx:</strong> 36 pharmacogenomic markers for chemotherapy response."
+        ],
+        startingMrp: 135000,
+        variants: [
+            {id: "NGS-IND-01-T01", name: "TBx", specimen: "Tissue", mrp: 135000, acc: "NABL and CAP", tat: "12 Days", included: ["PD-L1 (Ventana SP263) expression analysis by IHC"]},
+            {id: "NGS-IND-01-B01", name: "LBx", specimen: "Blood", mrp: 135000, acc: "NABL and CAP", tat: "12 Days", included: ["Baseline thresholding of ctDNA"]},
+            {id: "NGS-IND-01-C01", name: "OBx (CSF)", specimen: "CSF", mrp: 165000, acc: "CAP", tat: "12 Days", included: ["Baseline thresholding of ctDNA"]},
+            {id: "NGS-IND-01-A01", name: "OBx (Ascitic Fluid)", specimen: "Ascitic Fluid", mrp: 165000, acc: "CAP", tat: "12 Days", included: ["Baseline thresholding of ctDNA"]},
+            {id: "NGS-IND-01-P01", name: "OBx (Pleural Fluid)", specimen: "Pleural Fluid", mrp: 165000, acc: "CAP", tat: "12 Days", included: ["Baseline thresholding of ctDNA"]}
+        ]
+    },
+    {
+        parentId: "NGS-PRI-01", name: "OncoIndx® Prime +", type: "Service", analyte: "DNA, RNA, Protein", genes: "1080 Genes",
+        desc: "Comprehensive Multi-omics",
+        fullDetails: [
+            "<strong>5 Layered Multi-omics:</strong> Genomics (Tissue), Transcriptomics (Tissue), Proteomics (Tissue IHC), Genomics (Liquid), and Genomic DNA normal match.",
+            "<strong>True Somatic Detection:</strong> Normal match guarantees separation of true somatic and true germline variants.",
+            "<strong>Longitudinal Monitoring:</strong> Baseline thresholding using ctDNA. Includes CTC test."
+        ],
+        startingMrp: "Upon Enquiry",
+        variants: [
+            {
+                id: "NGS-PRI-01-M01", name: "Multi-omics Match", specimen: "Multiple", mrp: 290000, acc: "CAP", tat: "12 Days", included: ["IHC based Protein markers", "CTC test"],
+                subVariants: [
+                    {id: "NGS-PRI-01-V01", name: "Tissue + Blood + Tumor Match Normal", genes: "1080 Genes", mrp: 290000},
+                    {id: "NGS-PRI-01-V02", name: "Tissue + Tissue + Normal Match", genes: "1080 Genes", mrp: 290000},
+                    {id: "NGS-PRI-01-V03", name: "Tissue + Liquid + Tumor Match Normal", genes: "1080 Genes", mrp: "Upon Enquiry"},
+                    {id: "NGS-PRI-01-V04", name: "Blood + Liquid + Tumor Match Normal", genes: "1080 Genes", mrp: "Upon Enquiry"},
+                    {id: "NGS-PRI-01-V05", name: "Tissue + Tissue + Blood + Tumor Match Normal", genes: "1080 Genes", mrp: "Upon Enquiry"}
+                ]
+            }
+        ]
+    },
+    {
+        parentId: "NGS-HRD-01", name: "OncoHRD", type: "Service", analyte: "DNA", genes: "50+ HRR Genes",
+        desc: "Advanced HRD scoring test",
+        fullDetails: [
+            "<strong>HRD Scoring:</strong> Based upon LOH (Loss of Heterozygosity), LST (Large-Scale transitions), and TAI (Telomeric Allelic Imbalance).",
+            "<strong>Utility:</strong> Supports PARP inhibitors and platinum-based therapies recommendation.",
+            "<strong>Sequencing Depth:</strong> 2000X (Tissue), 10,000X (Liquid)."
+        ],
+        startingMrp: 80000,
+        variants: [
+            {id: "NGS-HRD-01-T01", name: "Tissue", specimen: "Tissue", mrp: 80000, acc: "CAP", tat: "12 Days", included: []},
+            {id: "NGS-HRD-01-B01", name: "Blood/Liquid (Upon Request)", specimen: "Blood", mrp: 80000, acc: "CAP", tat: "12 Days", included: []}
+        ]
+    },
+    {
+        parentId: "NGS-360-01", name: "OncoIndx®360 Endometrium", type: "Service", analyte: "DNA, Protein", genes: "Endometrial Core",
+        desc: "Integrated WHO-aligned molecular test",
+        fullDetails: [
+            "<strong>Core Targets:</strong> POLE, TP53, MMR/MSI, ER, HER2.",
+            "<strong>Utility:</strong> Provides clear prognosis and therapy guidance including immunotherapy, targeted, and hormone therapy options.",
+            "<strong>Sequencing Depth:</strong> 2000X."
+        ],
+        startingMrp: 60000,
+        variants: [
+            {id: "NGS-360-01-T01", name: "Tissue", specimen: "Tissue", mrp: 60000, acc: "CAP", tat: "12 Days", included: []}
+        ]
+    },
+    {
+        parentId: "NGS-TAR-01", name: "OncoTarget®", type: "Service", analyte: "DNA / ctDNA", genes: "100+ Genes",
+        desc: "Targeted NGS panel on tissue and liquid biopsy",
+        fullDetails: [
+            "<strong>Features:</strong> Variant Allele Frequency, SNVs, Indels, CNAs, specific fusions; MSI, DPYD Pharmacogenomics.",
+            "<strong>Coverage:</strong> Resistance genes for targeted therapies.",
+            "<strong>Indications:</strong> Bladder, Breast, Colon, Endometrium, GI, Head & Neck, Lung, Melanoma, Pancreas, Prostate, Ovary, Rectum, Thyroid."
+        ],
+        startingMrp: 30000,
+        variants: [
+            {
+                id: "NGS-TAR-01-T", name: "TBx", specimen: "Tissue", mrp: 30000, acc: "NABL and CAP", tat: "12 Days", included: [],
+                subVariants: [
+                    {id: "NGS-TAR-01-T01", name: "Complete Panel", genes: "100+ Genes", mrp: 30000},
+                    {id: "NGS-TAR-01-T02", name: "Bladder", genes: "FGFR1, FGFR2, FGFR3, TP53, PIK3CA", mrp: 30000},
+                    {id: "NGS-TAR-01-T03", name: "Breast", genes: "BRCA1, BRCA2, ERBB2, PIK3CA, ESR1", mrp: 30000},
+                    {id: "NGS-TAR-01-T04", name: "Colon", genes: "KRAS, NRAS, BRAF, APC, TP53", mrp: 30000},
+                    {id: "NGS-TAR-01-T05", name: "Endometrium", genes: "Organ Specific", mrp: 30000},
+                    {id: "NGS-TAR-01-T06", name: "GI", genes: "KIT, KRAS, BRAF, ERBB2, MET", mrp: 30000},
+                    {id: "NGS-TAR-01-T07", name: "Head & Neck", genes: "Organ Specific", mrp: 30000},
+                    {id: "NGS-TAR-01-T08", name: "Lung", genes: "EGFR, ALK, KRAS, ROS1, MET, RET", mrp: 30000},
+                    {id: "NGS-TAR-01-T09", name: "Melanoma", genes: "BRAF, CD274, NRAS, NTRK1/2/3", mrp: 30000},
+                    {id: "NGS-TAR-01-T10", name: "Ovary", genes: "BRCA1, BRCA2, MLH1, MSH2", mrp: 30000},
+                    {id: "NGS-TAR-01-T11", name: "Pancreas", genes: "Organ Specific", mrp: 30000},
+                    {id: "NGS-TAR-01-T12", name: "Prostate", genes: "BRCA1, BRCA2, CHEK2, PALB2", mrp: 30000},
+                    {id: "NGS-TAR-01-T13", name: "Rectum", genes: "Organ Specific", mrp: 30000},
+                    {id: "NGS-TAR-01-T14", name: "Thyroid", genes: "RET, NTRK, ALK, BRAF", mrp: 30000}
+                ]
+            },
+            {id: "NGS-TAR-01-B01", name: "LBx", specimen: "Blood", mrp: 40000, acc: "CAP", tat: "12 Days", included: []}
+        ]
+    },
+    {
+        parentId: "NGS-MON-01", name: "OncoMonitor® MRD", type: "Service", analyte: "ctDNA, CTC", genes: "90+ Genes",
+        desc: "ctDNA + CTC based monitoring assay (Post Surgery)",
+        fullDetails: [
+            "<strong>Post-Surgery Optimisation:</strong> Complete tracking ecosystem for one structural year via the 1Cell Concierge architecture.",
+            "<strong>Integrated Signal Analysis:</strong> Dual load tracking mapping out genomic variants alongside deep methylation parameters.",
+            "<strong>Baseline Configurations:</strong> Supports dynamic scaling between Tumor Informed (TI) or Tumor Agnostic (TA) strategies depending on block availability."
+        ],
+        startingMrp: 150000,
+        variants: [
+            {
+                id: "NGS-MON-01-M", name: "MRD (Post Surgery)", specimen: "Blood", mrp: 150000, acc: "CAP", tat: "12 Days", included: ["ctDNA load", "CTC estimation"],
+                subVariants: [
+                    {id: "NGS-MON-01-M01", name: "Tumor Agnostic (TA)", genes: "90+ Genes", mrp: 150000},
+                    {id: "NGS-MON-01-M02", name: "Tumor Informed (TI)", genes: "90+ Genes", mrp: 250000}
+                ]
+            }
+        ]
+    },
+    {
+        parentId: "NGS-MON-02", name: "OncoMonitor® TRM", type: "Service", analyte: "ctDNA, CTC", genes: "90+ Genes",
+        desc: "ctDNA + CTC based monitoring assay (Post Treatment)",
+        fullDetails: [
+            "<strong>Therapeutic Alignment:</strong> Deep evaluation tracking response profiles against ongoing lines of active treatments.",
+            "<strong>Constituents:</strong> Synchronous assessment mapping out ctDNA quantitative load dynamics, real-time CTC estimation metrics, and target genomic readouts."
+        ],
+        startingMrp: 50000,
+        variants: [
+            {id: "NGS-MON-02-B01", name: "TRM (Post Treatment)", specimen: "Blood", mrp: 50000, acc: "CAP", tat: "12 Days", included: ["ctDNA load", "CTC estimation", "Genomics"]}
+        ]
+    },
+    {
+        parentId: "CTC-01", name: "OncoCTC", type: "Service", analyte: "CTC", genes: "CTC Enumeration",
+        desc: "CTC based monitoring assay",
+        fullDetails: [
+            "<strong>Focus:</strong> Longitudinal cancer monitoring test that analyzes CTCs to provide real-time insights into disease progression, treatment response, and relapse risk.",
+            "<strong>Targets:</strong> single CTCs, CTC doublets, and CTC clusters."
+        ],
+        startingMrp: 35000,
+        variants: [{id: "CTC-01-B01", name: "Blood", specimen: "Blood", mrp: 35000, acc: "Not in Scope", tat: "7 Days", included: []}]
+    },
+    {
+        parentId: "NGS-RSK-01", name: "OncoRisk®", type: "RUO", analyte: "DNA", genes: "74 Genes / WES",
+        desc: "Hereditary Cancer Screening",
+        fullDetails: [
+            "<strong>Coverage:</strong> Comprehensive germline NGS Panel of NCCN recommended 74 Genes to uncover more than 11 distinct Hereditary Cancer Risk + 28 MLPA probes.",
+            "<strong>Utility:</strong> Reports cancer risk based upon germline variant findings. Helps identify potential risks early, enabling timely interventions."
+        ],
+        startingMrp: 25000,
+        variants: [
+            {id: "NGS-RSK-01-B01", name: "OncoRisk Base", specimen: "Blood", mrp: 25000, acc: "CAP", tat: "12 Days", included: []},
+            {id: "NGS-RSK-01-B02", name: "OncoRisk + MLPA", specimen: "Blood", mrp: 35000, acc: "CAP", tat: "12 Days", included: ["28 Custom MLPA genomic probes"]},
+            {id: "NGS-RSK-01-B03", name: "OncoRisk WES", specimen: "Blood", mrp: 25000, acc: "CAP", tat: "12 Days", included: ["Exomic scale analysis covering 20,000+ coding regions"]}
+        ]
+    }
+];
+
+const A6_LIST = ["ER", "PR", "HER2", "HER2 Low", "Ki67", "Vimentin", "CD45", "CD34", "CD30", "CD99", "CD117/C-KIT", "CD3", "CK5/6", "EMA", "CALREATININ", "ANTI DESMIN", "CD20", "CD10", "E-Cadherin", "Melanosome", "P63", "TTF-1", "CK20", "CK7", "Synaptophysin", "Chromogranin A", "Anti P53", "CD68", "S100", "CK", "CK CAM5"];
+const A7_LIST = ["Claudin 18.2", "Alk", "ROS1", "CMET"];
+const A8_LIST = ["C-Met", "Her2/NEU", "ANTI-PSA", "PSMA", "Mesothelin", "Anti-EGFRvIII", "Anti0IL-12", "Anti-TROP2", "Anti-EGFR", "Anti-Nectin-4", "Anti Li cadhrin", "PTK7", "HER3", "B7H3", "L1CAM"];
+
+let currentActiveVariant = null; 
+let cart = null; 
+let dbRecordCount = 0; 
+let storedDbRecords = [];
+let setA6 = new Set(), setA7 = new Set(), setA8 = new Set();
+
+/* ─────────────────────────────────────────────────────────────
+   RENDERING ENGINE
+───────────────────────────────────────────────────────────── */
+function showLeadGenerationOnly() {
+    document.getElementById('tab-catalog').style.display = 'none';
+    document.getElementById('tab-list').style.display = 'none';
+    document.getElementById('tab-guide').style.display = 'none';
+
+    document.getElementById('tab-lgf').style.display = 'inline-flex';
+
+    switchTab('lgf');
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+    // changes in the above code are done my simon for smooth scrolling to top when order button is clicked from catalog tab and lead generation form is shown
+}
+function showCatalogTabs() {
+
+    document.getElementById('tab-catalog').style.display = 'inline-flex';
+    document.getElementById('tab-list').style.display = 'inline-flex';
+    document.getElementById('tab-guide').style.display = 'inline-flex';
+
+    document.getElementById('tab-lgf').style.display = 'none';
+
+    switchTab('catalog');
+}
+// Changes in the above code are done by simon for showing lead generation form only when order button is clicked from catalog tab
+
+function renderTable() {
+    const tbody = document.getElementById("catalog-tbody");
+    tbody.innerHTML = "";
+    
+    catalog.forEach(parent => {
+        const typeCls = parent.type === "Service" ? "service" : "ruo";
+        
+        if (parent.variants.length === 0 && !parent.variants[0].subVariants) {
+            const variant = parent.variants[0];
+            const hasTissue = variant.specimen.toLowerCase().includes("tissue");
+            const isCTC = parent.parentId === "CTC-01";
+            const btnHtml = (hasTissue && !isCTC) 
+                ? `<button class="btn-action" onclick="openModal('${parent.parentId}', '${variant.id}')"><i class="fas fa-cog"></i> Configure</button>` 
+                : `<button class="btn-action" onclick="directOrder('${parent.parentId}', '${variant.id}'); showLeadGenerationOnly();"><i class="fas fa-plus"></i> Order</button>`;
+            // changes are done by simon in the above code
+            tbody.innerHTML += `
+                <tr class="single-row" id="parent-${parent.parentId}" data-type="${parent.type}">
+                    <td>
+                        <div class="test-cell-content" >
+                            <div class="parent-title">
+                                <img src="/static/images/${parent.name.replace(/®/g, '')}.png"
+                                    style="width:130px;height:100px;object-fit:contain;">
+
+                                <button class="info-btn" title="View Methodology" onclick="openInfoModal('${parent.parentId}')">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                            <div style="font-size:12px; color:#64748b;">${parent.desc}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-weight:700; color:var(--teal); font-size:14px; margin-bottom:4px;">${variant.name}</div>
+                        <div style="font-size:15px; color:#64748b; font-weight:600;">${variant.specimen}</div>
+                    </td>
+                    <td><span class="type-chip ${typeCls}">${parent.type}</span></td>
+                    <td><span style="font-size:14px; font-weight:400;color:var(--text-dim);">${parent.analyte}</span></td>
+                    <td><span class="genes-text">${parent.genes}</span></td>
+                    <td><span class="price-text">${formatCurrency(variant.mrp)}</span></td>
+                    <td><span class="acc-text">${variant.acc}</span></td>
+                    <td><span class="tat-text">${variant.tat}</span></td>
+                    <td>${btnHtml}</td>
+                </tr>
+            `;
+        } else {
+            const startPrice = formatCurrency(parent.startingMrp);
+            tbody.innerHTML += `
+                <tr class="parent-row" style="height: 80px;" id="parent-${parent.parentId}" data-type="${parent.type}" onclick="toggleParent('${parent.parentId}')">
+                    <td>
+                        <div class="test-cell-content" style="padding:0px 20px 0px 20px;">
+                            <div style="display:flex; align-items:center;justify-content:space-between;">
+                                <div class="logo-box">
+                                    <img src="/static/images/${parent.name.replace(/®/g, '')}.png">
+                                    </div>
+                               
+
+                                <button class="info-btn"
+                                        onclick="event.stopPropagation(); openInfoModal('${parent.parentId}')"
+                                        title="View Methodology">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td colspan="4"><span style="font-size:14px; font-weight:400; color:var(--text-dim); padding-left:20px;">${parent.variants.length} Variant(s) Available</span></td>
+                    <td><span class="price-text" style="color: #daa520; font-size:14px;font-weight:700;">From ${startPrice}</span></td>
+                    <td colspan="2"></td>
+                    <td>
+                       
+                        <div style="display:flex; justify-content:flex-end; padding-right:100px;">
+                            <span class="expand-icon">
+                                <i data-lucide="chevron-down"></i>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+            parent.variants.forEach(variant => {
+                const hasTissue = variant.specimen.toLowerCase().includes("tissue");
+                const btnHtml = hasTissue 
+                    ? `<button class="btn-action" onclick="openModal('${parent.parentId}', '${variant.id}')"><i class="fas fa-cog"></i> Configure</button>` 
+                    : `<button class="btn-action" style="background:var(--navy); color:#fff; border-color:var(--navy);" onclick="directOrder('${parent.parentId}', '${variant.id}'); showLeadGenerationOnly();"><i class="fas fa-plus"></i> Order</button>`;
+                // in the above code, changes are done by simon
+                let variantColHtml = `<div style="font-weight:700; color:var(--text-dim); font-size:14px; margin-bottom:4px;">${variant.name}</div><div style="font-size:13px; color:#64748b; font-weight:300;">${variant.specimen}</div>`;
+                let genesHtml = `<span class="genes-text">${parent.genes}</span>`;
+                let mrpHtml = `<span class="price-text" style="font-size:14px;" id="mrp-${variant.id}">${formatCurrency(variant.mrp)}</span>`;
+
+                if(variant.subVariants) {
+                    let opts = variant.subVariants.map(sv => `<option value="${sv.name}" data-id="${sv.id}" data-mrp="${sv.mrp}" data-genes="${sv.genes}">${sv.name}</option>`).join('');
+                    variantColHtml = `
+                        <div style="font-weight:600; color:var(--text-dim); font-size:14px; margin-bottom:6px;">${variant.name}</div>
+                        <select class="form-select" id="subvar-${variant.id}" onclick="event.stopPropagation();" onchange="changeSubVariant('${variant.id}')">
+                            ${opts}
+                        </select>
+                        <div style="font-size:12px; color:var(--text-dim); font-weight:100; margin-top:6px;">${variant.specimen}</div>
+                    `;
+                    genesHtml = `<span class="genes-text" id="genes-${variant.id}">${variant.subVariants[0].genes}</span>`;
+                    mrpHtml = `<span class="price-text" style="font-size:14px;" id="mrp-${variant.id}">${formatCurrency(variant.subVariants[0].mrp)}</span>`;
+                }
+
+                tbody.innerHTML += `
+                    <tr class="child-row child-of-${parent.parentId}">
+                        <td></td>
+                        <td>${variantColHtml}</td>
+                        <td><span class="type-chip ${typeCls}">${parent.type}</span></td>
+                        <td><span style="font-size:14px; font-weight:300;">${parent.analyte}</span></td>
+                        <td>${genesHtml}</td>
+                        <td>${mrpHtml}</td>
+                        <td><span class="acc-text">${variant.acc}</span></td>
+                        <td><span class="tat-text">${variant.tat}</span></td>
+                        <td>${btnHtml}</td>
+                    </tr>
+                `;
+            });
+        }
+    });
+}
+
+function toggleParent(parentId) {
+    const parentRow = document.getElementById(`parent-${parentId}`);
+    const childRows = document.querySelectorAll(`.child-of-${parentId}`);
+    const icon = parentRow.querySelector('.expand-icon');
+
+    const isOpen = parentRow.classList.contains("open");
+
+    if (isOpen) {
+        parentRow.classList.remove("open");
+        childRows.forEach(row => row.classList.remove("visible"));
+
+        if (icon) {
+            icon.style.transform = "rotate(0deg)";
+        }
+    } else {
+        parentRow.classList.add("open");
+        childRows.forEach(row => row.classList.add("visible"));
+
+        if (icon) {
+            icon.style.transform = "rotate(180deg)";
+        }
+    }
+}
+
+function changeSubVariant(variantId) {
+    const select = document.getElementById(`subvar-${variantId}`);
+    const selectedOpt = select.options[select.selectedIndex];
+    document.getElementById(`genes-${variantId}`).innerText = selectedOpt.dataset.genes;
+    if(selectedOpt.dataset.mrp) {
+        let newMrp = selectedOpt.dataset.mrp;
+        document.getElementById(`mrp-${variantId}`).innerText = formatCurrency(newMrp === "Upon Enquiry" ? "Upon Enquiry" : Number(newMrp));
+    }
+}
+
+function filterTable() {
+    let value = document.getElementById("globalSearch").value.toLowerCase();
+    document.querySelectorAll(".parent-row, .single-row").forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const parentId = row.id.replace('parent-', '');
+        let show = text.includes(value);
+        if(!show) {
+            document.querySelectorAll(`.child-of-${parentId}`).forEach(c => {
+                if(c.innerText.toLowerCase().includes(value)) show = true;
+            });
+        }
+        row.style.display = show ? "" : "none";
+        if(value !== "" && show && row.classList.contains('parent-row') && !row.classList.contains("open")) toggleParent(parentId);
+        if(value === "" && row.classList.contains('parent-row') && row.classList.contains("open")) toggleParent(parentId);
+    });
+}
+
+function filterType(type, btn) {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".parent-row, .single-row").forEach(row => {
+        const parentId = row.id.replace('parent-', '');
+        if (type === "All" || row.dataset.type === type) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+            row.classList.remove("open");
+            document.querySelectorAll(`.child-of-${parentId}`).forEach(c => c.classList.remove("visible"));
+        }
+    });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SIDE SHEET — SAMPLE GUIDE
+───────────────────────────────────────────────────────────── */
+
+function switchGuideTab(tab, btn) {
+    document.querySelectorAll('.guide-subtab').forEach(t => {
+        t.classList.remove('active');
+        t.style.borderBottomColor = 'transparent';
+        t.style.color = '#000000';
+    });
+
+    document.querySelectorAll('.guide-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    btn.style.borderBottomColor = 'var(--maroon)';
+    btn.style.color = 'var(--maroon)';
+    document.getElementById('guide-' + tab).classList.add('active');
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   MODALS
+───────────────────────────────────────────────────────────── */
+function openInfoModal(parentId) {
+    const parent = catalog.find(t => t.parentId === parentId);
+    document.getElementById("info-modal-title").innerText = parent.name;
+    document.getElementById("info-modal-desc").innerText = parent.desc;
+    let detailsHtml = "";
+    if (parent.fullDetails && parent.fullDetails.length > 0) {
+        detailsHtml = `<ul class="info-list">` + parent.fullDetails.map(item => `<li><i class="fas fa-circle" style="color: var(--text-dim);margin-top: 10px;font-size: 6px;"></i> <span>${item}</span></li>`).join('') + `</ul>`;
+    }
+    document.getElementById("info-modal-body").innerHTML = `
+        <div class="info-badge" style="background:#1a365d;color: white;"><i class="fas fa-bullseye"></i> ${parent.type} | ${parent.analyte}</div>
+        <div style="font-weight:700; font-size:18px; color:var(--text-dim); margin-bottom:10px; padding-bottom:4px;padding-left: 20px;">Methodology & Indications</div>
+        ${detailsHtml}
+    `;
+    document.getElementById("info-modal").classList.add("open");
+}
+function closeInfoModal() { document.getElementById("info-modal").classList.remove("open"); }
+
+/* ─────────────────────────────────────────────────────────────
+   ADD-ON SELECTION PIPELINE
+───────────────────────────────────────────────────────────── */
+function directOrder(parentId, variantId) {
+    const parent = catalog.find(p => p.parentId === parentId);
+    const variant = parent.variants.find(v => v.id === variantId);
+    let currentMrp = variant.mrp;
+    let finalVariantId = variant.id;
+    let finalVariantName = variant.name;
+    if(variant.subVariants) {
+        const svSelect = document.getElementById(`subvar-${variantId}`);
+        const selectedOpt = svSelect.options[svSelect.selectedIndex];
+        finalVariantName = `${variant.name} (${selectedOpt.value})`;
+        finalVariantId = selectedOpt.dataset.id;
+        currentMrp = selectedOpt.dataset.mrp === "Upon Enquiry" ? "Upon Enquiry" : Number(selectedOpt.dataset.mrp);
+    }
+    let basePrice = isNaN(currentMrp) ? 0 : currentMrp;
+    cart = {
+        testId: finalVariantId, testName: parent.name, variantName: finalVariantName, specimen: variant.specimen,
+        baseMrp: basePrice, displayMrp: currentMrp, addons: [], addonTotal: 0, total: basePrice,
+        includedText: variant.included ? variant.included.join(", ") : ""
+    };
+    setupLGFForm();
+    showLeadGenerationOnly();
+    // changes are done by simon in the above code
+}
+
+function openModal(parentId, variantId) {
+    const parent = catalog.find(p => p.parentId === parentId);
+    currentActiveVariant = parent.variants.find(v => v.id === variantId);
+    currentActiveVariant.parentName = parent.name;
+    let currentMrp = currentActiveVariant.mrp;
+
+    if(currentActiveVariant.subVariants) {
+        const svSelect = document.getElementById(`subvar-${variantId}`);
+        const selectedOpt = svSelect.options[svSelect.selectedIndex];
+        currentActiveVariant.finalDisplayName = `${currentActiveVariant.name} (${selectedOpt.value})`;
+        currentActiveVariant.finalId = selectedOpt.dataset.id;
+        currentMrp = selectedOpt.dataset.mrp === "Upon Enquiry" ? "Upon Enquiry" : Number(selectedOpt.dataset.mrp);
+    } else {
+        currentActiveVariant.finalDisplayName = currentActiveVariant.name;
+        currentActiveVariant.finalId = currentActiveVariant.id;
+    }
+    currentActiveVariant.currentBaseMrp = currentMrp;
+
+    setA6.clear(); setA7.clear(); setA8.clear();
+    document.querySelector('input[name="a1_pdl1"][value="None"]').checked = true;
+    document.getElementById('a2_histopath').value = "None";
+    document.getElementById('a4_breast').checked = false;
+    document.getElementById('a5_diag').checked = false;
+    document.getElementById('b1_mgmt').checked = false;
+    document.getElementById('b2_her2').checked = false;
+    document.getElementById('b3_eber').checked = false;
+    document.getElementById('b4_alpha').checked = false;
+    document.getElementById('b5_mlpa').checked = false;
+    document.getElementById('a3_mmr').checked = false;
+
+    if (parent.name === "OncoIndx®") {
+        document.getElementById("modal-ctc-addon-container").style.display = "block";
+        document.getElementById('add_oncoctc').checked = false;
+    } else {
+        document.getElementById("modal-ctc-addon-container").style.display = "none";
+        document.getElementById('add_oncoctc').checked = false;
+    }
+
+    document.getElementById("modal-title").innerText = `Configure: ${currentActiveVariant.finalDisplayName}`;
+    if(currentActiveVariant.included && currentActiveVariant.included.length > 0) {
+        document.getElementById("modal-foc-section").style.display = "block";
+        document.getElementById("foc-content").innerHTML = "<ul>" + currentActiveVariant.included.map(i => `<li>${i}</li>`).join("") + "</ul>";
+    } else {
+        document.getElementById("modal-foc-section").style.display = "none";
+    }
+
+    document.getElementById("modal-tissue-addons").style.display = "block";
+    document.getElementById("a6-grid").innerHTML = buildPills(A6_LIST, 'A6', 'toggleA6');
+    document.getElementById("a7-grid").innerHTML = buildPills(A7_LIST, 'A7', 'toggleA7');
+    document.getElementById("a8-grid").innerHTML = buildPills(A8_LIST, 'A8', 'toggleA8');
+
+    calcModalPrice();
+    document.getElementById("config-modal").classList.add("open");
+}
+
+function closeModal() { document.getElementById("config-modal").classList.remove("open"); }
+
+function calcModalPrice() {
+    let addonCost = 0;
+    if(document.getElementById("modal-tissue-addons").style.display !== "none") {
+        const pdl1 = document.querySelector('input[name="a1_pdl1"]:checked').value;
+        if(pdl1 === "DAKO 22 C3") addonCost += 17000;
+        else if(pdl1 === "Ventana SP263") addonCost += 7500;
+        
+        const histopath = document.getElementById('a2_histopath').value;
+        if(histopath === "Small") addonCost += 3000;
+        else if(histopath === "Medium") addonCost += 4000;
+        else if(histopath === "Large") addonCost += 5500;
+
+        if(document.getElementById('a4_breast').checked) addonCost += 6500;
+        if(document.getElementById('a5_diag').checked) addonCost += 15000;
+        if(document.getElementById('a3_mmr').checked) addonCost += 10000;
+        if(document.getElementById('b1_mgmt').checked) addonCost += 8500;
+        if(document.getElementById('b2_her2').checked) addonCost += 12000;
+        if(document.getElementById('b3_eber').checked) addonCost += 6000;
+        if(document.getElementById('b4_alpha').checked) addonCost += 13000;
+        if(document.getElementById('b5_mlpa').checked) addonCost += 15000;
+
+        addonCost += (setA6.size * 2500);
+        addonCost += (setA7.size * 8000);
+        addonCost += (setA8.size * 12000);
+    }
+    let base = isNaN(currentActiveVariant.currentBaseMrp) ? 0 : currentActiveVariant.currentBaseMrp;
+    document.getElementById("modal-total-price").innerText = formatCurrency(base + addonCost); 
+}
+
+function confirmModalSelection() {
+    let addonCost = 0;
+    let addonsArr = [];
+
+    if(document.getElementById("modal-tissue-addons").style.display !== "none") {
+        const pdl1 = document.querySelector('input[name="a1_pdl1"]:checked').value;
+        if(pdl1 === "DAKO 22 C3") { addonCost += 17000; addonsArr.push("PD-L1 (DAKO)"); }
+        else if(pdl1 === "Ventana SP263") { addonCost += 7500; addonsArr.push("PD-L1 (Ventana)"); }
+
+        const histopath = document.getElementById('a2_histopath').value;
+        if(histopath === "Small") { addonCost += 3000; addonsArr.push("Histopath (S)"); }
+        else if(histopath === "Medium") { addonCost += 4000; addonsArr.push("Histopath (M)"); }
+        else if(histopath === "Large") { addonCost += 5500; addonsArr.push("Histopath (L)"); }
+
+        if(document.getElementById('a4_breast').checked) { addonCost += 6500; addonsArr.push("Breast Panel"); }
+        if(document.getElementById('a5_diag').checked) { addonCost += 15000; addonsArr.push("Diagnostic IHC Panel"); }
+        if(document.getElementById('a3_mmr').checked) { addonCost += 10000; addonsArr.push("MMR Panel"); }
+        if(document.getElementById('b1_mgmt').checked) { addonCost += 8500; addonsArr.push("MGMT PCR"); }
+        if(document.getElementById('b2_her2').checked) { addonCost += 12000; addonsArr.push("Her2 FISH"); }
+        if(document.getElementById('b3_eber').checked) { addonCost += 6000; addonsArr.push("EBER ISH"); }
+        if(document.getElementById('b4_alpha').checked) { addonCost += 13000; addonsArr.push("Alpha Folate IHC"); }
+        if(document.getElementById('b5_mlpa').checked) { addonCost += 15000; addonsArr.push("MLPA PCR"); }
+
+        if(setA6.size > 0) { addonCost += (setA6.size * 2500); addonsArr.push(`Reg IHC (${Array.from(setA6).join(', ')})`); }
+        if(setA7.size > 0) { addonCost += (setA7.size * 8000); addonsArr.push(`Adv IHC (${Array.from(setA7).join(', ')})`); }
+        if(setA8.size > 0) { addonCost += (setA8.size * 12000); addonsArr.push(`ADC (${Array.from(setA8).join(', ')})`); }
+    }
+    if (document.getElementById("modal-ctc-addon-container").style.display === "block" && document.getElementById('add_oncoctc').checked) {
+        addonsArr.push("OncoCTC (Upon Request)");
+    }
+    let base = isNaN(currentActiveVariant.currentBaseMrp) ? 0 : currentActiveVariant.currentBaseMrp;
+    cart = {
+        testId: currentActiveVariant.finalId, testName: currentActiveVariant.parentName, variantName: currentActiveVariant.finalDisplayName, specimen: currentActiveVariant.specimen,
+        baseMrp: base, displayMrp: currentActiveVariant.currentBaseMrp, addons: addonsArr, addonTotal: addonCost, total: base + addonCost,
+        includedText: currentActiveVariant.included ? currentActiveVariant.included.join(", ") : ""
+    };
+    closeModal();
+    setupLGFForm();
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LEAD GENERATION FRAMEWORK & PREVIEW LOCKS
+───────────────────────────────────────────────────────────── */
+function setupLGFForm() {
+    document.getElementById('lgf-watermark-id').innerText = "DRAFT";
+    document.querySelectorAll('.lgf-data').forEach(input => {
+        input.disabled = false;
+        if (input.type === 'radio' || input.type === 'checkbox') input.checked = false;
+        else input.value = '';
+    });
+
+    const summaryDiv = document.getElementById("lgf-tests-summary");
+    let addonStr = cart.addons.length > 0 ? cart.addons.join('<br>') : '-';
+    let incStr = cart.includedText !== "" ? `<div style="font-size:0.8rem; color:#166534; margin-top:6px;"><b>Included:</b> ${cart.includedText}</div>` : '';
+    let displayTotal = isNaN(cart.displayMrp) && cart.addonTotal === 0 ? "Upon Enquiry" : formatCurrency(cart.total);
+
+    summaryDiv.innerHTML = `<table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                    <th style="padding:10px; background:var(--navy); color:#fff; font-size:13px; text-transform:uppercase;">Test Code</th>
+                    <th style="padding:10px; background:var(--navy); color:#fff; font-size:13px; text-transform:uppercase;">Test Ordered</th>
+                    <th style="padding:10px; background:var(--navy); color:#fff; font-size:13px; text-transform:uppercase;">Add-ons</th>
+                    <th style="padding:10px; background:var(--navy); color:#fff; font-size:13px; text-transform:uppercase; text-align:right;">Total MRP</th>
+                </tr>
+                <tr style="border-bottom:1px solid #e2e8f0; background:#f8fafc;">
+                    <td style="padding:16px 12px; font-weight:800; color:var(--teal); font-size:15px;">${cart.testId}</td>
+                    <td style="padding:16px 12px;"><strong>${cart.testName}</strong><br><span style="font-size:0.85rem; color:#475569; font-weight:600;">Variant: ${cart.variantName} | Specimen: ${cart.specimen}</span>${incStr}</td>
+                    <td style="padding:16px 12px; font-size:0.85rem; color:var(--maroon); font-weight:600; line-height:1.5;">${addonStr}</td>
+                    <td style="padding:16px 12px; text-align:right; font-weight:800; font-size:16px; color:var(--navy);">${displayTotal}</td>
+                 </tr>
+            </table><div style="text-align:right; font-size:1.6rem; font-weight:800; color:var(--maroon); margin-top:14px;">GRAND TOTAL: ${displayTotal}</div>`;
+
+    document.getElementById("save-btn").style.display = "inline-block";
+    document.getElementById("download-only-btn").style.display = "none";
+    document.getElementById("lgf-back-btn").style.display = "inline-block";
+    switchTab('lgf');
+}
+
+async function submitAndDownloadPDF() {
+    const btn = document.getElementById("save-btn");
+    btn.disabled = true; btn.innerHTML = "Processing...";
+    const formData = gatherFormData();
+    const pName = (formData['lgf-fname'] || '') + " " + (formData['lgf-lname'] || '');
+    const lgfId = "LGF" + String(dbRecordCount + 1).padStart(3, '0');
+    document.getElementById('lgf-watermark-id').innerText = lgfId;
+
+    const payload = {
+        id: lgfId, patient: pName.trim() === "" ? "Unknown Patient" : pName.trim(),
+        cancer: formData['lgf-diagnosis'] || "N/A", physician: formData['lgf-doc-name'] || "N/A",
+        total: cart.total, cartData: { cart: cart, formData: formData }
+    };
+
+    try {
+        const res = await fetch('/api/save_trf', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+        const result = await res.json();
+        if(result.success) { justDownloadPDF(`${lgfId}_${pName.trim().replace(/\s+/g, '_')}.pdf`, true); } 
+        else { alert("Database Error"); btn.disabled = false; }
+    } catch (e) {
+        justDownloadPDF(`${lgfId}_${pName.trim().replace(/\s+/g, '_')}.pdf`, false);
+        btn.disabled = false;
+    }
+}
+
+function justDownloadPDF(filename = "Lead_Generation_Form.pdf", redirect = false) {
+    html2pdf().set({ margin: 0.4, filename: filename, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, scrollY: 0 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(document.getElementById('lgf-document')).save().then(() => {
+        if(redirect) switchTab('list');
+        document.getElementById("save-btn").disabled = false;
+        document.getElementById("save-btn").innerHTML = `<i class="fas fa-save"></i> Save Lead & Download PDF`;
+    });
+}
+
+async function fetchRecordsList() {
+    const tbody = document.getElementById("records-tbody");
+    try {
+        const res = await fetch('/api/get_trfs');
+        const records = await res.json();
+        storedDbRecords = records; 
+        dbRecordCount = records.length;
+        if (records.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; font-weight:600; color:#64748b;">No leads found. LGF IDs will begin at LGF001.</td></tr>`; return; }
+        
+        tbody.innerHTML = "";
+        records.forEach(rec => {
+            tbody.innerHTML += `
+                <tr>
+                    <td><span class="clickable-lgf" onclick="viewPastLGF('${rec.id}')">${rec.id}</span></td>
+                    <td style="color:var(--text-dim);font-weight:400;">${rec.date}</td><td style="color:var(--navy);"><strong>${rec.patient}</strong></td>
+                    <td>${rec.physician}</td><td><span style="background:none; padding:4px 8px;font-weight:400;color: var(--text-dim));">${rec.cartData?.formData?.['lgf-sales'] || "-"}</span></td>
+                    <td style="color:#daa520;font-weight:700;font-size:16px;">${formatCurrency(rec.total)}</td>
+                </tr>`;
+        });
+    } catch(e) { tbody.innerHTML = `<tr><td colspan="6">Error loading database. Ensure app.py backend is running.</td></tr>`; }
+}
+
+function viewPastLGF(lgfId) {
+    const record = storedDbRecords.find(r => r.id === lgfId);
+    if(!record) return;
+
+    cart = record.cartData.cart;
+    document.getElementById('lgf-watermark-id').innerHTML = `<span class="preview-badge">PREVIEW MODE</span><br>${lgfId}`;
+
+    const summaryDiv = document.getElementById("lgf-tests-summary");
+    let addonStr = cart.addons.length > 0 ? cart.addons.join('<br>') : '-';
+    let incStr = cart.includedText !== "" ? `<div style="font-size:0.8rem; color:#166534; margin-top:6px;"><b>Included:</b> ${cart.includedText}</div>` : '';
+    let displayTotal = isNaN(cart.displayMrp) && cart.addonTotal === 0 ? "Upon Enquiry" : formatCurrency(record.total);
+
+    summaryDiv.innerHTML = `<table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                    <th style="padding:10px; background:var(--navy); color:#fff; font-size:13px; text-transform:uppercase;">Test Code</th>
+                    <th style="padding:10px; background:var(--navy); color:#fff; font-size:13px; text-transform:uppercase;">Test Ordered</th>
+                    <th style="padding:10px; background:var(--navy); color:#fff; font-size:13px; text-transform:uppercase;">Add-ons</th>
+                    <th style="padding:10px; background:var(--navy); color:#fff; font-size:13px; text-transform:uppercase; text-align:right;">Total MRP</th>
+                </tr>
+                <tr style="border-bottom:1px solid #e2e8f0; background:#f8fafc;">
+                    <td style="padding:14px 10px; font-weight:800; color:var(--teal); font-size:14px;">${cart.testId}</td>
+                    <td style="padding:14px 10px;"><strong>${cart.testName}</strong><br><span style="font-size:0.85rem; color:#475569; font-weight:600;">Variant: ${cart.variantName} | Specimen: ${cart.specimen}</span>${incStr}</td>
+                    <td style="padding:14px 10px; font-size:0.85rem; color:var(--maroon); font-weight:600; line-height:1.5;">${addonStr}</td>
+                    <td style="padding:14px 10px; text-align:right; font-weight:800; font-size:15px; color:var(--navy);">${displayTotal}</td>
+                 </tr>
+            </table><div style="text-align:right; font-size:1.6rem; font-weight:800; color:var(--maroon); margin-top:14px;">GRAND TOTAL: ${displayTotal}</div>`;
+
+    document.querySelectorAll('.lgf-data').forEach(input => {
+        if (input.type === 'radio') { 
+            if (record.cartData.formData[input.name] === input.value) input.checked = true; 
+        } else { 
+            if (record.cartData.formData[input.id]) input.value = record.cartData.formData[input.id]; 
+        }
+        input.disabled = true; 
+    });
+    
+    document.getElementById("save-btn").style.display = "none";
+    document.getElementById("download-only-btn").style.display = "inline-block";
+    document.getElementById("lgf-back-btn").style.display = "none";
+    switchTab('lgf');
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PILL BUILDER & TOGGLE HELPERS
+───────────────────────────────────────────────────────────── */
+function buildPills(list, group, toggleFn) {
+    return list.map(item => `<span class="select-pill" onclick="${toggleFn}(this, '${item}')">${item}</span>`).join('');
+}
+function toggleA6(el, val) { el.classList.toggle('active'); if(el.classList.contains('active')) setA6.add(val); else setA6.delete(val); calcModalPrice(); }
+function toggleA7(el, val) { el.classList.toggle('active'); if(el.classList.contains('active')) setA7.add(val); else setA7.delete(val); calcModalPrice(); }
+function toggleA8(el, val) { el.classList.toggle('active'); if(el.classList.contains('active')) setA8.add(val); else setA8.delete(val); calcModalPrice(); }
+
+/* ─────────────────────────────────────────────────────────────
+   TAB SWITCHING
+───────────────────────────────────────────────────────────── */
+
+
+function switchTab(tab) {
+    document.querySelectorAll('.dos-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+    const tabEl = document.querySelector(`.dos-tab[onclick="switchTab('${tab}')"]`);
+    if (tabEl) tabEl.classList.add('active');
+    const secEl = document.getElementById(`view-${tab}`);
+    if (secEl) secEl.classList.add('active');
+    if (tab === 'lgf') { document.getElementById('tab-lgf').style.display = 'inline-block'; }
+    if (tab === 'list') fetchRecordsList();
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CURRENCY FORMATTER
+───────────────────────────────────────────────────────────── */
+function formatCurrency(val) {
+    if (val === "Upon Enquiry" || isNaN(val)) return val;
+    return '₹' + Number(val).toLocaleString('en-IN');
+}
+
+/* ─────────────────────────────────────────────────────────────
+   GATHER FORM DATA FOR LGF PDF
+───────────────────────────────────────────────────────────── */
+function gatherFormData() {
+    const data = {};
+    document.querySelectorAll('.lgf-data').forEach(input => {
+        if (input.type === 'radio') { if (input.checked) data[input.name] = input.value; }
+        else if (input.type === 'checkbox') { data[input.id] = input.checked; }
+        else { data[input.id] = input.value; }
+    });
+    return data;
+}
+
+/* Init */
+renderTable();
+fetchRecordsList();
+</script>
+{% endblock %}

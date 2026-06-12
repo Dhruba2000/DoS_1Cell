@@ -1,20 +1,21 @@
 {% extends "base.html" %}
+
+{% block topbar_title %}
+Glossary
+{% endblock %}
+
+{% block topbar_subtitle %}
+Key genomic and clinical terminology used across reports and diagnostics
+{% endblock %}
+
 {% block content %}
 
-<div class="page-header">
-    <div>
-        <div class="page-title">Scientific <span class="hi">Glossary</span></div>
-        <div class="page-desc">Important molecular diagnostics terms and abbreviations</div>
-    </div>
-</div>
+
 
 <div class="tbl-wrap">
-    <div class="tbl-header">
-        <div class="tbl-title"><i class="fas fa-spell-check"></i> Glossary</div>
-    </div>
 
     <div class="tbl-scroll">
-        <table>
+        <table >
             <thead>
                 <tr>
                     <th>Term</th>
@@ -24,7 +25,7 @@
             <tbody>
                 {% for g in glossary %}
                 <tr>
-                    <td><strong>{{ g[0] }}</strong></td>
+                    <td style="padding-left: 40px;"><strong>{{ g[0] }}</strong></td>
                     <td>{{ g[1] }}</td>
                 </tr>
                 {% endfor %}

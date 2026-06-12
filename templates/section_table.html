@@ -15,93 +15,108 @@
 
 {% set meta = section_meta.get(active, (active.replace('_',' ').title(), 'fa-file', '', 'teal')) %}
 
-<div class="page-header">
-  <h1><span>{{ meta[0] }}</span></h1>
-  <p>{{ meta[2] }}</p>
-</div>
+<div class="test-selector" style="display:grid; gap:12px; margin-bottom:24px;">
 
-<!-- Test selector -->
-<div class="test-selector">
-  <label><i class="fas fa-flask" style="color:var(--teal); margin-right:6px;"></i> Test</label>
-  <select class="form-control" onchange="window.location.href='?test='+this.value" id="testSelect">
-    {% for t in tests %}
-    <option value="{{ t }}" {% if t == selected_test %}selected{% endif %}>{{ t }}</option>
-    {% endfor %}
-  </select>
-  {% if session.get('is_admin') %}
-  <button class="btn btn-gold btn-sm" onclick="openAddModal()">
-    <i class="fas fa-plus"></i> Add Record
-  </button>
-  {% else %}
-  <button class="btn btn-secondary btn-sm" onclick="openLoginModal()">
-    <i class="fas fa-lock"></i> Admin Login to Edit
-  </button>
-  {% endif %}
-</div>
+  <label>
+    <i data-lucide="flask-conical" style="color:#000; margin-right:6px;"></i>
+    Test
+  </label>
 
-{% if session.get('is_admin') %}
-<div class="edit-toolbar">
-  <i class="fas fa-shield-check"></i>
-  <span>Admin mode active — you can add, edit, or delete records below</span>
-</div>
-{% endif %}
+  <!-- Dropdown + Button Row -->
+  <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
 
-<!-- Section intro -->
-<div class="section-intro">
-  <div class="section-intro-icon"><i class="fas {{ meta[1] }}"></i></div>
-  <div>
-    <h2>{{ selected_test }} — {{ meta[0] }}</h2>
-    <p>{{ meta[2] }} Use the table below to view or manage data. Admins can add, edit, and delete records.</p>
+    <select 
+      class="form-control" 
+      onchange="window.location.href='?test='+this.value" 
+      id="testSelect"
+      style="max-width:1065px;"
+    >
+      {% for t in tests %}
+      <option value="{{ t }}" {% if t == selected_test %}selected{% endif %}>
+        {{ t }}
+      </option>
+      {% endfor %}
+    </select>
+
+    {% if session.get('is_admin') %}
+    <button class="btn btn-gold btn-sm" onclick="openAddModal()">
+      <i class="fas fa-plus"></i> Add Record
+    </button>
+
+    {% else %}
+    {% endif %}
+
   </div>
+
 </div>
 
-<!-- Data table -->
-{% if rows %}
-<div class="card" style="padding:0; overflow:hidden;">
-  <div class="table-wrap" style="border:none; border-radius:0;">
-    <table>
-      <thead>
-        <tr>
-          {% for f in fields %}
-          <th>{{ f.replace('_', ' ').title() }}</th>
-          {% endfor %}
-          {% if session.get('is_admin') %}
-          <th>Actions</th>
-          {% endif %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in rows %}
-        <tr id="row-{{ row['id'] }}">
-          {% for f in fields %}
-          <td>
-            <span class="cell-view">{{ row[f] or '—' }}</span>
+  {% if session.get('is_admin') %}
+  <div class="edit-toolbar">
+    <i class="fas fa-shield-check"></i>
+    <span style="color: var(--green);font-size: 14px;">Admin mode active — you can add, edit, or delete records below</span>
+  </div>
+  {% endif %}
+
+
+<div class = "card">
+  <div class="section-intro" style="margin-bottom: 20px;">
+    <div>
+      <h4>{{ selected_test }} — {{ meta[0] }}</h4>
+      <p style="font-size: 14px;color: #999999;">{{ meta[2] }} Use the table below to view or manage data. Admins can add, edit, and delete records.</p>
+    </div>
+  </div>
+
+
+  <!-- Data table -->
+  {% if rows %}
+  <div style="padding:0; overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius-md);">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            {% for f in fields %}
+            <th style="font-size: 14px;">{{ f.replace('_', ' ').title() }}</th>
+            {% endfor %}
             {% if session.get('is_admin') %}
-            <input class="form-control cell-edit" data-field="{{ f }}" value="{{ row[f] or '' }}"
-                   style="display:none; min-width:120px; padding:4px 8px; font-size:0.8rem;">
+            <th>Actions</th>
             {% endif %}
-          </td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+          <tr id="row-{{ row['id'] }}">
+            {% for f in fields %}
+            <td>
+              <span class="cell-view">{{ row[f] or '—' }}</span>
+              {% if session.get('is_admin') %}
+              <input class="form-control cell-edit" data-field="{{ f }}" value="{{ row[f] or '' }}"
+                    style="display:none; min-width:120px; padding:4px 8px; font-size:0.8rem;">
+              {% endif %}
+            </td>
+            {% endfor %}
+            {% if session.get('is_admin') %}
+            <td class="act">
+              <button class="btn btn-sm btn-secondary" style="font-weight: none;" onclick="startEditRow('{{ row.id}}')">
+                <i data-lucide="pencil"></i> Edit
+              </button>
+              <button class="btn btn-sm btn-success save-row-btn" style="display:none;"
+                      onclick="saveRow('{{ row.id }}', '{{ selected_test }}')">
+                <i class="fas fa-save"></i> Save
+              </button>
+              <button class="btn btn-sm btn-danger cancel-row-btn" style="display:none;"
+                      onclick="cancelEditRow('{{ row.id }}')">
+                <i class="fas fa-times"></i> Cancel
+              </button>
+              <button class="btn btn-sm btn-secondary" style="font-weight: none; margin-right: 15px;" onclick="deleteRow('{{ row.id }}')">
+               <i data-lucide="trash-2"></i> Delete
+              </button>
+            </td>
+            {% endif %}
+          </tr>
           {% endfor %}
-          {% if session.get('is_admin') %}
-          <td class="actions">
-            <button class="btn btn-secondary btn-sm edit-row-btn" onclick="startEditRow({{ row['id'] }})">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-primary btn-sm save-row-btn" onclick="saveRow({{ row['id'] }}, '{{ selected_test }}')" style="display:none;">
-              <i class="fas fa-save"></i>
-            </button>
-            <button class="btn btn-secondary btn-sm cancel-row-btn" onclick="cancelEditRow({{ row['id'] }})" style="display:none;">
-              <i class="fas fa-times"></i>
-            </button>
-            <button class="btn btn-danger btn-sm" onclick="deleteRow({{ row['id'] }})">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
-          {% endif %}
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 {% else %}
@@ -118,7 +133,7 @@
     {% endif %}
   </div>
   {% if session.get('is_admin') %}
-  <button class="btn btn-primary" onclick="openAddModal()">
+  <button class="btn btn-primary" style="background-color: #1a365d; border-color: #1a365d;font-weight: 400;" onclick="openAddModal()">
     <i class="fas fa-plus"></i> Add First Record
   </button>
   {% endif %}
@@ -152,7 +167,7 @@
 
 {% block scripts %}
 <script>
-const SECTION = {{ active | tojson }};
+  const SECTION = JSON.parse('{{ active | tojson | safe }}');
 
 function openAddModal() {
   document.getElementById('addModal').classList.add('open');

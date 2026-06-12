@@ -62,26 +62,16 @@ TESTS_DOS = [
 # ─────────────────────────────────────────────────────────────
 ACL = {
     'Doctor': [
-        'instructions', 'dos', 'glossary', 'test_details', 'master_test_directory',
-        'biomarker_coverage', 'clinical_positioning', 'performance',
-        'support_services', 'journey_mapping', 'comparison',
+        'instructions', 'dos', 'glossary', 'test_details'
     ],
     'Patient': [
-        'instructions', 'dos', 'glossary', 'test_details', 'biomarker_coverage',
-        'clinical_positioning', 'support_services', 'journey_mapping',
-        'comparison',
+        'instructions', 'dos', 'glossary', 'test_details'
     ],
     'Sales Team': [
-        'instructions', 'dos', 'glossary', 'test_details', 'master_test_directory',
-        'biomarker_coverage', 'clinical_positioning', 'operations',
-        'performance', 'pricing', 'ordering', 'support_services',
-        'journey_mapping', 'comparison',
+        'instructions', 'dos', 'glossary', 'test_details'
     ],
     'Internal Team': [
-        'instructions', 'dos', 'glossary', 'test_details', 'master_test_directory',
-        'biomarker_coverage', 'clinical_positioning', 'operations',
-        'performance', 'pricing', 'ordering', 'support_services',
-        'journey_mapping', 'comparison',
+        'instructions', 'dos', 'glossary', 'test_details'
     ],
 }
 # ─────────────────────────────────────────────────────────────
@@ -93,19 +83,20 @@ NAV_ITEMS = [
     ('comparison',           'Product Matrix',        'fa-table-columns'),
     ('glossary',             'Glossary',              'fa-spell-check'),
 
-    ('database_header',      'Database',              'fa-database'),
+    ('database_header',      'Database',              'database'),
 
-    ('instructions',         'Instructions',          'fa-book-open'),
-    ('master_test_directory','Master Test Directory', 'fa-list-alt'),
-    ('biomarker_coverage',   'Biomarker Coverage',    'fa-dna'),
-    ('clinical_positioning', 'Clinical Positioning',  'fa-stethoscope'),
-    ('operations',           'Operations',            'fa-cogs'),
-    ('performance',          'Performance',           'fa-chart-line'),
-    ('pricing',              'Pricing',               'fa-tags'),
-    ('ordering',             'Ordering',              'fa-shopping-cart'),
-    ('support_services',     'Support Services',      'fa-headset'),
-    ('journey_mapping',      'Journey Mapping',       'fa-route'),
+    ('instructions',         'Instructions',          'notebook-text'),
+    ('master_test_directory','Master Test Directory', 'folder-kanban'),
+    ('biomarker_coverage',   'Biomarker Coverage',    'dna'),
+    ('clinical_positioning', 'Clinical Positioning',  'stethoscope'),
+    ('operations',           'Operations',            'settings'),
+    ('performance',          'Performance',           'chart-line'),
+    ('pricing',              'Pricing',               'tags'),
+    ('ordering',             'Ordering',              'shopping-cart'),
+    ('support_services',     'Support Services',      'headset'),
+    ('journey_mapping',      'Journey Mapping',       'route'),
 ]
+
 
 # ─────────────────────────────────────────────────────────────
 #  COMPARISON TABLE ROW GROUPS
@@ -372,19 +363,79 @@ def init_db():
         total_mrp REAL,
         cart_data TEXT
     )''')
+    # ── Test IDs Registry ──────────────────────────────────────
+    c.execute('''CREATE TABLE IF NOT EXISTS test_id_registry (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        parent_name TEXT,
+        parent_id TEXT,
+        variant_id TEXT,
+        variant_name TEXT,
+        specimen TEXT,
+        mrp TEXT
+    )''')
 
-    conn = sqlite3.connect("dos.db")   
-    cur = conn.cursor()
+    # Migration Check: Look for the new 'OncoIndx Multimodal' test to trigger the update
+    has_new_catalog = c.execute("SELECT COUNT(*) FROM test_id_registry WHERE variant_id='NGS-IND-01-M01'").fetchone()[0]
+    
+    if has_new_catalog == 0:
+        # Clear the old test registry to prevent duplicates (keeps leads safe)
+        c.execute('DELETE FROM test_id_registry')
+        
+        data = [
+            ("OncoIndx", "NGS-IND-01", "NGS-IND-01-T01", "OncoIndx DNA", "Tissue", "1,35,000"),
+            ("OncoIndx", "NGS-IND-01", "NGS-IND-01-B01", "OncoIndx RNA", "Tissue", "1,50,000"),
+            ("OncoIndx", "NGS-IND-01", "NGS-IND-01-M01", "OncoIndx Multimodal", "Tissue", "2,10,000"),
+            ("OncoIndx Prime +", "NGS-PRI-01", "NGS-PRI-01-M01", "Multi-omics Match", "Tissue + Blood", "Upon Enquiry"),
+            ("OncoHRD", "NGS-HRD-01", "NGS-HRD-01-T01", "Tissue", "Tissue", "80,000"),
+            ("OncoHRD", "NGS-HRD-01", "NGS-HRD-01-B01", "Blood/Liquid (Upon Request)", "Blood", "80,000"),
+            ("OncoIndx 360", "NGS-360-01", "NGS-360-01-T01", "Endometrium", "Tissue", "60,000"),
+            ("OncoTarget", "NGS-TAR-01", "NGS-TAR-01-T01", "TBx", "Tissue", "30,000"),
+            ("OncoTarget", "NGS-TAR-01", "NGS-TAR-01-B01", "LBx", "Blood", "40,000"),
+            ("OncoMonitor", "NGS-MON-01", "NGS-MON-01-M01", "MRD (Post Surgery)", "Blood", "60,000"),
+            ("OncoMonitor", "NGS-MON-01", "NGS-MON-01-T01", "TRM (Post Treatment)", "Blood", "60,000"),
+            ("OncoCTC", "CTC-01", "CTC-01-B01", "OncoCTC", "Blood", "12,000"),
+            ("OncoRisk", "NGS-RSK-01", "NGS-RSK-01-B01", "OncoRisk", "Blood", "25,000"),
+            ("OncoAlibrex TRM", "NGS-ALB-01", "NGS-ALB-01-B01", "Initial Report", "Blood", "Early Access Program"),
+            ("OncoAlibrex TRM", "NGS-ALB-01", "NGS-ALB-01-B02", "Subsequent Reports", "Blood", "Early Access Program"),
+            ("OncoPredikt BRS", "AI-PRD-01", "AI-PRD-01-T01", "OncoPredikt BRS", "Tissue", "Early Access Program")
+        ]
+        c.executemany('''
+            INSERT INTO test_id_registry (parent_name, parent_id, variant_id, variant_name, specimen, mrp)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', data)
+
+    # Automatically map to old Master Test Directory
+    master_mappings = {
+        'OncoIndx TBx': 'NGS-IND-01-T01',
+        'OncoIndx LBx': 'NGS-IND-01-B01',
+        'OncoMonitor TRM': 'NGS-MON-01-T01',
+        'OncoMonitor MRD': 'NGS-MON-01-M01',
+        'OncoIndx Prime Plus': 'NGS-PRI-01-M01',
+        'OncoCTC': 'CTC-01-B01',
+        'OncoHRD': 'NGS-HRD-01',
+        'OncoRisk': 'NGS-RSK-01',
+        'OncoTarget': 'NGS-TAR-01',
+        'OncoIndx 360 EC': 'NGS-360-01-T01'
+    }
+    for t_name, t_id in master_mappings.items():
+        exists = c.execute('SELECT id, test_id FROM master_test_directory WHERE test_name=?', (t_name,)).fetchone()
+        if exists:
+            if not exists['test_id']:
+                c.execute('UPDATE master_test_directory SET test_id=? WHERE test_name=?', (t_id, t_name))
+        else:
+            c.execute('INSERT INTO master_test_directory (test_name, test_id) VALUES (?, ?)', (t_name, t_id))
 
     conn.commit()
     conn.close()
-
 
 def is_admin():
     return session.get('is_admin', False)
 
 
 def check_access(section):
+    if session.get('is_admin'):
+        return True
+        
     user_type = session.get('user_type')
     if not user_type:
         return False
@@ -430,7 +481,7 @@ def admin_login():
     username = request.form.get('username')
     password = request.form.get('password')
     next_url = request.form.get('next', url_for('instructions'))
-    if username == 'admin' and password == 'password':
+    if username == 'OneCell' and password == '1Cell.Ai@2026':
         session['is_admin'] = True
         return jsonify({'success': True, 'redirect': next_url})
     return jsonify({'success': False, 'message': 'Invalid credentials'})
@@ -1083,6 +1134,26 @@ def get_trfs():
         })
         
     return jsonify(records)  
+
+@app.route('/test_id_registry')
+def test_id_registry():
+    if not check_access('test_id_registry'):
+        return redirect(url_for('instructions'))
+    
+    conn = get_db()
+    raw_rows = conn.execute('SELECT * FROM test_id_registry ORDER BY parent_id, variant_id').fetchall()
+    conn.close()
+
+    # Convert SQLite rows to standard dictionaries
+    dict_rows = [dict(r) for r in raw_rows]
+
+    return render_template(
+        'test_ids.html',
+        nav_items=NAV_ITEMS,
+        acl=ACL.get(session.get('user_type'), []),
+        active='test_id_registry',
+        rows=dict_rows
+    )
 
 
 # ─────────────────────────────────────────────────────────────
